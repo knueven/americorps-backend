@@ -1,7 +1,28 @@
-class Organization:
+from sqlalchemy import *
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relation, sessionmaker
+
+Base = declarative_base()
+
+class Organization(Base):
+
+    _tablename_ = 'organizations'
+    id = Column(Integer, primary_key = True, nullable = False)
+    name = Column(String(255), nullable = False)
+    address = Column(String(255), nullable = False)
+    city = Column(String(30), nullable = False)
+    state = Column(String(15), nullable = False)
+    zip = Column(String(5), nullable = False)
+    mission = Column(String(255), nullable = False)
+    email = Column(String(255), nullable = False)
+    phone = Column(String(15), nullable = False)
+    activity = Column(String(255), nullable = False)
+
     # all these fields are strings
-    def __init__(self, address, city, state,
-                 zip, missionStatement, email, phone, password, lastActivity):
+    def __init__(self, id, name, address, city, state,
+                 zip, missionStatement, email, phone, lastActivity):
+        self.id = id
+        self.name = name
         self.address = address
         self.city = city
         self.state = state
@@ -9,59 +30,20 @@ class Organization:
         self.mission = missionStatement
         self.email = email
         self.phone = phone
-        self.password = password
         self.activity = lastActivity
 
-    # change the address to the new address
-    def editAddress(self, address):
-        self.address = address
+    def _repr_(self):
+        return "Organization(%s, %s)" % (self.id, self.name)
 
-    # change the city to the new city
-    def editCity(self, city):
-        self.city = city
-
-    # add the neighboorhood field to the instance and set it to neighborhood
-    def editNeighborhood(self, hood):
-        self.neighborhood = hood
-
-    # edit the state field to the new state
-    def editState(self, state):
-        self.state = state
-
-    # edit the zip code or raise an error if it is ivalid
-    # a valid zip code is any 5-digit string of integers
-    def editZip(self, zip):
-        if len(zip) != 5:
-            raise ValueError('a zip code must be 5 digits long')
-        elif type(zip) != int:
-            raise TypeError('a zip code must be a string of integers')
-        else:
-            self.zip = zip
-
-    # edit the mission statement of the organization
-    def editMissionStatement(self, mission):
-        self.mission = mission
-
-    # edit the email address of the organization
-    # need to check if the email is valid
-    def editEmail(self, email):
-        self.email = email
-
-    # edit the phone number of the organization if it is valid
-    # a phone number is a string of integers and some special characters
-    def editPhoneNumber(self, phone):
-        if any (c.isalpha() for c in phone):
-            raise ValueError('a phone number should not contain letters')
-        else:
-            self.phone = phone
-
-    # edit the password of the organization
-    def editPassword(self, password):
-        self.password = password
-
-    # edit the last activity of the organization
-    def editLastActivity(self, activity):
-        self.activity = activity
+    def updateOrg(self, org_id, update_data):
+        session = Session()
+        try:
+            session.query(organizations).filter_by(id = org_id).update(json.loads(update_data))
+        except:
+            session.rollback()
+            raise ValueError("id not found")
+        finally:
+            session.close()
 
 
 
