@@ -1,11 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relation, sessionmaker
-
-Base = declarative_base()
-# replace with config setting for database
-database_engine = create_engine("mysql://...")
-Session = sessionmaker(bind=database_engine)
+from app import Base, Session
 
 
 class Organization(Base):
