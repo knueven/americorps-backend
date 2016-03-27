@@ -2,7 +2,6 @@ from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from app import Base, Session
 
-
 class Organization(Base):
     __tablename__ = 'organizations'
     id = Column(Integer, primary_key=True, nullable=False)
@@ -19,16 +18,32 @@ class Organization(Base):
     # all these fields are strings
     def __init__(self, id, name, address, city, state,
                  zip, missionStatement, email, phone, lastActivity):
+
+        # make sure th zip code is valid
+        if len(zip) != 5 or not(zip.isdigit()):
+            raise ValueError("a zip code must be 5 digits")
+        else:
+            self.zip = zip
+
+        # make sure the phone number is valid
+        if len(phone) < 10 or len(phone) > 15 or not(phone.isdigit()):
+            raise ValueError('a phone number must be between 10 and 15 digits')
+        else:
+            self.phone = phone
         self.id = id
         self.name = name
         self.address = address
         self.city = city
         self.state = state
-        self.zip = zip
         self.mission = missionStatement
         self.email = email
-        self.phone = phone
         self.activity = lastActivity
+
+        # add the organization to the database
+        session = Session()
+        session.add(self)
+        session.commit()
+        session.close()
 
     def __repr__(self):
         return "Organization(%s, %s)" % (self.id, self.name)
@@ -36,7 +51,7 @@ class Organization(Base):
     def updateOrg(self, org_id, update_data):
         session = Session()
         try:
-            session.query(organizations).filter_by(id=org_id).update(json.loads(update_data))
+            session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
         except:
             session.rollback()
             raise ValueError("id not found")
