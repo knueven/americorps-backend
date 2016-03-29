@@ -6,7 +6,8 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 #replace with config setting for database
-database_engine = create_engine("mysql://...")
+import config
+database_engine = create_engine(config.database_config)
 Session = sessionmaker(bind=database_engine)
 
 #when we have secret keys and such turn this back on

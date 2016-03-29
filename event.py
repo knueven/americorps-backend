@@ -1,11 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relation, sessionmaker
-
-Base = declarative_base()
-# replace with config setting for database
-database_engine = create_engine("mysql://...")
-Session = sessionmaker(bind=database_engine)
+from app import Base, Session
 
 
 class Event(Base):
@@ -23,7 +19,7 @@ class Event(Base):
     duration = Column(Integer, nullable=False)
     interests = Column(String(255), nullable=False) 
     skills = Column(String(255), nullable=False)
-    org = Column() #object or id?
+    org = Column(Integer, ForeignKey('organizations.id'), nullable=False) #object or id?
 
     # all these fields are strings
     def __init__(self, id, name, address, city, state,
