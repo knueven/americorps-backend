@@ -26,7 +26,6 @@ class Volunteer(User):
 			self.passwordhash = passwordhash
 			self.phone = phone
 			self.last_activity = last_activity
-			self.master = master
 			self.birthdate = birthdate
 			self.about = about
 			self.gender = gender
