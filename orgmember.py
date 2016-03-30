@@ -1,7 +1,8 @@
 from user import User
+from db import Base, Session
 from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker
-from app import Base, Session
+from datetime import datetime
 
 
 class OrgMember(User):
@@ -18,9 +19,25 @@ class OrgMember(User):
 		org = Column(Integer, ForeignKey('organizations.id')) #object or id?
 		poc = Column(Boolean, nullable=False)
 
-		def __init__(self, name, email, passwordhash, phone, last_activity, birthdate=None,
+		@classmethod
+		def fromdict(cls, d):
+			allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
+				'about', 'gender', 'vhours', 'neighborhood', 'interests', 
+				'education', 'availabilty', 'events', 'org', 'poc')
+			df = {k : v for k, v in d.items() if k in allowed}
+			return cls(**df)
+
+		def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(), birthdate=None,
              about=None, gender=None, vhours=None, neighborhood=None, interests=None, 
 			education=None, availability=None, events=None, org=None, poc=None):
+			self.name = name
+			self.email = email
+			self.passwordhash = passwordhash
+			self.phone = phone
+			self.last_active = last_active
+			self.birthdate = birthdate
+			self.about = about
+			self.gender = gender
 			self.vhours = vhours
 			self.neighborhood = neighborhood
 			self.interests = interests
@@ -29,3 +46,16 @@ class OrgMember(User):
 			self.events = events
 			self.org = org
 			self.poc = poc	
+
+		#create a volunteer from a json blob
+		def createMember(json):
+			o = OrgMember.fromdict(json)
+			s = Session()
+			try:
+				s.add(o)
+				s.commit()
+			except:
+				return False
+			finally:
+				s.close()
+			return True

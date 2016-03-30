@@ -1,6 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
-from app import Base, Session
+from db import Base, Session
 
 class Organization(Base):
     __tablename__ = 'organizations'

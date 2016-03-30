@@ -1,7 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-from app import Base, Session
+from db import Base
 
 # abstract base class for Users
 class User(Base):
@@ -12,7 +12,7 @@ class User(Base):
 	passwordhash = Column(String(255), nullable=False) 
 	phone = Column(String(15), nullable=False)
 	permissions = Column(Enum('volunteer', 'orgmember', 'admin'), nullable=False)
-	last_active = Column(DateTime(timezone=False), nullable=False)
+	last_active = Column(DateTime(timezone=False), nullable=True)
 	token = Column(String(50))
 	birthdate = Column(String(20))
 	bio = Column(String(10000))

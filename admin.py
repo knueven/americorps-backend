@@ -1,7 +1,10 @@
 from user import User
+from db import Base, Session
 from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker
-from app import Base, Session
+import json
+from datetime import datetime
+import itertools
 
 
 class Admin(User):
@@ -12,17 +15,35 @@ class Admin(User):
 
     __mapper_args__ = {'polymorphic_identity' : 'admin'}
 
+    @classmethod
+    def fromdict(cls, d):
+        allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 'about', 'gender', 'master')
+        df = {k : v for k, v in d.items() if k in allowed}
+        return cls(**df)
 
-    def __init__(self, name, email, passwordhash, phone, last_activity, master, birthdate=None, about=None, gender=None):
+    def __init__(self, name, email, passwordhash, phone, master, birthdate=None, about=None, gender=None, last_active=datetime.now()):
         #will contain all these fields from user
         self.name = name
         self.email = email
         self.passwordhash = passwordhash
         self.phone = phone
-        self.last_activity = last_activity
+        self.last_active = last_active
         self.master = master
         self.birthdate = birthdate
         self.about = about
         self.gender = gender
+
+    #create an admin from a json blob
+    def createAdmin(json):
+        a = Admin.fromdict(json)
+        s = Session()
+        try:
+            s.add(a)
+            s.commit()
+        except:
+            return False
+        finally:
+            s.close()
+        return True
 
 

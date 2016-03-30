@@ -1,5 +1,5 @@
 from event import Event
-from app import Session
+from db import Session
 import unittest
 from organization import Organization
 from datetime import datetime
