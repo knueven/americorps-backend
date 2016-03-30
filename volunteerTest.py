@@ -3,8 +3,8 @@ from db import Session
 import unittest
 from datetime import datetime
 from sqlalchemy import exc
-# volunteer contains: name, email, passwordhash, phone, last_activity,
-#			birthdate=None, about=None, gender=None,
+# volunteer contains: name, email, passwordhash, phone, last_active,
+#			birthdate=None, permissions, bio=None, gender=None,
 #			vhours=None, neighborhood=None, interests=None, 
 #			skills=None, education=None, availability=None, events=None
 
@@ -19,9 +19,10 @@ class VolunteerTests(unittest.TestCase):
                         joey.email == 'wood.jos@husky.neu.edu' and
                         joey.passwordhash == 'lit' and
                         joey.phone == '3015559721' and
-                        joey.last_activity == '03/26/16' and
+                        joey.last_active == '03/26/16' and
 			joey.birthdate == '05/26/1990' and
-                        joey.about == 'Snell rhymes with hell' and
+                        joey.permissions == "volunteer" and
+                        joey.bio == 'Snell rhymes with hell' and
                         joey.gender == 'Male' and
 			joey.vhours == 0 and
                         joey.neighborhood == "Back bay" and
@@ -57,9 +58,10 @@ class VolunteerTests(unittest.TestCase):
                         joey.email == poey.email and
                         joey.passwordhash == poey.passwordhash and
                         joey.phone == poey.phone and
-                        joey.last_activity == poey.last_activity and
+                        joey.last_active == poey.last_active and
 			joey.birthdate == poey.birthdate and
-                        joey.about == poey.about and
+                        joey.permissions == poey.permissions and
+                        joey.bio == poey.bio and
                         joey.gender == poey.gender and
 			joey.vhours == poey.vhours and
                         joey.neighborhood == poey.neighborhood and
@@ -80,9 +82,10 @@ class VolunteerTests(unittest.TestCase):
                         joey.email == poey.email and
                         joey.passwordhash == poey.passwordhash and
                         joey.phone == poey.phone and
-                        joey.last_activity == poey.last_activity and
+                        joey.last_active == poey.last_active and
 			joey.birthdate == poey.birthdate and
-                        joey.about == poey.about and
+                        joey.permissions == poey.permissions and
+                        joey.bio == poey.bio and
                         joey.gender == poey.gender and
 			joey.vhours == poey.vhours and
                         joey.neighborhood == poey.neighborhood and
@@ -103,9 +106,10 @@ class VolunteerTests(unittest.TestCase):
                         joey.email == poey.email and
                         joey.passwordhash == poey.passwordhash and
                         joey.phone == poey.phone and
-                        joey.last_activity == poey.last_activity and
+                        joey.last_active == poey.last_active and
 			joey.birthdate == poey.birthdate and
-                        joey.about == poey.about and
+                        joey.permissions == poey.permissions and
+                        joey.bio == poey.bio and
                         joey.gender == poey.gender and
 			joey.vhours == poey.vhours and
                         joey.neighborhood == poey.neighborhood and
@@ -146,26 +150,26 @@ class VolunteerTests(unittest.TestCase):
     #                     "Mondays @ 3pm - 6pm", "")
     #     self.assertRaises(ValueError, 'Phone numbers must be a string of 10 integers')
 
-    # # joey.last_activity_is a string - should be in the form mm/dd/yyyy, hh:mm
-    # def test_last_activity_format0(self):
+    # # joey.last_active_is a string - should be in the form mm/dd/yyyy, hh:mm
+    # def test_last_active_format0(self):
     #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00:00', '05/26/1990',
     #                     'Snell rhymes with hell', 'Male', 0, "Back Bay", "Teaching", "Teaching", "College",
     #                     "Mondays @ 3pm - 6pm", "")
-    #     self.assertRaises(ValueError, 'last activity must be in the form mm/dd/yyyy hh:mm')
+    #     self.assertRaises(ValueError, 'last active must be in the form mm/dd/yyyy hh:mm')
 
-    # # joey.last_activity_is a string - should be in the form mm/dd/yyyy, hh:mm
-    # def test_last_activity_format1(self):
+    # # joey.last_active_is a string - should be in the form mm/dd/yyyy, hh:mm
+    # def test_last_active_format1(self):
     #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1am', '05/26/1990',
     #                     'Snell rhymes with hell', 'Male', 0, "Back Bay", "Teaching", "Teaching", "College",
     #                     "Mondays @ 3pm - 6pm", "")
-    #     self.assertRaises(ValueError, 'last activity must be in the form mm/dd/yyyy hh:mm')
+    #     self.assertRaises(ValueError, 'last active must be in the form mm/dd/yyyy hh:mm')
 
-    # # joey.last_activity_must be in the past
-    # def test_last_activity_format1(self):
+    # # joey.last_active_must be in the past
+    # def test_last_active_past(self):
     #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '04/26/2020 1:00', '05/26/1990',
     #                     'Snell rhymes with hell', 'Male', 0, "Back Bay", "Teaching", "Teaching", "College",
     #                     "Mondays @ 3pm - 6pm", "")
-    #     self.assertRaises(ValueError, 'last activity must be in the form mm/dd/yyyy hh:mm')
+    #     self.assertRaises(ValueError, 'last active must be in the form mm/dd/yyyy hh:mm')
 
     # # joey.birthday is a string - should be in form mm/dd/yyyy
     # def test_birthday_format0(self):
