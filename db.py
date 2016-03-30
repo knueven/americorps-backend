@@ -6,3 +6,6 @@ from app import Base, Session, database_engine
 
 def setup():
 	Base.metadata.create_all(database_engine)
+
+if __name__ == '__main__':
+	setup()

@@ -16,7 +16,7 @@ class Organization(Base):
     activity = Column(String(255), nullable=False)
 
     # all these fields are strings
-    def __init__(self, id, name, address, city, state,
+    def __init__(self, name, address, city, state,
                  zip, missionStatement, email, phone, lastActivity):
 
         # make sure th zip code is valid
@@ -30,7 +30,6 @@ class Organization(Base):
             raise ValueError('a phone number must be between 10 and 15 digits')
         else:
             self.phone = phone
-        self.id = id
         self.name = name
         self.address = address
         self.city = city
@@ -39,11 +38,6 @@ class Organization(Base):
         self.email = email
         self.activity = lastActivity
 
-        # add the organization to the database
-        session = Session()
-        session.add(self)
-        session.commit()
-        session.close()
 
     def __repr__(self):
         return "Organization(%s, %s)" % (self.id, self.name)

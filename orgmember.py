@@ -18,10 +18,9 @@ class OrgMember(User):
 		org = Column(Integer, ForeignKey('organizations.id')) #object or id?
 		poc = Column(Boolean, nullable=False)
 
-		def __init__(self, id, name, email, passwordhash, phone, last_activity, birthdate=None,
+		def __init__(self, name, email, passwordhash, phone, last_activity, birthdate=None,
              about=None, gender=None, vhours=None, neighborhood=None, interests=None, 
 			education=None, availability=None, events=None, org=None, poc=None):
-			self.id = id
 			self.vhours = vhours
 			self.neighborhood = neighborhood
 			self.interests = interests

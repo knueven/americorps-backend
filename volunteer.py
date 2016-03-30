@@ -16,11 +16,10 @@ class Volunteer(User):
 		availability = Column(String(255)) #this will need some discussion
 		events = Column(String(255)) #will need to foreignkey to another table later
 
-		def __init__(self, id, name, email, passwordhash, phone, last_activity,
+		def __init__(self, name, email, passwordhash, phone, last_activity,
 			birthdate=None, about=None, gender=None,
 			vhours=None, neighborhood=None, interests=None, 
 			skills=None, education=None, availability=None, events=None):
-			self.id = id
 			self.name = name
 			self.email = email
 			self.passwordhash = passwordhash

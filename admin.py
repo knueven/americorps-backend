@@ -13,9 +13,8 @@ class Admin(User):
     __mapper_args__ = {'polymorphic_identity' : 'admin'}
 
 
-    def __init__(self, id, name, email, passwordhash, phone, last_activity, master, birthdate=None, about=None, gender=None):
+    def __init__(self, name, email, passwordhash, phone, last_activity, master, birthdate=None, about=None, gender=None):
         #will contain all these fields from user
-        self.id = id
         self.name = name
         self.email = email
         self.passwordhash = passwordhash
