@@ -33,6 +33,9 @@ class VolunteerTests(unittest.TestCase):
 
     #test object write to the database.    
     def test_db_write(self):
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+                         'Snell rhymes with hell', 'Male', 0, "Back Bay", "Teaching", "Teaching", "College",
+                         "Mondays @ 3pm - 6pm", "")
         s = Session()
         try:
             s.add(joey)
