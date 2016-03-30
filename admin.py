@@ -17,11 +17,11 @@ class Admin(User):
 
     @classmethod
     def fromdict(cls, d):
-        allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 'about', 'gender', 'master')
+        allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 'bio', 'gender', 'master')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
-    def __init__(self, name, email, passwordhash, phone, master, birthdate=None, about=None, gender=None, last_active=datetime.now()):
+    def __init__(self, name, email, passwordhash, phone, master, birthdate=None, bio=None, gender=None, last_active=datetime.now()):
         #will contain all these fields from user
         self.name = name
         self.email = email
@@ -30,7 +30,7 @@ class Admin(User):
         self.last_active = last_active
         self.master = master
         self.birthdate = birthdate
-        self.about = about
+        self.bio = bio
         self.gender = gender
 
     #create an admin from a json blob

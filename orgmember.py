@@ -22,13 +22,13 @@ class OrgMember(User):
 		@classmethod
 		def fromdict(cls, d):
 			allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-				'about', 'gender', 'vhours', 'neighborhood', 'interests', 
+				'bio', 'gender', 'vhours', 'neighborhood', 'interests', 
 				'education', 'availabilty', 'events', 'org', 'poc')
 			df = {k : v for k, v in d.items() if k in allowed}
 			return cls(**df)
 
 		def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(), birthdate=None,
-             about=None, gender=None, vhours=None, neighborhood=None, interests=None, 
+             bio=None, gender=None, vhours=None, neighborhood=None, interests=None, 
 			education=None, availability=None, events=None, org=None, poc=None):
 			self.name = name
 			self.email = email
@@ -36,7 +36,7 @@ class OrgMember(User):
 			self.phone = phone
 			self.last_active = last_active
 			self.birthdate = birthdate
-			self.about = about
+			self.bio = bio
 			self.gender = gender
 			self.vhours = vhours
 			self.neighborhood = neighborhood

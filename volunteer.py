@@ -22,13 +22,13 @@ class Volunteer(User):
 		@classmethod
 		def fromdict(cls, d):
 			allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-				'about', 'gender', 'vhours', 'neighborhood', 'interests', 'skills', 
+				'bio', 'gender', 'vhours', 'neighborhood', 'interests', 'skills', 
 				'education', 'availabilty', 'events')
 			df = {k : v for k, v in d.items() if k in allowed}
 			return cls(**df)
 
 		def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(),
-			birthdate=None, about=None, gender=None,
+			birthdate=None, bio=None, gender=None,
 			vhours=None, neighborhood=None, interests=None, 
 			skills=None, education=None, availability=None, events=None):
 			self.name = name
@@ -38,7 +38,7 @@ class Volunteer(User):
 			self.last_active = last_active
 			self.birthdate = birthdate
 			self.permissions = 'volunteer'
-			self.about = about
+			self.bio = bio
 			self.gender = gender
 			self.vhours = vhours
 			self.neighboorhood = neighborhood
