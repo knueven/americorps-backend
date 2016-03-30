@@ -1,5 +1,5 @@
 from volunteer import Volunteer
-from app import Session
+from db import Session
 import unittest
 from datetime import datetime
 from sqlalchemy import exc
