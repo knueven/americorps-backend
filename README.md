@@ -5,3 +5,4 @@
 #### Dependencies:
 	- SQLAlchemy
 	- Flask
+	- MySQL Server 5.5+
