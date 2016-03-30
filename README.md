@@ -4,3 +4,4 @@
 
 #### Dependencies:
 	- SQLAlchemy
+	- Flask
