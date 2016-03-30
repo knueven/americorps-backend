@@ -8,7 +8,7 @@ from sqlalchemy import exc
 #			vhours=None, neighborhood=None, interests=None, 
 #			skills=None, education=None, availability=None, events=None
 
-    class VolunteerTests(unittest.TestCase):
+class VolunteerTests(unittest.TestCase):
 
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
@@ -50,21 +50,21 @@ from sqlalchemy import exc
                          'Snell rhymes with hell', 'Male', 0, "Back Bay", "Teaching", "Teaching", "College",
                          "Mondays @ 3pm - 6pm", "")         
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        self.assertTrue(joey.name == 'Joey Wood' and
-                        joey.email == 'wood.jos@husky.neu.edu' and
-                        joey.passwordhash == 'lit' and
-                        joey.phone == '3015559721' and
-                        joey.last_activity == '03/26/16' and
-			joey.birthdate == '05/26/1990' and
-                        joey.about == 'Snell rhymes with hell' and
-                        joey.gender == 'Male' and
-			joey.vhours == 0 and
-                        joey.neighborhood == "Back bay" and
-                        joey.interests == "Teaching" and 
-			joey.skills == "Teaching" and
-                        joey.education == "College" and
-                        joey.availability == "Mondays @ 3pm - 6pm" and
-                        joey.events == "")
+        self.assertTrue(joey.name == poey.name and
+                        joey.email == poey.email and
+                        joey.passwordhash == poey.passwordhash and
+                        joey.phone == poey.phone and
+                        joey.last_activity == poey.last_activity and
+			joey.birthdate == poey.birthdate and
+                        joey.about == poey.about and
+                        joey.gender == poey.gender and
+			joey.vhours == poey.vhours and
+                        joey.neighborhood == poey.neighborhood and
+                        joey.interests == poey.interests and 
+			joey.skills == poey.skills and
+                        joey.education == poey.education and
+                        joey.availability == poey.availability and
+                        joey.events == poey.events)
 
     # checks if the volunteer can be queried by email
     def test_queryEmail(self):
@@ -73,21 +73,21 @@ from sqlalchemy import exc
                          'Snell rhymes with hell', 'Male', 0, "Back Bay", "Teaching", "Teaching", "College",
                          "Mondays @ 3pm - 6pm", "")         
         poey = session.query(Volunteer).filter_by(email='wood.jos@husky.neu.edu').first()
-        self.assertTrue(joey.name == 'Joey Wood' and
-                        joey.email == 'wood.jos@husky.neu.edu' and
-                        joey.passwordhash == 'lit' and
-                        joey.phone == '3015559721' and
-                        joey.last_activity == '03/26/16' and
-			joey.birthdate == '05/26/1990' and
-                        joey.about == 'Snell rhymes with hell' and
-                        joey.gender == 'Male' and
-			joey.vhours == 0 and
-                        joey.neighborhood == "Back bay" and
-                        joey.interests == "Teaching" and 
-			joey.skills == "Teaching" and
-                        joey.education == "College" and
-                        joey.availability == "Mondays @ 3pm - 6pm" and
-                        joey.events == "")
+        self.assertTrue(joey.name == poey.name and
+                        joey.email == poey.email and
+                        joey.passwordhash == poey.passwordhash and
+                        joey.phone == poey.phone and
+                        joey.last_activity == poey.last_activity and
+			joey.birthdate == poey.birthdate and
+                        joey.about == poey.about and
+                        joey.gender == poey.gender and
+			joey.vhours == poey.vhours and
+                        joey.neighborhood == poey.neighborhood and
+                        joey.interests == poey.interests and 
+			joey.skills == poey.skills and
+                        joey.education == poey.education and
+                        joey.availability == poey.availability and
+                        joey.events == poey.events)
 
     # checks if the volunteer can be queried by phone
     def test_queryPhone(self):
@@ -96,21 +96,21 @@ from sqlalchemy import exc
                          'Snell rhymes with hell', 'Male', 0, "Back Bay", "Teaching", "Teaching", "College",
                          "Mondays @ 3pm - 6pm", "")         
         poey = session.query(Volunteer).filter_by(phone='3015559721').first()
-        self.assertTrue(joey.name == 'Joey Wood' and
-                        joey.email == 'wood.jos@husky.neu.edu' and
-                        joey.passwordhash == 'lit' and
-                        joey.phone == '3015559721' and
-                        joey.last_activity == '03/26/16' and
-			joey.birthdate == '05/26/1990' and
-                        joey.about == 'Snell rhymes with hell' and
-                        joey.gender == 'Male' and
-			joey.vhours == 0 and
-                        joey.neighborhood == "Back bay" and
-                        joey.interests == "Teaching" and 
-			joey.skills == "Teaching" and
-                        joey.education == "College" and
-                        joey.availability == "Mondays @ 3pm - 6pm" and
-                        joey.events == "")
+        self.assertTrue(joey.name == poey.name and
+                        joey.email == poey.email and
+                        joey.passwordhash == poey.passwordhash and
+                        joey.phone == poey.phone and
+                        joey.last_activity == poey.last_activity and
+			joey.birthdate == poey.birthdate and
+                        joey.about == poey.about and
+                        joey.gender == poey.gender and
+			joey.vhours == poey.vhours and
+                        joey.neighborhood == poey.neighborhood and
+                        joey.interests == poey.interests and 
+			joey.skills == poey.skills and
+                        joey.education == poey.education and
+                        joey.availability == poey.availability and
+                        joey.events == poey.events)
 
 
     # # Email is valid
