@@ -28,9 +28,9 @@ class VolunteerTests(unittest.TestCase):
                         joey.interests == "Teaching" and 
 			joey.skills == "Teaching" and
                         joey.education == "College" and
-                        joey.availability == "Mondays @ 3pm - 6pm" and
+                        joey.availability == "Mondays @ 3pm - 6pm")
                         #joey.events == ""
-                        )
+                        
 
     #test object write to the database.    
     def test_db_write(self):
@@ -68,9 +68,9 @@ class VolunteerTests(unittest.TestCase):
                         joey.interests == poey.interests and 
 			joey.skills == poey.skills and
                         joey.education == poey.education and
-                        joey.availability == poey.availability and
+                        joey.availability == poey.availability)
 #                        joey.events == poey.events
-                        )
+                        
 
     # checks if the volunteer can be queried by email
     def test_queryEmail(self):
@@ -93,9 +93,9 @@ class VolunteerTests(unittest.TestCase):
                         joey.interests == poey.interests and 
 			joey.skills == poey.skills and
                         joey.education == poey.education and
-                        joey.availability == poey.availability and
+                        joey.availability == poey.availability)
  #                       joey.events == poey.events
-                        )
+                        
 
     # checks if the volunteer can be queried by phone
     def test_queryPhone(self):
@@ -118,9 +118,9 @@ class VolunteerTests(unittest.TestCase):
                         joey.interests == poey.interests and 
 			joey.skills == poey.skills and
                         joey.education == poey.education and
-                        joey.availability == poey.availability and
+                        joey.availability == poey.availability)
   #                      joey.events == poey.events
-                        )
+                        
 
 
     # # Email is valid
