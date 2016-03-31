@@ -1,3 +1,4 @@
+from enum import Enum
 
 class DaysEnum(Enum):
 	monday = "Monday"
@@ -68,7 +69,7 @@ class NeighborhoodsEnum(Enum):
 	westroxbury = "West Roxbury"
 	greater = "Greater Boston Area/Outside City"
 
-	class EducationEnum(Enum):
+class EducationEnum(Enum):
 	lesshigh = "Less than High School"
 	highschool = "High School diploma or equivalent"
 	somecoll = "Some college, no degree"
