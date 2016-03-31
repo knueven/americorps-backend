@@ -14,4 +14,4 @@ def setup():
 	Base.metadata.create_all(database_engine)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=config.isDev)
