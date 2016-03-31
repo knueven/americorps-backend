@@ -15,21 +15,22 @@ class VolunteerTests(unittest.TestCase):
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
                          bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
                          availability="Mondays @ 3pm - 6pm")
-        self.assertTrue(joey.name == 'Joey Wood' and
-                        joey.email == 'wood.jos@husky.neu.edu' and
-                        joey.passwordhash == 'lit' and
-                        joey.phone == '3015559721' and
-			#joey.birthdate == '05/26/1990' and
-                        joey.permissions == "volunteer")
-                        #joey.bio == 'Snell rhymes with hell' and
-                        #joey.gender == 'Male' and
-			#joey.vhours == 0 and
-                        #joey.neighborhood == "Back Bay" and
-                        #joey.interests == "Teaching" and 
-			#joey.skills == "Teaching" and
-                        #joey.education == "College" and
-                        #joey.availability == "Mondays @ 3pm - 6pm")
-                        #joey.events == ""
+        self.assertTrue(joey.name == 'Joey Wood')
+        self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
+        self.assertTrue(joey.passwordhash == 'lit')
+        self.assertTrue(joey.phone == '3015559721')
+        #self.assertTrue(joey.last_active == )
+	self.assertTrue(joey.birthdate == '05/26/1990')
+        self.assertTrue(joey.permissions == 'volunteer')
+        self.assertTrue(joey.bio == 'Snell rhymes with hell')
+        self.assertTrue(joey.gender == 'Male')
+	self.assertTrue(joey.vhours == 0)
+        self.assertTrue(joey.neighborhood == 'Back Bay')
+        self.assertTrue(joey.interests == "Teaching") 
+	self.assertTrue(joey.skills == "Teaching")
+        self.assertTrue(joey.education == 'College')
+        self.assertTrue(joey.availability == 'Mondats @ 3pm - 6pm')
+        #self.assertTrue(joey.events == )
                         
 
     #test object write to the database.    
@@ -54,22 +55,22 @@ class VolunteerTests(unittest.TestCase):
                          bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
                          availability="Mondays @ 3pm - 6pm", events="")         
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        self.assertTrue(joey.name == poey.name and
-                        joey.email == poey.email and
-                        joey.passwordhash == poey.passwordhash and
-                        joey.phone == poey.phone and
-                        joey.last_active == poey.last_active and
-			#joey.birthdate == poey.birthdate and
-                        joey.permissions == poey.permissions)
-                        #joey.bio == poey.bio and
-                        #joey.gender == poey.gender and
-			#joey.vhours == poey.vhours and
-                        #joey.neighborhood == poey.neighborhood and
-                        #joey.interests == poey.interests and 
-			#joey.skills == poey.skills and
-                        #joey.education == poey.education and
-                        #joey.availability == poey.availability)
-#                        joey.events == poey.events
+        self.assertTrue(joey.name == poey.name)
+        self.assertTrue(joey.email == poey.email)
+        self.assertTrue(joey.passwordhash == poey.passwordhash)
+        self.assertTrue(joey.phone == poey.phone)
+        self.assertTrue(joey.last_active == poey.last_active)
+	self.assertTrue(joey.birthdate == poey.birthdate)
+        self.assertTrue(joey.permissions == poey.permissions)
+        self.assertTrue(joey.bio == poey.bio)
+        self.assertTrue(joey.gender == poey.gender)
+	self.assertTrue(joey.vhours == poey.vhours)
+        self.assertTrue(joey.neighborhood == poey.neighborhood)
+        self.assertTrue(joey.interests == poey.interests) 
+	self.assertTrue(joey.skills == poey.skills)
+        self.assertTrue(joey.education == poey.education)
+        self.assertTrue(joey.availability == poey.availability)
+        self.assertTrue(joey.events == poey.events)
                         
 
     # checks if the volunteer can be queried by email
@@ -79,22 +80,22 @@ class VolunteerTests(unittest.TestCase):
                          bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
                          availability="Mondays @ 3pm - 6pm", events="")         
         poey = session.query(Volunteer).filter_by(email='wood.jos@husky.neu.edu').first()
-        self.assertTrue(joey.name == poey.name and
-                        joey.email == poey.email and
-                        joey.passwordhash == poey.passwordhash and
-                        joey.phone == poey.phone and
-                        joey.last_active == poey.last_active and
-			#joey.birthdate == poey.birthdate and
-                        joey.permissions == poey.permissions)
-                        #joey.bio == poey.bio and
-                        #joey.gender == poey.gender and
-			#joey.vhours == poey.vhours and
-                        #joey.neighborhood == poey.neighborhood and
-                        #joey.interests == poey.interests and 
-			#joey.skills == poey.skills and
-                        #joey.education == poey.education and
-                        #joey.availability == poey.availability)
- #                       joey.events == poey.events
+        self.assertTrue(joey.name == poey.name)
+        self.assertTrue(joey.email == poey.email)
+        self.assertTrue(joey.passwordhash == poey.passwordhash)
+        self.assertTrue(joey.phone == poey.phone)
+        self.assertTrue(joey.last_active == poey.last_active)
+	self.assertTrue(joey.birthdate == poey.birthdate)
+        self.assertTrue(joey.permissions == poey.permissions)
+        self.assertTrue(joey.bio == poey.bio)
+        self.assertTrue(joey.gender == poey.gender)
+	self.assertTrue(joey.vhours == poey.vhours)
+        self.assertTrue(joey.neighborhood == poey.neighborhood)
+        self.assertTrue(joey.interests == poey.interests) 
+	self.assertTrue(joey.skills == poey.skills)
+        self.assertTrue(joey.education == poey.education)
+        self.assertTrue(joey.availability == poey.availability)
+        self.assertTrue(joey.events == poey.events)
                         
 
     # checks if the volunteer can be queried by phone
@@ -104,22 +105,22 @@ class VolunteerTests(unittest.TestCase):
                          bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
                          availability="Mondays @ 3pm - 6pm", events="")         
         poey = session.query(Volunteer).filter_by(phone='3015559721').first()
-        self.assertTrue(joey.name == poey.name and
-                        joey.email == poey.email and
-                        joey.passwordhash == poey.passwordhash and
-                        joey.phone == poey.phone and
-                        joey.last_active == poey.last_active and
-			#joey.birthdate == poey.birthdate and
-                        joey.permissions == poey.permissions)
-                        #joey.bio == poey.bio and
-                        #joey.gender == poey.gender and
-			#joey.vhours == poey.vhours and
-                        #joey.neighborhood == poey.neighborhood and
-                        #joey.interests == poey.interests and 
-			#joey.skills == poey.skills and
-                        #joey.education == poey.education and
-                        #joey.availability == poey.availability)
-  #                      joey.events == poey.events
+        self.assertTrue(joey.name == poey.name)
+        self.assertTrue(joey.email == poey.email)
+        self.assertTrue(joey.passwordhash == poey.passwordhash)
+        self.assertTrue(joey.phone == poey.phone)
+        self.assertTrue(joey.last_active == poey.last_active)
+	self.assertTrue(joey.birthdate == poey.birthdate)
+        self.assertTrue(joey.permissions == poey.permissions)
+        self.assertTrue(joey.bio == poey.bio)
+        self.assertTrue(joey.gender == poey.gender)
+	self.assertTrue(joey.vhours == poey.vhours)
+        self.assertTrue(joey.neighborhood == poey.neighborhood)
+        self.assertTrue(joey.interests == poey.interests) 
+	self.assertTrue(joey.skills == poey.skills)
+        self.assertTrue(joey.education == poey.education)
+        self.assertTrue(joey.availability == poey.availability)
+        self.assertTrue(joey.events == poey.events)
                         
 
 
