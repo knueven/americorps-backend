@@ -19,16 +19,16 @@ class VolunteerTests(unittest.TestCase):
                         joey.email == 'wood.jos@husky.neu.edu' and
                         joey.passwordhash == 'lit' and
                         joey.phone == '3015559721' and
-			joey.birthdate == '05/26/1990' and
-                        joey.permissions == "volunteer" and
-                        joey.bio == 'Snell rhymes with hell' and
-                        joey.gender == 'Male' and
-			joey.vhours == 0 and
-                        joey.neighborhood == "Back Bay" and
-                        joey.interests == "Teaching" and 
-			joey.skills == "Teaching" and
-                        joey.education == "College" and
-                        joey.availability == "Mondays @ 3pm - 6pm")
+			#joey.birthdate == '05/26/1990' and
+                        joey.permissions == "volunteer")
+                        #joey.bio == 'Snell rhymes with hell' and
+                        #joey.gender == 'Male' and
+			#joey.vhours == 0 and
+                        #joey.neighborhood == "Back Bay" and
+                        #joey.interests == "Teaching" and 
+			#joey.skills == "Teaching" and
+                        #joey.education == "College" and
+                        #joey.availability == "Mondays @ 3pm - 6pm")
                         #joey.events == ""
                         
 
@@ -59,16 +59,16 @@ class VolunteerTests(unittest.TestCase):
                         joey.passwordhash == poey.passwordhash and
                         joey.phone == poey.phone and
                         joey.last_active == poey.last_active and
-			joey.birthdate == poey.birthdate and
-                        joey.permissions == poey.permissions and
-                        joey.bio == poey.bio and
-                        joey.gender == poey.gender and
-			joey.vhours == poey.vhours and
-                        joey.neighborhood == poey.neighborhood and
-                        joey.interests == poey.interests and 
-			joey.skills == poey.skills and
-                        joey.education == poey.education and
-                        joey.availability == poey.availability)
+			#joey.birthdate == poey.birthdate and
+                        joey.permissions == poey.permissions)
+                        #joey.bio == poey.bio and
+                        #joey.gender == poey.gender and
+			#joey.vhours == poey.vhours and
+                        #joey.neighborhood == poey.neighborhood and
+                        #joey.interests == poey.interests and 
+			#joey.skills == poey.skills and
+                        #joey.education == poey.education and
+                        #joey.availability == poey.availability)
 #                        joey.events == poey.events
                         
 
@@ -84,16 +84,16 @@ class VolunteerTests(unittest.TestCase):
                         joey.passwordhash == poey.passwordhash and
                         joey.phone == poey.phone and
                         joey.last_active == poey.last_active and
-			joey.birthdate == poey.birthdate and
-                        joey.permissions == poey.permissions and
-                        joey.bio == poey.bio and
-                        joey.gender == poey.gender and
-			joey.vhours == poey.vhours and
-                        joey.neighborhood == poey.neighborhood and
-                        joey.interests == poey.interests and 
-			joey.skills == poey.skills and
-                        joey.education == poey.education and
-                        joey.availability == poey.availability)
+			#joey.birthdate == poey.birthdate and
+                        joey.permissions == poey.permissions)
+                        #joey.bio == poey.bio and
+                        #joey.gender == poey.gender and
+			#joey.vhours == poey.vhours and
+                        #joey.neighborhood == poey.neighborhood and
+                        #joey.interests == poey.interests and 
+			#joey.skills == poey.skills and
+                        #joey.education == poey.education and
+                        #joey.availability == poey.availability)
  #                       joey.events == poey.events
                         
 
@@ -109,16 +109,16 @@ class VolunteerTests(unittest.TestCase):
                         joey.passwordhash == poey.passwordhash and
                         joey.phone == poey.phone and
                         joey.last_active == poey.last_active and
-			joey.birthdate == poey.birthdate and
-                        joey.permissions == poey.permissions and
-                        joey.bio == poey.bio and
-                        joey.gender == poey.gender and
-			joey.vhours == poey.vhours and
-                        joey.neighborhood == poey.neighborhood and
-                        joey.interests == poey.interests and 
-			joey.skills == poey.skills and
-                        joey.education == poey.education and
-                        joey.availability == poey.availability)
+			#joey.birthdate == poey.birthdate and
+                        joey.permissions == poey.permissions)
+                        #joey.bio == poey.bio and
+                        #joey.gender == poey.gender and
+			#joey.vhours == poey.vhours and
+                        #joey.neighborhood == poey.neighborhood and
+                        #joey.interests == poey.interests and 
+			#joey.skills == poey.skills and
+                        #joey.education == poey.education and
+                        #joey.availability == poey.availability)
   #                      joey.events == poey.events
                         
 
