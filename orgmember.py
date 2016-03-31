@@ -49,8 +49,9 @@ class OrgMember(User):
 
         # create a volunteer from a json blob
 
-    def createMember(json):
-        o = OrgMember.fromdict(json)
+    def createMember(json1):
+        json_dict = json.loads(json1)
+        o = OrgMember.fromdict(json_dict)
         s = Session()
         try:
             s.add(o)

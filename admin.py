@@ -34,8 +34,9 @@ class Admin(User):
         self.gender = gender
 
     #create an admin from a json blob
-    def createAdmin(json):
-        a = Admin.fromdict(json)
+    def createAdmin(json1):
+        json_dict = json.loads(json1)
+        a = Admin.fromdict(json_dict)
         s = Session()
         try:
             s.add(a)

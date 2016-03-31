@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relation, sessionmaker
 from db import Base, Session
 import organization
+import json
 
 
 class Event(Base):
@@ -21,6 +22,15 @@ class Event(Base):
     skills = Column(String(255), nullable=False)
     org = Column(Integer, ForeignKey('organizations.id'), nullable=False)
     capacity = Column(Integer, nullable=True)
+
+    @classmethod
+    def fromdict(cls, d):
+        allowed = ('name', 'address', 'city', 'state', 'zip', 'about', 
+                   'start_at', 'posted_at', 'duration', 'interests', 'skills',
+                   'org', 'capacity')
+        df = {k: e for k,e in d.items() if k in allowed}
+        return cls(**df)
+
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
@@ -49,4 +59,18 @@ class Event(Base):
             raise #exception of some sort
         finally:
             session.close()
+
+     # create an event from a json string
+    def createEvent(json1):
+        json_dict = json.loads(json1)
+        e = Event.fromdict(json_dict)
+        s = Session()
+        try:
+            s.add(e)
+            s.commit()
+        except:
+            return False
+        finally:
+            s.close()
+        return True
 

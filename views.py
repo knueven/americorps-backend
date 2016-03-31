@@ -1,6 +1,7 @@
 import volunteer
 import admin
 import orgmember
+import event
 from flask import request, render_template
 from flask.ext.api import status
 from db import Base, Session
@@ -33,3 +34,15 @@ def user():
 
 	if request.method == 'GET':
 		return content, status.HTTP_200_OK
+
+@app.route('/event', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def event():
+ 	content = {'events': 'test'}
+ 	success = {'status': 'event created'}
+ 	error = {'error': "Error in JSON/SQL syntax"}
+ 	if request.method == 'POST':
+ 		data = request.json
+ 		if event.Events.creatEvent(data):
+ 			return success, status.HTTP_200_OK
+ 		else:
+ 			return error, HTTP_500_INTERNAL_SERVER_ERROR

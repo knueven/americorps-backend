@@ -15,6 +15,13 @@ class Organization(Base):
     phone = Column(String(15), nullable=False)
     activity = Column(String(255), nullable=False)
 
+    @classmethod
+    def fromdict(cls, d):
+        allowed = ('name', 'address', 'city', 'state', 'zip', 'mission', 
+                   'email', 'phone', 'activity')
+        df = {k: e for k,e in d.items() if k in allowed}
+        return cls(**df)
+
     # all these fields are strings
     def __init__(self, name, address, city, state,
                  zip, missionStatement, email, phone, lastActivity):
@@ -51,3 +58,17 @@ class Organization(Base):
             raise ValueError("id not found")
         finally:
             session.close()
+
+   # create an event from a json string
+    def createOrganization(json1):
+        json_dict = json.loads(json1)
+        e = Organization.fromdict(json_dict)
+        s = Session()
+        try:
+            s.add(e)
+            s.commit()
+        except:
+            return False
+        finally:
+            s.close()
+        return True
