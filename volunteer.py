@@ -27,7 +27,7 @@ class Volunteer(User):
 			df = {k : v for k, v in d.items() if k in allowed}
 			return cls(**df)
 
-		def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(),
+		def __init__(self, name, email, passwordhash, phone, 
 			birthdate=None, bio=None, gender=None,
 			vhours=None, neighborhood=None, interests=None, 
 			skills=None, education=None, availability=None, events=None):
@@ -35,7 +35,7 @@ class Volunteer(User):
 			self.email = email
 			self.passwordhash = passwordhash
 			self.phone = phone
-			self.last_active = last_active
+			self.last_active = datetime.now()
 			self.birthdate = birthdate
 			self.permissions = 'volunteer'
 			self.bio = bio
