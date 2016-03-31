@@ -12,9 +12,9 @@ class VolunteerTests(unittest.TestCase):
 
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
                          bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
-                         availability="Mondays @ 3pm - 6pm", events="")
+                         availability="Mondays @ 3pm - 6pm")
         self.assertTrue(joey.name == 'Joey Wood' and
                         joey.email == 'wood.jos@husky.neu.edu' and
                         joey.passwordhash == 'lit' and
@@ -29,11 +29,12 @@ class VolunteerTests(unittest.TestCase):
 			joey.skills == "Teaching" and
                         joey.education == "College" and
                         joey.availability == "Mondays @ 3pm - 6pm" and
-                        joey.events == "")
+                        #joey.events == ""
+                        )
 
     #test object write to the database.    
     def test_db_write(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
                          bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
                          availability="Mondays @ 3pm - 6pm", events="")
         s = Session()
@@ -68,7 +69,8 @@ class VolunteerTests(unittest.TestCase):
 			joey.skills == poey.skills and
                         joey.education == poey.education and
                         joey.availability == poey.availability and
-                        joey.events == poey.events)
+#                        joey.events == poey.events
+                        )
 
     # checks if the volunteer can be queried by email
     def test_queryEmail(self):
@@ -92,7 +94,8 @@ class VolunteerTests(unittest.TestCase):
 			joey.skills == poey.skills and
                         joey.education == poey.education and
                         joey.availability == poey.availability and
-                        joey.events == poey.events)
+ #                       joey.events == poey.events
+                        )
 
     # checks if the volunteer can be queried by phone
     def test_queryPhone(self):
@@ -116,12 +119,13 @@ class VolunteerTests(unittest.TestCase):
 			joey.skills == poey.skills and
                         joey.education == poey.education and
                         joey.availability == poey.availability and
-                        joey.events == poey.events)
+  #                      joey.events == poey.events
+                        )
 
 
     # # Email is valid
     # def test_phone_number_symbol(self):
-    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'Email must be vald')
@@ -130,63 +134,63 @@ class VolunteerTests(unittest.TestCase):
 
     # # Phone is a string of 10 ints
     # def test_phone_number_symbol(self):
-    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'Phone numbers must be a string of 10 integers')
 
      # # Phone is a string of 10 ints
     # def test_phone_number<10(self):
-    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'Phone numbers must be a string of 10 integers')
 
    # Phone is a string of 10 ints
     # def test_phone_number>10(self):
-    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'Phone numbers must be a string of 10 integers')
 
     # # joey.last_active_is a string - should be in the form mm/dd/yyyy, hh:mm
     # def test_last_active_format0(self):
-    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #    joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'last active must be in the form mm/dd/yyyy hh:mm')
 
     # # joey.last_active_is a string - should be in the form mm/dd/yyyy, hh:mm
     # def test_last_active_format1(self):
-    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'last active must be in the form mm/dd/yyyy hh:mm')
 
     # # joey.last_active_must be in the past
     # def test_last_active_past(self):
-    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
-                         bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
-                         availability="Mondays @ 3pm - 6pm", events="")
+    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990'
+    #                    bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
+    #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'last active must be in the form mm/dd/yyyy hh:mm')
 
     # # joey.birthday is a string - should be in form mm/dd/yyyy
     # def test_birthday_format0(self):
-    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'birthday must be in the form mm/dd/yyyy')
 
     # # joey.birthday is a string - should be in the form mm/dd/yyyy
     # def test_birthday_format1(self):
-    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'birthday must be in the form mm/dd/yyyy')
 
     # # joey.birthday is a string of letters - should be in the past
     # def test_birthday_past(self):
-    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '03/26/16 1:00', '05/26/1990',
+    #     joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
     #                     bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
     #                     availability="Mondays @ 3pm - 6pm", events="")
     #     self.assertRaises(ValueError, 'birthday must be in the past')
