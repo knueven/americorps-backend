@@ -46,4 +46,13 @@ class Admin(User):
             s.close()
         return True
 
+    def getAdmin(self, id):
+        s = Session()
+        content = s.query(Admin).filter_by(id = id).first()
+        s.close()
+        if content:
+            return content
+        else:
+            raise ValueError("user does not exist")
+
 

@@ -7,6 +7,7 @@ import json
 import itertools
 from datetime import datetime
 
+
 class Volunteer(User):
 		__tablename__ = "volunteers"
 		__mapper_args__ = {'polymorphic_identity' : 'volunteer'}
@@ -54,15 +55,25 @@ class Volunteer(User):
 			self.availability = availability
 			self.events = events
 
-		#create a volunteer from a json blob
-		def createVolunteer(json):
-			v = Volunteer.fromdict(json)
-			s = Session()
-			try:
-				s.add(v)
-				s.commit()
-			except:
-				return False
-			finally:
-				s.close()
-			return True
+		# create a volunteer from a json blob
+    def createVolunteer(json):
+        v = Volunteer.fromdict(json)
+        s = Session()
+        try:
+            s.add(v)
+            s.commit()
+        except:
+            return False
+        finally:
+            s.close()
+        return True
+
+    # take in a user id, grab the volunteer from the database and return it
+    def getVolunteer(self, id):
+        s = Session()
+        content = s.query(Volunteer).filter_by(id = id).first()
+        s.close()
+        if content:
+            return content
+        else:
+            raise ValueError("user does not exist")
