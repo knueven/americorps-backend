@@ -12,9 +12,7 @@ class VolunteerTests(unittest.TestCase):
 
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
-                         bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
-                         availability="Mondays @ 3pm - 6pm")
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990', bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College", availability="Mondays @ 3pm - 6pm")
         self.assertTrue(joey.name == 'Joey Wood')
         self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
         self.assertTrue(joey.passwordhash == 'lit')
@@ -25,11 +23,11 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.bio == 'Snell rhymes with hell')
         self.assertTrue(joey.gender == 'Male')
         self.assertTrue(joey.vhours == 0)
-        self.assertTrue(joey.neighborhood == 'Back Bay')
+        self.assertTrue(joey.neighborhood == "Back Bay")
         self.assertTrue(joey.interests == "Teaching") 
         self.assertTrue(joey.skills == "Teaching")
         self.assertTrue(joey.education == 'College')
-        self.assertTrue(joey.availability == 'Mondats @ 3pm - 6pm')
+        self.assertTrue(joey.availability == 'Mondays @ 3pm - 6pm')
         #self.assertTrue(joey.events == )
                         
 

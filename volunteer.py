@@ -21,7 +21,7 @@ class Volunteer(User):
 
 		@classmethod
 		def fromdict(cls, d):
-			allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
+			allowed = ('name', 'email', 'passwordhash', 'phone', 'birthdate', 
 				'bio', 'gender', 'vhours', 'neighborhood', 'interests', 'skills', 
 				'education', 'availabilty', 'events')
 			df = {k : v for k, v in d.items() if k in allowed}
@@ -41,7 +41,7 @@ class Volunteer(User):
 			self.bio = bio
 			self.gender = gender
 			self.vhours = vhours
-			self.neighboorhood = neighborhood
+			self.neighborhood = neighborhood
 			self.interests = interests
 			self.skills = skills
 			self.education = education
