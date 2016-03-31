@@ -16,7 +16,7 @@ def setup():
 	Base.metadata.create_all(database_engine)
 
 if __name__ == '__main__':
-	if sys.argv[1]:
+	if len(sys.argv) > 1:
 		setup()
 		sys.exit()
 	else:
