@@ -10,7 +10,20 @@ class VolunteerSkills(Base):
 	__tablename__ = 'volunteerSkills'
 
 	id = Column(Integer, primary_key=True)
-	skill = Column(SkillsEnum, nullable=False)
+	skill = Column(Enum("Public Relations/Public Speaking",
+						"Teaching/Tutoring",
+						"IT/Computer",
+						"Administrative",
+						"Legal",
+						"Coaching/Mentoring",
+						"Handiwork",
+						"Fine Arts",
+						"TEFL/TESOL",
+						"Writing/Editing",
+						"Foreign Language",
+						"Event Planning",
+						"Management",
+						"Sports/Recreation", name="skills_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
 	volunteer = relationship("Volunteer", back_populates="volunteerSkills")

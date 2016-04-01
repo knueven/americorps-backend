@@ -10,7 +10,8 @@ class VolunteerInterests(Base):
 	__tablename__ = 'volunteerInterests'
 
 	id = Column(Integer, primary_key=True)
-	interest = Column(InterestsEnum, nullable=False)
+	interest = Column(Enum("Youth","Seniors","Education","Environment/Sustainability","Health","Arts and Culture","Financial Empowerment","Veterans","Immigration","Animals","Mentoring","Homeless/Housing","Lesbian, gay, bisexual, transgender","Domestic Violence","Hunger","People with Disabilities",
+				name="interests_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
 	volunteer = relationship("Volunteer", back_populates="volunteerInterests")

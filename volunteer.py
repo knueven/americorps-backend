@@ -18,7 +18,7 @@ class Volunteer(User):
     __mapper_args__ = {'polymorphic_identity' : 'volunteer'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the Volunteer will have all User fields
-    education = Column(EducationEnum) 
+    education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree","Postsecondary non-degree award","Associate's degree", "Bachelor's degree", "Master's degree", "Doctoral or professional degree", name="education_enum")) 
 
     neighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
         back_populates='volunteers') #enum

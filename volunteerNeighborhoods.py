@@ -9,7 +9,30 @@ class VolunteerNeighborhoods(Base):
 	__tablename__ = 'volunteerNeighborhoods'
 
 	id = Column(Integer, primary_key=True)
-	neighborhood = Column('neighborhood',NeighborhoodsEnum, nullable=False)
+	neighborhood = Column(Enum("Allston",
+								"Back Bay",
+								"Bay Village",
+								"Beacon Hill",
+								"Brighton",
+								"Charlestown",
+								"Chinatown/Leather District",
+								"Dorchester",
+								"Downtown",
+								"East Boston",
+								"Fenway Kenmore",
+								"Hyde Park",
+								"Jamaica Plain",
+								"Mattapan",
+								"Mid Dorchester",
+								"Mission Hill",
+								"North End",
+								"Roslindale",
+								"Roxbury",
+								"South Boston",
+								"South End",
+								"West End",
+								"West Roxbury",
+								"Greater Boston Area/Outside City", name="neighborhoods_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
 	volunteer = relationship("Volunteer", back_populates="volunteerNeighborhoods")

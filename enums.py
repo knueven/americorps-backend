@@ -28,6 +28,7 @@ class InterestsEnum(Enum):
 	hunger = "Hunger"
 	disabilities = "People with Disabilities"
 
+
 class SkillsEnum(Enum):
 	public = "Public Relations/Public Speaking"
 	teaching = "Teaching/Tutoring"
@@ -79,3 +80,5 @@ class EducationEnum(Enum):
 	bachelor = "Bachelor's degree"
 	master = "Master's degree"
 	doctoral = "Doctoral or professional degree"
+
+

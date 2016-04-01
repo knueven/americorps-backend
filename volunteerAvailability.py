@@ -12,7 +12,7 @@ class VolunteerAvailability(Base):
 	__tablename__ = 'volunteerAvailability'
 
 	id = Column(Integer, primary_key=True)
-	day = Column(DaysEnum, nullable=False)
+	day = Column(Enum("Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", name="days_enum"), nullable=False)
 	voluntee_id = Column(Integer, ForeignKey('volunteers.id'))
 
 	volunteer = relationship("Volunteer", back_populates="volunteerAvailability")
