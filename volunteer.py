@@ -8,22 +8,25 @@ import itertools
 from datetime import datetime
 import enums
 from enums import EducationEnum
-
+from volunteerNeighborhoods import VolunteerNeighborhoods
+from volunteerSkills import VolunteerSkills
+from volunteerInterests import VolunteerInterests
+from volunteerAvailability import VolunteerAvailability
 
 class Volunteer(User):
     __tablename__ = "volunteers"
     __mapper_args__ = {'polymorphic_identity' : 'volunteer'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the Volunteer will have all User fields
-    education = Column(Enum(EducationEnum)) 
+    education = Column(EducationEnum) 
 
     neighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
-        back_populaters='volunteers') #enum
-    interests = relationship("VolunteerInterests", order_by=VolunteerInterets.id,
-        back_populaters='volunteers') #enum?
-    skills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populaters='volunteers')
+        back_populates='volunteers') #enum
+    interests = relationship("VolunteerInterests", order_by=VolunteerInterests.id,
+        back_populates='volunteers') #enum?
+    skills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
     availability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
-        back_populaters='volunteers') #this will need some discussion
+        back_populates='volunteers') #this will need some discussion
 
     vhours = Column(Integer) #will be a seperate table later, could be merged into events
     events = Column(String(255)) #will need to foreignkey to another table later
