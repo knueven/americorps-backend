@@ -53,7 +53,7 @@ class Event(Base):
     def updateEvent(self, event_id, update_data):
         session = Session()
         try:
-            session.query(events).filter_by(id=event_id).update(json.loads(update_data))
+            session.query(Event).filter_by(id=event_id).update(json.loads(update_data))
         except:
             session.rollback()
             raise #exception of some sort

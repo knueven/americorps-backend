@@ -10,6 +10,7 @@ import user
 import admin
 import organization
 import orgmember
+import event
 import sys
 import event
 
