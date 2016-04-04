@@ -12,7 +12,6 @@ import organization
 import orgmember
 import event
 import sys
-import event
 
 def setup():
 	Base.metadata.create_all(database_engine)

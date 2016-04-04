@@ -6,7 +6,7 @@ from flask import request, render_template
 from flask.ext.api import status
 from db import Base, Session
 from app import app
-
+from flask import json
 
 @app.route('/')
 def index():
@@ -42,7 +42,9 @@ def event():
  	error = {'error': "Error in JSON/SQL syntax"}
  	if request.method == 'POST':
  		data = request.json
- 		if event.Events.creatEvent(data):
+ 		if event.Event.createEvent(json_dict):
  			return success, status.HTTP_200_OK
  		else:
  			return error, HTTP_500_INTERNAL_SERVER_ERROR
+ 	if request.method == 'GET':
+ 		return content, status.HTTP_200_OK
