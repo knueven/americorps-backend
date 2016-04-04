@@ -56,11 +56,20 @@ class Volunteer(User):
         self.bio = bio
         self.gender = gender
         self.vhours = vhours
-        self.volunteerNeighboorhoods = [volunteerNeighborhoods]
-        self.volunteerInterests = [volunteerInterests]
-        self.volunteerSkills = [volunteerSkills]
+        self.volunteerNeighboorhoods = volunteerNeighborhoods
+        if volunteerInterests is None:
+            self.volunteerInterests = []
+        else:
+            self.volunteerInterests = volunteerInterests
+        if volunteerSkills is None:
+            self.volunteerSkils = []
+        else:
+            self.volunteerSkills = volunteerSkills
         self.education = education
-        self.volunteerAvailability = [volunteerAvailability]
+        if volunteerAvailability is None:
+            self.volunteerAvailability = []
+        else:
+            self.volunteerAvailability = volunteerAvailability
 
     # create a volunteer from a json blob
     def createVolunteer(json):

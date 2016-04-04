@@ -12,7 +12,9 @@ class VolunteerTests(unittest.TestCase):
 
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990', bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College", availability="Mondays @ 3pm - 6pm")
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         vhours=0, education="Some college, no degree")
         self.assertTrue(joey.name == 'Joey Wood')
         self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
         self.assertTrue(joey.passwordhash == 'lit')
@@ -23,19 +25,18 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.bio == 'Snell rhymes with hell')
         self.assertTrue(joey.gender == 'Male')
         self.assertTrue(joey.vhours == 0)
-        self.assertTrue(joey.neighborhood == "Back Bay")
-        self.assertTrue(joey.interests == "Teaching") 
-        self.assertTrue(joey.skills == "Teaching")
-        self.assertTrue(joey.education == 'College')
-        self.assertTrue(joey.availability == 'Mondays @ 3pm - 6pm')
-        #self.assertTrue(joey.events == )
-                        
+        #self.assertTrue(joey.neighborhoods.neighborhood == "Back Bay")
+        #self.assertTrue(joey.interests == "Teaching") 
+        #self.assertTrue(joey.skills == "Teaching")
+        self.assertTrue(joey.education == "Some college, no degree")
+        #self.assertTrue(joey.availability == 'Mondays @ 3pm - 6pm')
+
 
     #test object write to the database.    
     def test_db_write(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
-                         bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
-                         availability="Mondays @ 3pm - 6pm", events="")
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+                         birthdate='05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         vhours=0, education="Some college, no degree")
         s = Session()
         try:
             s.add(joey)
@@ -45,13 +46,12 @@ class VolunteerTests(unittest.TestCase):
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
-
-    # checks if the volunteer was added to the database after initialization
+# checks if the volunteer was added to the database after initialization
     def test_queryName(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
-                         bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
-                         availability="Mondays @ 3pm - 6pm", events="")         
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         vhours=0, education="Some college, no degree")        
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         self.assertTrue(joey.name == poey.name)
         self.assertTrue(joey.email == poey.email)
@@ -63,20 +63,20 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.bio == poey.bio)
         self.assertTrue(joey.gender == poey.gender)
         self.assertTrue(joey.vhours == poey.vhours)
-        self.assertTrue(joey.neighborhood == poey.neighborhood)
-        self.assertTrue(joey.interests == poey.interests) 
-        self.assertTrue(joey.skills == poey.skills)
+        #self.assertTrue(joey.neighborhoods == poey.neighborhoods)
+        #self.assertTrue(joey.interests == poey.interests) 
+        #self.assertTrue(joey.skills == poey.skills)
         self.assertTrue(joey.education == poey.education)
-        self.assertTrue(joey.availability == poey.availability)
-        self.assertTrue(joey.events == poey.events)
+        #self.assertTrue(joey.availability == poey.availability)
+        #self.assertTrue(joey.events == poey.events)
                         
 
     # checks if the volunteer can be queried by email
     def test_queryEmail(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
-                         bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
-                         availability="Mondays @ 3pm - 6pm", events="")         
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         vhours=0, education="Some college, no degree")
         poey = session.query(Volunteer).filter_by(email='wood.jos@husky.neu.edu').first()
         self.assertTrue(joey.name == poey.name)
         self.assertTrue(joey.email == poey.email)
@@ -88,20 +88,20 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.bio == poey.bio)
         self.assertTrue(joey.gender == poey.gender)
         self.assertTrue(joey.vhours == poey.vhours)
-        self.assertTrue(joey.neighborhood == poey.neighborhood)
-        self.assertTrue(joey.interests == poey.interests) 
-        self.assertTrue(joey.skills == poey.skills)
+        #self.assertTrue(joey.neighborhoods == poey.neighborhoods)
+        #self.assertTrue(joey.interests == poey.interests) 
+        #self.assertTrue(joey.skills == poey.skills)
         self.assertTrue(joey.education == poey.education)
-        self.assertTrue(joey.availability == poey.availability)
-        self.assertTrue(joey.events == poey.events)
+        #self.assertTrue(joey.availability == poey.availability)
+        #self.assertTrue(joey.events == poey.events)
                         
 
     # checks if the volunteer can be queried by phone
     def test_queryPhone(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', '05/26/1990',
-                         bio='Snell rhymes with hell', gender='Male', vhours=0, neighborhood="Back Bay", interests="Teaching", skills="Teaching", education="College",
-                         availability="Mondays @ 3pm - 6pm", events="")         
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         vhours=0, education="Some college, no degree")         
         poey = session.query(Volunteer).filter_by(phone='3015559721').first()
         self.assertTrue(joey.name == poey.name)
         self.assertTrue(joey.email == poey.email)
@@ -113,13 +113,14 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.bio == poey.bio)
         self.assertTrue(joey.gender == poey.gender)
         self.assertTrue(joey.vhours == poey.vhours)
-        self.assertTrue(joey.neighborhood == poey.neighborhood)
-        self.assertTrue(joey.interests == poey.interests) 
-        self.assertTrue(joey.skills == poey.skills)
+        #self.assertTrue(joey.neighborhoods == poey.neighborhoods)
+        #self.assertTrue(joey.interests == poey.interests) 
+        #self.assertTrue(joey.skills == poey.skills)
         self.assertTrue(joey.education == poey.education)
-        self.assertTrue(joey.availability == poey.availability)
-        self.assertTrue(joey.events == poey.events)
+        #self.assertTrue(joey.availability == poey.availability)
+        #self.assertTrue(joey.events == poey.events)
                         
+    
 
 
     # # Email is valid
@@ -208,6 +209,9 @@ class VolunteerTests(unittest.TestCase):
     #     session = Session()
     #     self.assertEqual(self.joey.skills, session.query(Skills).filter_by(name=self.joey.skills).first())
     #     session.close()
+
+        
+
 
 
 
