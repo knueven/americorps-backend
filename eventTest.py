@@ -66,7 +66,7 @@ class EventTests(unittest.TestCase):
 
 
     def test_create_event(self):
-        json = '{"name": "Event1","address": "1 something street", "city": "Boston", "state": "MA", "zip": "02115", "about": "ok", "start_at": "04/02/2016 13:00","posted_at": "03/27/2016 24:00:00","duration": 2, "interests": "stuff", "skills" : "sporty", "org": 1}'
+        json = {"name": "Event1","address": "1 something street", "city": "Boston", "state": "MA", "zip": "02115", "about": "ok", "start_at": "04/02/2016 13:00","posted_at": "03/27/2016 24:00:00","duration": 2, "interests": "stuff", "skills" : "sporty", "org": 1}
         try: 
             Event.createEvent(json)
         except exc.SQLAlchemyError:
