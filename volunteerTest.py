@@ -73,6 +73,7 @@ class VolunteerTests(unittest.TestCase):
 
     # checks if the volunteer can be queried by email
     def test_queryEmail(self):
+        
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
                          birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
