@@ -15,6 +15,7 @@ from volunteerAvailability import VolunteerAvailability
 from attendee import Attendee
 from event import Event
 from sqlalchemy import exc
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Volunteer(User):
     __tablename__ = "volunteers"
@@ -48,7 +49,7 @@ class Volunteer(User):
         volunteerSkills=None, education=None, volunteerAvailability=None):
         self.name = name
         self.email = email
-        self.passwordhash = passwordhash
+        self.set_password(passwordhash)
         self.phone = phone
         self.last_active = datetime.now()
         self.birthdate = birthdate
@@ -70,6 +71,12 @@ class Volunteer(User):
             self.volunteerAvailability = []
         else:
             self.volunteerAvailability = volunteerAvailability
+
+    def set_password(self, password):
+        self.passwordhash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.passwordhash, password)
 
     # create a volunteer from a json blob
     def createVolunteer(json):

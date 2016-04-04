@@ -25,13 +25,19 @@ class Admin(User):
         #will contain all these fields from user
         self.name = name
         self.email = email
-        self.passwordhash = passwordhash
+        self.set_password(passwordhash)
         self.phone = phone
         self.last_active = last_active
         self.master = master
         self.birthdate = birthdate
         self.bio = bio
         self.gender = gender
+
+    def set_password(self, password):
+        self.passwordhash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.passwordhash, password)
 
     #create an admin from a json blob
     def createAdmin(json):

@@ -105,7 +105,7 @@ class VolunteerTests(unittest.TestCase):
         poey = session.query(Volunteer).filter_by(phone='3015559721').first()
         self.assertTrue(joey.name == poey.name)
         self.assertTrue(joey.email == poey.email)
-        self.assertTrue(joey.passwordhash == poey.passwordhash)
+      #  self.assertTrue(joey.passwordhash == poey.passwordhash)
         self.assertTrue(joey.phone == poey.phone)
         #self.assertTrue(joey.last_active == poey.last_active)
         self.assertTrue(joey.birthdate == poey.birthdate)
@@ -119,6 +119,32 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.education == poey.education)
         #self.assertTrue(joey.availability == poey.availability)
         #self.assertTrue(joey.events == poey.events)
+
+    #unit test for password hashing
+    def test_password_hash(self):
+        session = Session()
+        vol = Volunteer('Test', '2234@gmail.com', 'lit', '3015559725',
+                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         vhours=0, education="Some college, no degree")  
+        try:
+            session.add(vol)
+            session.commit()
+            poey = session.query(Volunteer).filter_by(phone='3015559725').first()
+            self.assertTrue(vol.passwordhash != poey.passwordhash)
+            self.assertTrue(vol.check_password('lit'))
+            self.assertFalse(vol.check_password('lit2'))
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+
+        # vol = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559725',
+        #                  birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+        #                  vhours=0, education="Some college, no degree")  
+
+        
+     #   print(vol.passwordhash)
+       
                         
     
 

@@ -33,7 +33,7 @@ class OrgMember(User):
                  education=None, availability=None, events=None, org=None, poc=None):
         self.name = name
         self.email = email
-        self.passwordhash = passwordhash
+        self.set_password(passwordhash)
         self.phone = phone
         self.last_active = last_active
         self.birthdate = birthdate
@@ -47,6 +47,12 @@ class OrgMember(User):
         self.events = events
         self.org = org
         self.poc = poc
+
+    def set_password(self, password):
+        self.passwordhash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.passwordhash, password)
 
         # create a volunteer from a json blob
 
