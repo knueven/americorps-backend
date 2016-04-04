@@ -44,8 +44,8 @@ class Volunteer(User):
 
     def __init__(self, name, email, passwordhash, phone,
         birthdate=None, bio=None, gender=None,
-        vhours=None, neighborhoods=None, interests=None, 
-        skills=None, education=None, availability=None):
+        vhours=None, volunteerNeighborhoods=None, volunteerInterests=None, 
+        volunteerSkills=None, education=None, volunteerAvailability=None):
         self.name = name
         self.email = email
         self.passwordhash = passwordhash
@@ -56,11 +56,11 @@ class Volunteer(User):
         self.bio = bio
         self.gender = gender
         self.vhours = vhours
-        self.neighboorhoods = neighborhoods
-        self.volunteerInterests = interests
-        self.skills = skills
+        self.volunteerNeighboorhoods = [volunteerNeighborhoods]
+        self.volunteerInterests = [volunteerInterests]
+        self.volunteerSkills = [volunteerSkills]
         self.education = education
-        self.availability = availability
+        self.volunteerAvailability = [volunteerAvailability]
 
     # create a volunteer from a json blob
     def createVolunteer(json):
