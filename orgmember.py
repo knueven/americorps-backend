@@ -3,6 +3,7 @@ from db import Base, Session
 from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker
 from datetime import datetime
+from attendee import Attendee
 
 
 class OrgMember(User):
@@ -69,3 +70,13 @@ class OrgMember(User):
             return content
         else:
             raise ValueError("user does not exist")
+
+    def confirmAttendee(self, event, user):
+        s = Session()
+        attendee = s.query(Attendee).filter_by(event).filter_by(user).first()
+        attendee.confirmEvent()
+        s.commit()
+        s.close()
+
+
+

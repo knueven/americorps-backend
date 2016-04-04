@@ -15,6 +15,7 @@ from volunteerAvailability import VolunteerAvailability
 
 class Attendee(Base):
     __tablename__ = 'attendees'
+    key = Column(Integer, primary_key=True, nullable=False)
     userID = Column(Integer, ForeignKey('users.id'), nullable=False)
     eventID = Column(Integer, ForeignKey('events.id'), nullable=False)
     confirmed = Column(Boolean)
