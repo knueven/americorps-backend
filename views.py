@@ -36,7 +36,7 @@ def user():
 		return content, status.HTTP_200_OK
 
 @app.route('/event', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def event():
+def events():
  	content = {'events': 'test'}
  	success = {'status': 'event created'}
  	error = {'error': "Error in JSON/SQL syntax"}
