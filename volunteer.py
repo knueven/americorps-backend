@@ -63,9 +63,8 @@ class Volunteer(User):
         self.availability = availability
 
     # create a volunteer from a json blob
-    def createVolunteer(json1):
-        json_dict = json.loads(json1)
-        v = Volunteer.fromdict(json_dict)
+    def createVolunteer(json):
+        v = Volunteer.fromdict(json)
         s = Session()
         try:
             s.add(v)
