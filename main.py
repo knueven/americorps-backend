@@ -11,14 +11,17 @@ import admin
 import organization
 import orgmember
 import event
+import attendee
 import sys
 
+
 def setup():
-	Base.metadata.create_all(database_engine)
+    Base.metadata.create_all(database_engine)
+
 
 if __name__ == '__main__':
-	if len(sys.argv) > 1:
-		setup()
-		sys.exit()
-	else:
-		app.run(debug=config.isDev)
+    if len(sys.argv) > 1:
+        setup()
+        sys.exit()
+    else:
+        app.run(debug=config.isDev)

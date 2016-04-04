@@ -12,13 +12,18 @@ from volunteerNeighborhoods import VolunteerNeighborhoods
 from volunteerSkills import VolunteerSkills
 from volunteerInterests import VolunteerInterests
 from volunteerAvailability import VolunteerAvailability
+from attendee import Attendee
+from event import Event
+from sqlalchemy import exc
 
 class Volunteer(User):
     __tablename__ = "volunteers"
     __mapper_args__ = {'polymorphic_identity' : 'volunteer'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the Volunteer will have all User fields
-    education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree","Postsecondary non-degree award","Associate's degree", "Bachelor's degree", "Master's degree", "Doctoral or professional degree", name="education_enum")) 
+    education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree"
+                            ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
+                            "Master's degree", "Doctoral or professional degree", name="education_enum"))
 
     neighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
         back_populates='volunteers') #enum
@@ -27,9 +32,7 @@ class Volunteer(User):
     skills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
     availability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
         back_populates='volunteers') #this will need some discussion
-
     vhours = Column(Integer) #will be a seperate table later, could be merged into events
-    events = Column(String(255)) #will need to foreignkey to another table later
 
     @classmethod
     def fromdict(cls, d):
@@ -39,7 +42,7 @@ class Volunteer(User):
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
-    def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(),
+    def __init__(self, name, email, passwordhash, phone,
         birthdate=None, bio=None, gender=None,
         vhours=None, neighborhoods=None, interests=None, 
         skills=None, education=None, availability=None, events=None):
@@ -47,7 +50,7 @@ class Volunteer(User):
         self.email = email
         self.passwordhash = passwordhash
         self.phone = phone
-        self.last_active = last_active
+        self.last_active = datetime.now()
         self.birthdate = birthdate
         self.permissions = 'volunteer'
         self.bio = bio
@@ -83,3 +86,17 @@ class Volunteer(User):
             return content
         else:
             raise ValueError("user does not exist")
+
+    # take an event and add it to this user's events
+    def addEvent(self, eventid):
+        s = Session()
+        event = s.query(Event).filter_by(id=eventid).first()
+        a = Attendee()
+        if event == null:
+            raise ValueError("event does not exist")
+        else:
+            try:
+                a.addRelation(self.id, eventid)
+            except False:
+                raise exc.ArgumentError('commit failed')
+
