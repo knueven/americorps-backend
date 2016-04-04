@@ -30,7 +30,7 @@ def user():
 			if orgmember.OrgMember.createMember(data):
 				return success, status.HTTP_200_OK
 		else:
-			return error, HTTP_500_INTERNAL_SERVER_ERROR
+			return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
 	if request.method == 'GET':
 		return content, status.HTTP_200_OK
@@ -41,8 +41,8 @@ def event():
  	success = {'status': 'event created'}
  	error = {'error': "Error in JSON/SQL syntax"}
  	if request.method == 'POST':
- 		data = request.get_json()
- 		if event.Event.createEvent(json_dict):
+ 		data = request.json
+ 		if event.Event.createEvent(data):
  			return success, status.HTTP_200_OK
  		else:
  			return error, HTTP_500_INTERNAL_SERVER_ERROR

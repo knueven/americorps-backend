@@ -35,7 +35,7 @@ class VolunteerNeighborhoods(Base):
 								"Greater Boston Area/Outside City", name="neighborhoods_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
-	volunteer = relationship("Volunteer", back_populates="volunteerNeighborhoods")
+	volunteers = relationship("Volunteer", back_populates="volunteerNeighborhoods")
 
 	def __init__(self, id, neighborhood, volunteer_id):
 		self.id = id

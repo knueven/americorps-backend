@@ -14,7 +14,7 @@ class VolunteerInterests(Base):
 				name="interests_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
-	volunteer = relationship("Volunteer", back_populates="volunteerInterests")
+	volunteers = relationship("Volunteer", back_populates="volunteerInterests")
 
 	def __init__(self, id, interest, volunteer_id):
 		self.id = id

@@ -15,7 +15,7 @@ class VolunteerAvailability(Base):
 	day = Column(Enum("Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", name="days_enum"), nullable=False)
 	voluntee_id = Column(Integer, ForeignKey('volunteers.id'))
 
-	volunteer = relationship("Volunteer", back_populates="volunteerAvailability")
+	volunteers = relationship("Volunteer", back_populates="volunteerAvailability")
 
 	def __init__(self, id, day, volunteer_id):
 		self.id = id

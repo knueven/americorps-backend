@@ -25,12 +25,12 @@ class Volunteer(User):
                             ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
                             "Master's degree", "Doctoral or professional degree", name="education_enum"))
 
-    neighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
+    volunteerNeighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
         back_populates='volunteers') #enum
-    interests = relationship("VolunteerInterests", order_by=VolunteerInterests.id,
+    volunteerInterests = relationship("VolunteerInterests", order_by=VolunteerInterests.id,
         back_populates='volunteers') #enum?
-    skills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
-    availability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
+    volunteerSkills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
+    volunteerAvailability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
         back_populates='volunteers') #this will need some discussion
     vhours = Column(Integer) #will be a seperate table later, could be merged into events
 
@@ -57,7 +57,7 @@ class Volunteer(User):
         self.gender = gender
         self.vhours = vhours
         self.neighboorhoods = neighborhoods
-        self.interests = interests
+        self.volunteerInterests = interests
         self.skills = skills
         self.education = education
         self.availability = availability
