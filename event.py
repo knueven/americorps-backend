@@ -61,9 +61,9 @@ class Event(Base):
             session.close()
 
      # create an event from a json string
-    def createEvent(json1):
-        json_dict = json.loads(json1)
-        e = Event.fromdict(json_dict)
+    def createEvent(json):
+        #json_dict = json.loads(json1)
+        e = Event.fromdict(json)
         s = Session()
         try:
             s.add(e)

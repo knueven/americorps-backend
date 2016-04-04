@@ -41,7 +41,7 @@ def event():
  	success = {'status': 'event created'}
  	error = {'error': "Error in JSON/SQL syntax"}
  	if request.method == 'POST':
- 		data = request.json
+ 		data = request.get_json()
  		if event.Event.createEvent(json_dict):
  			return success, status.HTTP_200_OK
  		else:
