@@ -37,9 +37,10 @@ class VolunteerNeighborhoods(Base):
 
 	volunteers = relationship("Volunteer", back_populates="volunteerNeighborhoods")
 
-	def __init__(self, id, neighborhood, volunteer_id):
+	def __init__(self, neighborhood, volunteer_id):
 		self.id = id
 		self.neighborhood = neighborhood
+		self.volunteer_id = volunteer_id
 
 	def __repr__(self):
 		return "<VolunteerNeighborhoods(neighborhood='%s')>" % (self.neighborhood)
