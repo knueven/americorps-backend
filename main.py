@@ -6,7 +6,7 @@ from sqlalchemy.orm import relation, sessionmaker
 from sqlalchemy import create_engine
 import config
 import volunteer
-import volnteerAvailability
+import volunteerAvailability
 import volunteerInterests
 import volunteerNeighborhoods
 import volunteerSkills
