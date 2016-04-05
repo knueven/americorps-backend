@@ -1,10 +1,13 @@
 from user import User
 from db import Base, Session
 from sqlalchemy import *
-from sqlalchemy.orm import relation, sessionmaker
+from sqlalchemy.orm import relation, sessionmaker, relationship
+from sqlalchemy import ForeignKey
 import json
-from datetime import datetime
 import itertools
+from datetime import datetime
+import enums
+from sqlalchemy import exc
 
 
 class Admin(User):
@@ -21,13 +24,13 @@ class Admin(User):
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
-    def __init__(self, name, email, passwordhash, phone, master, birthdate=None, bio=None, gender=None, last_active=datetime.now()):
+    def __init__(self, name, email, passwordhash, phone, master, birthdate=None, bio=None, gender=None):
         #will contain all these fields from user
         self.name = name
         self.email = email
         self.set_password(passwordhash)
         self.phone = phone
-        self.last_active = last_active
+        self.last_active = datetime.now()
         self.master = master
         self.birthdate = birthdate
         self.bio = bio
