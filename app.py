@@ -6,5 +6,6 @@ from flask.ext.api import FlaskAPI, status
 import config
 
 app = FlaskAPI(__name__)
+app.config['SECRET_KEY'] = 'super-secret'
 # will pull config options from config.py
 #app.config.from_object(config)

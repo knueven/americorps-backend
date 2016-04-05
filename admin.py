@@ -8,7 +8,7 @@ import itertools
 from datetime import datetime
 import enums
 from sqlalchemy import exc
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Admin(User):
     __tablename__ = 'admins'

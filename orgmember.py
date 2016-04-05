@@ -4,7 +4,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker
 from datetime import datetime
 from attendee import Attendee
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class OrgMember(User):
     __tablename__ = "orgmembers"
