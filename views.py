@@ -3,7 +3,6 @@ import admin
 import orgmember
 import event
 from flask import render_template,redirect, url_for, json, g
-from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.api import status
 from flask import Flask, request, jsonify, session
 from db import Base, Session
