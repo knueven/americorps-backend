@@ -4,3 +4,4 @@ virtualenv>=14.0.1
 virtualenvwrapper-win>=1.2.1
 mysqlclient>=1.3.7
 SQLAlchemy>=1.0.12
+pyJWT>=1.4.0
