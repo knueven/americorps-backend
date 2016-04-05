@@ -73,7 +73,7 @@ class VolunteerTests(unittest.TestCase):
 
     # checks if the volunteer can be queried by email
     def test_queryEmail(self):
-        
+
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
                          birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
@@ -131,7 +131,8 @@ class VolunteerTests(unittest.TestCase):
             session.add(vol)
             session.commit()
             poey = session.query(Volunteer).filter_by(phone='3015559725').first()
-            self.assertTrue(vol.passwordhash != poey.passwordhash)
+            self.assertTrue(vol.passwordhash != 'lit')
+            self.assertTrue(poey.passwordhash != 'lit')
             self.assertTrue(vol.check_password('lit'))
             self.assertFalse(vol.check_password('lit2'))
             session.close()
