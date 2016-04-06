@@ -26,12 +26,7 @@ class VolunteerSkills(Base):
 						"Sports/Recreation", name="skills_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
-<<<<<<< HEAD
-
-	volunteers = relationship("Volunteer", back_populates="volunteerSkills")
-=======
 	#volunteers = relationship("Volunteer", back_populates="volunteerSkills")
->>>>>>> enum-fixes
 
 	def __init__(self, skill, volunteer_id):
 		self.skill = skill
