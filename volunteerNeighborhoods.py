@@ -35,7 +35,8 @@ class VolunteerNeighborhoods(Base):
 								"Greater Boston Area/Outside City", name="neighborhoods_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
-	volunteers = relationship("Volunteer", back_populates="volunteerNeighborhoods")
+
+	#volunteers = relationship("Volunteer", back_populates="volunteerNeighborhoods")
 
 	def __init__(self, neighborhood, volunteer_id):
 		self.id = id
@@ -44,3 +45,14 @@ class VolunteerNeighborhoods(Base):
 
 	def __repr__(self):
 		return "<VolunteerNeighborhoods(neighborhood='%s')>" % (self.neighborhood)
+
+	def create_v_neighborhood(volunteer_id, neighborhoods):
+		s = Session()
+		for n in neighborhoods: 
+			v = VolunteerNeighborhoods(n, volunteer_id)
+			s.add(v)
+
+		s.commit()
+		s.close()
+		return True
+
