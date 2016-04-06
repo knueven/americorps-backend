@@ -164,7 +164,7 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         moey = VolunteerInterests("Youth", doey.id)
-        joey = session.query(VolunteerInterests).filter_by(volunteer_id=25).first()
+        joey = session.query(VolunteerInterests).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.interest == joey.interest)
 
     def test_neighborhood_write(self):
@@ -184,7 +184,7 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         moey = VolunteerNeighborhoods("Back Bay", doey.id)
-        joey = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=25).first()
+        joey = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.neighborhood == joey.neighborhood)
 
     def test_skill_write(self):
@@ -204,7 +204,7 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         moey = VolunteerSkills("Teaching/Tutoring", doey.id)
-        joey = session.query(VolunteerSkills).filter_by(volunteer_id=25).first()
+        joey = session.query(VolunteerSkills).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.skill == joey.skill)
 
     def test_availability_write(self):
