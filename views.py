@@ -53,28 +53,17 @@ def users(user_id):
     if request.method == 'POST':
         data = request.json
         if data:
-            if data['permissions'] == 'volunteer':
-                if volunteer.Volunteer.updateVolunteer(data):
-                    return updateSuccess, status.HTTP_200_OK
-                else: 
-                    return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-            if data['permissions'] == 'admin':
-                if admin.Admin.createAdmin(data):
-                    return updateSuccess, status.HTTP_200_OK
-                else:
-                    return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-            if data['permissions'] == 'orgmember':
-                if orgmember.OrgMember.createMember(data):
-                    return updateSuccess, status.HTTP_200_OK
-                else:
-                    return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-        else:
-            return error, status.HTTP_400_BAD_REQUEST
+            s = Session()
+            u = s.query(User).filter_by(id=user_id).update(data)
+            s.commit()
+            return updateSuccess, status.HTTP_200_OK
+            s.close()
     if request.method == 'GET':
         s = Session()
         u = s.query(User).filter_by(id=user_id).first()
         if u:
             return jsonify(u.asdict()), status.HTTP_200_OK
+            s.close()
         else:
             return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
