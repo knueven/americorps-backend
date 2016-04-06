@@ -19,7 +19,7 @@ class VolunteerAvailability(Base):
 
 	def __init__(self, day, volunteer_id):
 		self.day = day
-		self.volunteer_id
+		self.volunteer_id = volunteer_id
 
 	def __repr__(self):
 		return "<VolunteerAvailability(day='%s')>" % (self.day)
