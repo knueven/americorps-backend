@@ -1,5 +1,6 @@
 from volunteer import Volunteer
 from db import Session
+from user import User
 import unittest
 from datetime import datetime
 from sqlalchemy import exc
@@ -162,7 +163,7 @@ class VolunteerTests(unittest.TestCase):
 
     def test_interests(self):
         session = Session()
-        doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        doey = session.query(User).filter_by(name='Joey Wood').first()
         moey = VolunteerInterests("Youth", doey.id)
         joey = session.query(VolunteerInterests).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.interest == joey.interest)
@@ -209,20 +210,23 @@ class VolunteerTests(unittest.TestCase):
 
     def test_availability_write(self):
         session = Session()
-        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        moey = VolunteerAvailability("Monday", joey.id)
-        self.assertTrue(moey.day == "Monday")
-        try:
-            session.add(moey)
-            session.commit()
-            session.close()
-            self.assertTrue(True)
-        except exc.SQLAlchemyError:
+        joey = session.query(User).filter_by(name='Joey Wood').first()
+        if joey:
+            moey = VolunteerAvailability("Monday", joey.id)
+            self.assertTrue(moey.day == "Monday")
+            try:
+                session.add(moey)
+                session.commit()
+                session.close()
+                self.assertTrue(True)
+            except exc.SQLAlchemyError:
+                self.assertTrue(False)
+        else:
             self.assertTrue(False)
 
     def test_availability(self):
         session = Session()
-        doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        doey = session.query(User).filter_by(name='Joey Wood').first()
         moey = VolunteerAvailability("Monday", doey.id)
         joey = session.query(VolunteerAvailability).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.day == joey.day)
