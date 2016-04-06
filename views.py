@@ -61,25 +61,19 @@ def createVolunteer(json):
         # volunteer.Volunteer.grab_interests(v, json)
         # volunteer.Volunteer.grab_availability(v, json)
         s.close()
-        print("i reacehd ")
         v2 = volunteer.Volunteer.fromdict(json)
         createEnums(v2, json)
         return True
 
 def createEnums(v, json):
     s = Session()
-    print("here")
-    #try:
-    print("here")
-    v1 = s.query(User).filter_by(email=v.email).first()
-    print("enums")
-    print(v1.id)
-    volunteer.Volunteer.grab_neighborhoods(v1.id, json)
-# except:
-    print ("false")
-    return False
-   # finally:
-    s.close()
+    try:
+        v1 = s.query(User).filter_by(email=v.email).first()
+        volunteer.Volunteer.grab_neighborhoods(v1.id, json)
+    except:
+        return False
+    finally:
+        s.close()
     return True
 
 @app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])
