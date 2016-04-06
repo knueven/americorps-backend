@@ -48,6 +48,7 @@ def create_user():
 def users(user_id):
     error = {'error': 'Error in JSON/SQL syntax'}
     updateSuccess = {'status':'account updated'}
+    updateError = {'error': 'User not found/input validation failed.'}
     noUser = {'error': 'User not found.'}
     # update user
     if request.method == 'POST':
@@ -55,9 +56,12 @@ def users(user_id):
         if data:
             s = Session()
             u = s.query(User).filter_by(id=user_id).update(data)
-            s.commit()
-            return updateSuccess, status.HTTP_200_OK
-            s.close()
+            if u:
+                s.commit()
+                s.close()
+                return updateSuccess, status.HTTP_200_OK
+            else:
+                return updateError, status.HTTP_400_BAD_REQUEST
     if request.method == 'GET':
         s = Session()
         u = s.query(User).filter_by(id=user_id).first()
