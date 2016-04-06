@@ -6,14 +6,22 @@ from sqlalchemy.orm import relation, sessionmaker
 from sqlalchemy import create_engine
 import config
 import volunteer
+import volunteerAvailability
+import volunteerInterests
+import volunteerNeighborhoods
+import volunteerSkills
 import user
 import admin
 import organization
 import orgmember
+import event
+import attendee
 import sys
 
+
 def setup():
-	Base.metadata.create_all(database_engine)
+    Base.metadata.create_all(database_engine)
+
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1:
@@ -21,3 +29,4 @@ if __name__ == '__main__':
 		sys.exit()
 	else:
 		app.run(debug=config.isDev)
+
