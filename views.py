@@ -74,9 +74,9 @@ def users(user_id):
         s = Session()
         u = s.query(User).filter_by(id=user_id).first()
         if u:
-            return jsonify(u._asdict()), status.HTTP_200_OK
+            return jsonify(u.asdict()), status.HTTP_200_OK
         else:
-            return noUser, HTTP_404_NOT_FOUND
+            return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
         return error, HTTP_503_SERVICE_UNAVAILABLE 
 
