@@ -43,6 +43,12 @@ class Volunteer(User):
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
+    def asdict(self):
+        dict_ = {}
+        for key in self.__mapper__.c.keys():
+                dict_[key] = getattr(self, key)
+        return dict_
+
     def __init__(self, name, email, passwordhash, phone,
         birthdate=None, bio=None, gender=None,
         vhours=None, volunteerNeighborhoods=None, volunteerInterests=None, 
@@ -58,6 +64,7 @@ class Volunteer(User):
         self.gender = gender
         self.vhours = vhours
         self.volunteerNeighboorhoods = volunteerNeighborhoods
+        self.education = education
         if volunteerInterests is None:
             self.volunteerInterests = []
         else:
@@ -66,7 +73,6 @@ class Volunteer(User):
             self.volunteerSkils = []
         else:
             self.volunteerSkills = volunteerSkills
-        self.education = education
         if volunteerAvailability is None:
             self.volunteerAvailability = []
         else:

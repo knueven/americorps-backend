@@ -24,6 +24,12 @@ class Admin(User):
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
+    def asdict(self):
+        dict_ = {}
+        for key in self.__mapper__.c.keys():
+                dict_[key] = getattr(self, key)
+        return dict_
+
     def __init__(self, name, email, passwordhash, phone, master, birthdate=None, bio=None, gender=None):
         #will contain all these fields from user
         self.name = name

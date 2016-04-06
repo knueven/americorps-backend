@@ -15,30 +15,70 @@ def index():
     content = {'test content':'disregard'}
     return content, status.HTTP_404_NOT_FOUND
 
-@app.route('/user', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def users():
-    content = {'content':'blah'}
+@app.route('/user/', methods=['POST'])
+def create_user():
     success = {'status':'account created, yay!'}
     error = {'error': 'Error in JSON/SQL syntax'}
     error2 = {'error': 'User already exists'}
-    if request.method == 'POST':
-        data = request.json
+    error3 = {'error': 'No user data provided'}
+    data = request.json
+    if data:
         if data['permissions'] == 'volunteer':
             if volunteer.Volunteer.createVolunteer(data):
                 return success, status.HTTP_200_OK
             else: 
-                return error2, status.HTTP_200_OK
+                return error, status.HTTP_500_INTERNAL_SERVER_ERROR
         if data['permissions'] == 'admin':
             if admin.Admin.createAdmin(data):
                 return success, status.HTTP_200_OK
+            else:
+                return error, status.HTTP_500_INTERNAL_SERVER_ERROR
         if data['permissions'] == 'orgmember':
             if orgmember.OrgMember.createMember(data):
                 return success, status.HTTP_200_OK
+            else:
+                return error, status.HTTP_500_INTERNAL_SERVER_ERROR
         else:
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
+    else:
+        return error3, status.HTTP_400_BAD_REQUEST
+
+@app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])
+def users(user_id):
+    error = {'error': 'Error in JSON/SQL syntax'}
+    updateSuccess = {'status':'account updated'}
+    noUser = {'error': 'User not found.'}
+    # update user
+    if request.method == 'POST':
+        data = request.json
+        if data:
+            if data['permissions'] == 'volunteer':
+                if volunteer.Volunteer.updateVolunteer(data):
+                    return updateSuccess, status.HTTP_200_OK
+                else: 
+                    return error, status.HTTP_500_INTERNAL_SERVER_ERROR
+            if data['permissions'] == 'admin':
+                if admin.Admin.createAdmin(data):
+                    return updateSuccess, status.HTTP_200_OK
+                else:
+                    return error, status.HTTP_500_INTERNAL_SERVER_ERROR
+            if data['permissions'] == 'orgmember':
+                if orgmember.OrgMember.createMember(data):
+                    return updateSuccess, status.HTTP_200_OK
+                else:
+                    return error, status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            return error, status.HTTP_400_BAD_REQUEST
     if request.method == 'GET':
-        return content, status.HTTP_200_OK
+        s = Session()
+        u = s.query(User).filter_by(id=user_id).first()
+        if u:
+            return jsonify(u._asdict()), status.HTTP_200_OK
+        else:
+            return noUser, HTTP_404_NOT_FOUND
+    if request.method == 'DELETE':
+        return error, HTTP_503_SERVICE_UNAVAILABLE 
 
 @app.route('/event', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def events():

@@ -28,6 +28,12 @@ class OrgMember(User):
         df = {k: v for k, v in d.items() if k in allowed}
         return cls(**df)
 
+    def asdict(self):
+        dict_ = {}
+        for key in self.__mapper__.c.keys():
+                dict_[key] = getattr(self, key)
+        return dict_
+
     def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(), birthdate=None,
                  bio=None, gender=None, vhours=None, neighborhood=None, interests=None,
                  education=None, availability=None, events=None, org=None, poc=None):
