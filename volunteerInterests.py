@@ -16,9 +16,9 @@ class VolunteerInterests(Base):
 
 	volunteers = relationship("Volunteer", back_populates="volunteerInterests")
 
-	def __init__(self, id, interest, volunteer_id):
-		self.id = id
+	def __init__(self, interest, volunteer_id):
 		self.interest = interest
+		self.volunteer_id = volunteer_id
 
 	def __repr__(self):
 		return "<VolunteerInterests(interest='%s')>" % (self.interest)

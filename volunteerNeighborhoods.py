@@ -38,7 +38,6 @@ class VolunteerNeighborhoods(Base):
 	volunteers = relationship("Volunteer", back_populates="volunteerNeighborhoods")
 
 	def __init__(self, neighborhood, volunteer_id):
-		self.id = id
 		self.neighborhood = neighborhood
 		self.volunteer_id = volunteer_id
 
