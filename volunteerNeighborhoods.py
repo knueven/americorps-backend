@@ -53,5 +53,5 @@ class VolunteerNeighborhoods(Base):
 
 		s.commit()
 		s.close()
-		return True
+		return
 

@@ -35,4 +35,17 @@ class VolunteerSkills(Base):
 	def __repr__(self):
 		return "<VolunteerSkills(skill='%s')>" % (self.day)
 
+	def createvskills(volunteer_id, skills):
+		s = Session()
+		try:
+			for sk in skills: 
+				v = VolunteerSkills(sk, volunteer_id)
+				s.add(v)
+
+			s.commit()
+		except:
+			return False
+		finally:
+			s.close()
+			return True
 

@@ -22,3 +22,18 @@ class VolunteerInterests(Base):
 
 	def __repr__(self):
 		return "<VolunteerInterests(interest='%s')>" % (self.interest)
+
+
+	def create_v_interests(volunteer_id, interests):
+		s = Session()
+		try:
+			for i in interests: 
+				v = VolunteerInterests(i, volunteer_id)
+				s.add(v)
+
+			s.commit()
+		except:
+			return False
+		finally:
+			s.close()
+			return True

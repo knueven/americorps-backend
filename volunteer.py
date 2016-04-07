@@ -39,8 +39,7 @@ class Volunteer(User):
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-            'bio', 'gender', 'vhours', 'interests', 'skills', 
-            'education', 'availabilty', 'events')
+            'bio', 'gender', 'vhours','education', 'availabilty', 'events')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
@@ -89,30 +88,21 @@ class Volunteer(User):
         n = json.loads(json.dumps(json1))
         neighborhoods = n['neighborhoods']
         VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
-        return
 
-    def grab_skills(self, json1):
+    def grab_skills(volun_id, json1):
         s = json.loads(json.dumps(json1))
-        print("I reached here")
-        print(s)
         skills = s['skills']
-        print(skills)
+        VolunteerSkills.createvskills(volun_id, skills)
 
-    def grab_interests(self, json1):
+    def grab_interests(volun_id, json1):
         i = json.loads(json.dumps(json1))
-        print("I reached here")
-        print(i)
         interests = i['interests']
-        print(interests)
+        VolunteerInterests.create_v_interests(volun_id, interests)
 
-    def grab_availability(self, json1):
+    def grab_availability(volun_id, json1):
         a = json.loads(json.dumps(json1))
-        print("I reached here")
-        print(a)
-        avail = a['availabilty']
-        print(avail)
-
- 
+        avail = a['availability']
+        VolunteerAvailability.create_v_availability(volun_id, avail)
 
     # take in a user id, grab the volunteer from the database and return it
     def getVolunteer(self, id):

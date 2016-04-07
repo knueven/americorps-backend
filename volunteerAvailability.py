@@ -23,3 +23,13 @@ class VolunteerAvailability(Base):
 
 	def __repr__(self):
 		return "<VolunteerAvailability(day='%s')>" % (self.day)
+
+	def create_v_availability(volunteer_id, avail):
+		s = Session()
+		for a in avail: 
+			v = VolunteerAvailability(a, volunteer_id)
+			s.add(v)
+
+		s.commit()
+		s.close()
+		return True
