@@ -1,6 +1,7 @@
 import volunteer
 import admin
 import orgmember
+import organization
 import event
 from flask import render_template,redirect, url_for, json, g
 from flask.ext.api import status
@@ -156,6 +157,18 @@ def parse_token(req):
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    session.pop('logged_in', None)
     return jsonify({'result': 'success'})
 
+@app.route('/organization', methods=['POST'])
+def org():
+    success = {'status': 'org created'}
+    error = {'error': "Error in JSON/SQL syntax"}
+    print("????")
+    if request.method == 'POST':
+        print("FFF")
+        data = request.json
+        print("json")
+        if organization.Organization.createOrganization(data):
+            return success, status.HTTP_200_OK
+        else:
+            return error, status.HTTP_500_INTERNAL_SERVER_ERROR
