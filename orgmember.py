@@ -5,6 +5,8 @@ from sqlalchemy.orm import relation, sessionmaker
 from datetime import datetime
 from attendee import Attendee
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import json
+import organization
 
 class OrgMember(User):
     __tablename__ = "orgmembers"
@@ -58,7 +60,20 @@ class OrgMember(User):
             return False
         finally:
             s.close()
-        return True
+            o2 = OrgMember.fromdict(json)
+            link_org(o2)
+            return True
+
+def link_org(orgmember):
+    s = Session()
+    o2_org = orgmember.org
+    org_m = s.query(OrgMember).filter_by(email = orgmember.email).first()
+    s.close()
+    org_id = org_m.id
+    json2 = json.dumps({'poc': org_id})
+    print(json2)
+    organization.updateOrg(o2_org, json2)
+    return
 
     def getOrgMember(self, id):
         s = Session()

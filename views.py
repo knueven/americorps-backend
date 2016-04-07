@@ -34,7 +34,7 @@ def create_user():
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-        if data['permissions'] == 'orgmember':
+        if data['permissions'] == 'orgmember': 
             if orgmember.OrgMember.createMember(data):
                 return success, status.HTTP_200_OK
             else:
@@ -43,7 +43,7 @@ def create_user():
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
     else:
-        return error3, status.HTTP_400_BAD_REQUEST
+        return error3, status.HTTP_400_BAD_REQUESTup
 
     # create a volunteer from a json blob
 def createVolunteer(json):
@@ -163,11 +163,8 @@ def logout():
 def org():
     success = {'status': 'org created'}
     error = {'error': "Error in JSON/SQL syntax"}
-    print("????")
     if request.method == 'POST':
-        print("FFF")
         data = request.json
-        print("json")
         if organization.Organization.createOrganization(data):
             return success, status.HTTP_200_OK
         else:
