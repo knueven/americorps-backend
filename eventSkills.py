@@ -28,9 +28,10 @@ class EventSkills(Base):
 
 	#events = relationship("Event", back_populates="eventSkills")
 
-	def __init__(self, id, skill, event_id):
-		self.id = id
+	def __init__(self, skill, event_id):
+		#self.id = id
 		self.skill = skill
+		self.event_id = event_id
 
 	def __repr__(self):
 		return "<EventSkills(skill='%s')>" % (self.day)

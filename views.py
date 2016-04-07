@@ -11,6 +11,7 @@ from app import app
 from user import User
 import jwt
 from datetime import datetime, timedelta
+from event import Event
 @app.route('/')
 def index():
     content = {'test content':'disregard'}
@@ -126,31 +127,31 @@ def events():
 
  # create an event from a json string
 def createEvent(json):
-    #json_dict = json.loads(json1)
     e = event.Event.fromdict(json)
     s = Session()
-    #try:
-    s.add(e)
-    s.commit()
-    #except:
-    #return False
-    #finally:
-    s.close()
-    v2 = event.Event.fromdict(json)
-    createEventEnums(v2, json)
-    return True
+    try:
+        s.add(e)
+        s.commit()
+    except:
+        return False
+    finally:
+        s.close()
+        v2 = event.Event.fromdict(json)
+        print("???")
+        createEventEnums(v2, json)
+        return True
 
 def createEventEnums(v, json):
     s = Session()
     try:
-        v1 = s.query(User).filter_by(email=v.email).first()
+        v1 = s.query(Event).filter_by(name=v.name).first()
         event.Event.grab_skills(v1.id, json)
         event.Event.grab_interests(v1.id, json)
     except:
         return False
     finally:
         s.close()
-    return True
+        return True
 
 @app.route('/login', methods=['POST'])
 def login():

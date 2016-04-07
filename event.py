@@ -72,9 +72,12 @@ class Event(Base):
 
 
     def grab_skills(volun_id, json1):
+        print("skills")
         s = json.loads(json.dumps(json1))
         skills = s['skills']
+        print(skills)
         EventSkills.createvskills(volun_id, skills)
+        return
 
     def grab_interests(volun_id, json1):
         i = json.loads(json.dumps(json1))
