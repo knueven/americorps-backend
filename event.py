@@ -20,12 +20,7 @@ class Event(Base):
     about = Column(String(255), nullable=False)
     start_at = Column(String(255), nullable=False)    
     posted_at = Column(String(255), nullable=False)
-    duration = Column(Integer, nullable=False)
-    eventNeighborhoods = relationship("EventNeighborhoods", order_by=EventNeighborhoods.id,
-        back_populates='events')
-    eventInterests = relationship("EventInterests", order_by=EventInterests.id,
-        back_populates='events')
-    eventSkills = relationship("EventSkills", order_by=EventSkills.id, back_populates='events')
+    end_at = Column(String(255), nullable=False)
     org = Column(Integer, ForeignKey('organizations.id'), nullable=False)
     capacity = Column(Integer, nullable=True)
 
@@ -51,20 +46,20 @@ class Event(Base):
         self.start_at = start_at
         self.posted_at = posted_at
         self.duration = duration
-        self.eventNeighborhoods = eventNeighborhoods
-        self.eventInterests = eventInterests
-        self.eventSkills = eventSkills
+        # self.eventNeighborhoods = eventNeighborhoods
+        # self.eventInterests = eventInterests
+        # self.eventSkills = eventSkills
         self.org = org
         self.capacity = capacity
 
-        if eventInterests is None:
-            self.eventInterests = []
-        else:
-            self.eventInterests = eventInterests
-        if eventSkills is None:
-            self.eventSkils = []
-        else:
-            self.eventSkills = eventSkills
+        # if eventInterests is None:
+        #     self.eventInterests = []
+        # else:
+        #     self.eventInterests = eventInterests
+        # if eventSkills is None:
+        #     self.eventSkils = []
+        # else:
+        #     self.eventSkills = eventSkills
 
         # Update a user (must exist)
     def updateEvent(self, event_id, update_data):
@@ -77,17 +72,14 @@ class Event(Base):
         finally:
             session.close()
 
-     # create an event from a json string
-    def createEvent(json):
-        #json_dict = json.loads(json1)
-        e = Event.fromdict(json)
-        s = Session()
-        try:
-            s.add(e)
-            s.commit()
-        except:
-            return False
-        finally:
-            s.close()
-        return True
+
+    def grab_skills(volun_id, json1):
+        s = json.loads(json.dumps(json1))
+        skills = s['skills']
+        EventSkills.createvskills(volun_id, skills)
+
+    def grab_interests(volun_id, json1):
+        i = json.loads(json.dumps(json1))
+        interests = i['interests']
+        EventInterests.create_v_interests(volun_id, interests)
 

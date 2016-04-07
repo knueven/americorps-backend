@@ -34,3 +34,17 @@ class EventSkills(Base):
 
 	def __repr__(self):
 		return "<EventSkills(skill='%s')>" % (self.day)
+
+	def createvskills(event_id, skills):
+		s = Session()
+		try:
+			for sk in skills: 
+				v = EventSkills(sk, event_id)
+				s.add(v)
+
+			s.commit()
+		except:
+			return False
+		finally:
+			s.close()
+			return True

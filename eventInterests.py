@@ -22,3 +22,17 @@ class EventInterests(Base):
 
 	def __repr__(self):
 		return "<EventInterests(interest='%s')>" % (self.interest)
+
+	def create_v_interests(event_id, interests):
+		s = Session()
+		try:
+			for i in interests: 
+				v = EventInterests(i, event_id)
+				s.add(v)
+
+			s.commit()
+		except:
+			return False
+		finally:
+			s.close()
+			return True
