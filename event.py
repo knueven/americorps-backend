@@ -1,6 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relation, sessionmaker
+from sqlalchemy.orm import relation, sessionmaker, relationship
 from db import Base, Session
 import organization
 import json
@@ -8,7 +8,6 @@ import enums
 from eventNeighborhoods import EventNeighborhoods
 from eventSkills import EventSkills
 from eventInterests import EventInterests
-
 
 class Event(Base):
     __tablename__ = 'events'

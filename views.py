@@ -24,7 +24,7 @@ def create_user():
     data = request.json
     if data:
         if data['permissions'] == 'volunteer':
-            if volunteer.Volunteer.createVolunteer(data):
+            if createVolunteer(data):
                 return success, status.HTTP_200_OK
             else: 
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -43,6 +43,42 @@ def create_user():
 
     else:
         return error3, status.HTTP_400_BAD_REQUEST
+
+    # create a volunteer from a json blob
+def createVolunteer(json):
+    v = volunteer.Volunteer.fromdict(json)
+    s = Session()
+    try:
+        s.add(v)
+        s.commit()
+
+    except:
+        return False
+    finally:
+        #v1 = s.query(User).filter_by(email=v.email, name=v.name).first()
+       # volunteer.Volunteer.grab_neighborhoods(v1, json)
+        # volunteer.Volunteer.grab_skills(v,json)
+        # volunteer.Volunteer.grab_interests(v, json)
+        # volunteer.Volunteer.grab_availability(v, json)
+        s.close()
+        v2 = volunteer.Volunteer.fromdict(json)
+        createEnums(v2, json)
+        return True
+
+def createEnums(v, json):
+    s = Session()
+    try:
+        v1 = s.query(User).filter_by(email=v.email).first()
+        volunteer.Volunteer.grab_neighborhoods(v1.id, json)
+        volunteer.Volunteer.grab_skills(v1.id, json)
+        volunteer.Volunteer.grab_interests(v1.id, json)
+        volunteer.Volunteer.grab_availability(v1.id, json)
+    except:
+        return False
+    finally:
+        s.close()
+    return True
+
 
 @app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])
 def users(user_id):

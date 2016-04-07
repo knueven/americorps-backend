@@ -26,12 +26,26 @@ class VolunteerSkills(Base):
 						"Sports/Recreation", name="skills_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
-	volunteers = relationship("Volunteer", back_populates="volunteerSkills")
+	#volunteers = relationship("Volunteer", back_populates="volunteerSkills")
 
-	def __init__(self, id, skill, volunteer_id):
-		self.id = id
+	def __init__(self, skill, volunteer_id):
 		self.skill = skill
+		self.volunteer_id = volunteer_id
 
 	def __repr__(self):
 		return "<VolunteerSkills(skill='%s')>" % (self.day)
+
+	def createvskills(volunteer_id, skills):
+		s = Session()
+		try:
+			for sk in skills: 
+				v = VolunteerSkills(sk, volunteer_id)
+				s.add(v)
+
+			s.commit()
+		except:
+			return False
+		finally:
+			s.close()
+			return True
 

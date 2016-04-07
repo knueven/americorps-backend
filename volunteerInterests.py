@@ -14,11 +14,27 @@ class VolunteerInterests(Base):
 				name="interests_enum"), nullable=False)
 	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
 
-	volunteers = relationship("Volunteer", back_populates="volunteerInterests")
+	#volunteers = relationship("Volunteer", back_populates="volunteerInterests")
 
-	def __init__(self, id, interest, volunteer_id):
-		self.id = id
+	def __init__(self, interest, volunteer_id):
 		self.interest = interest
+		self.volunteer_id = volunteer_id
 
 	def __repr__(self):
 		return "<VolunteerInterests(interest='%s')>" % (self.interest)
+
+
+	def create_v_interests(volunteer_id, interests):
+		s = Session()
+		try:
+			for i in interests: 
+				v = VolunteerInterests(i, volunteer_id)
+				s.add(v)
+
+			s.commit()
+		except:
+			return False
+		finally:
+			s.close()
+			return True
+

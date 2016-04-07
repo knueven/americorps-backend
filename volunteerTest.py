@@ -1,8 +1,13 @@
 from volunteer import Volunteer
 from db import Session
+from user import User
 import unittest
 from datetime import datetime
 from sqlalchemy import exc
+from volunteerNeighborhoods import VolunteerNeighborhoods
+from volunteerInterests import VolunteerInterests
+from volunteerSkills import VolunteerSkills
+from volunteerAvailability import VolunteerAvailability
 # volunteer contains: name, email, passwordhash, phone, last_active,
 #			birthdate=None, permissions, bio=None, gender=None,
 #			vhours=None, neighborhood=None, interests=None, 
@@ -69,6 +74,11 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.education == poey.education)
         #self.assertTrue(joey.availability == poey.availability)
         #self.assertTrue(joey.events == poey.events)
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> develop
                         
 
     # checks if the volunteer can be queried by email
@@ -140,6 +150,89 @@ class VolunteerTests(unittest.TestCase):
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
+
+    def test_interests_write(self):
+        session = Session()
+        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        moey = VolunteerInterests("Youth", joey.id)
+        self.assertTrue(moey.interest == "Youth")
+        try:
+            session.add(moey)
+            session.commit()
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+
+    def test_interests(self):
+        session = Session()
+        doey = session.query(User).filter_by(name='Joey Wood').first()
+        moey = VolunteerInterests("Youth", doey.id)
+        joey = session.query(VolunteerInterests).filter_by(volunteer_id=doey.id).first()
+        self.assertTrue(moey.interest == joey.interest)
+
+    def test_neighborhood_write(self):
+        session = Session()
+        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        moey = VolunteerNeighborhoods("Back Bay", joey.id)
+        self.assertTrue(moey.neighborhood == "Back Bay")
+        try:
+            session.add(moey)
+            session.commit()
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+
+    def test_neighborhoods(self):
+        session = Session()
+        doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        moey = VolunteerNeighborhoods("Back Bay", doey.id)
+        joey = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=doey.id).first()
+        self.assertTrue(moey.neighborhood == joey.neighborhood)
+
+    def test_skill_write(self):
+        session = Session()
+        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        moey = VolunteerSkills("Teaching/Tutoring", joey.id)
+        self.assertTrue(moey.skill == "Teaching/Tutoring")
+        try:
+            session.add(moey)
+            session.commit()
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+
+    def test_skills(self):
+        session = Session()
+        doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        moey = VolunteerSkills("Teaching/Tutoring", doey.id)
+        joey = session.query(VolunteerSkills).filter_by(volunteer_id=doey.id).first()
+        self.assertTrue(moey.skill == joey.skill)
+
+    def test_availability_write(self):
+        session = Session()
+        joey = session.query(User).filter_by(name='Joey Wood').first()
+        if joey:
+            moey = VolunteerAvailability("Monday", joey.id)
+            self.assertTrue(moey.day == "Monday")
+            try:
+                session.add(moey)
+                session.commit()
+                session.close()
+                self.assertTrue(True)
+            except exc.SQLAlchemyError:
+                self.assertTrue(False)
+        else:
+            self.assertTrue(False)
+
+    def test_availability(self):
+        session = Session()
+        doey = session.query(User).filter_by(name='Joey Wood').first()
+        moey = VolunteerAvailability("Monday", doey.id)
+        joey = session.query(VolunteerAvailability).filter_by(volunteer_id=doey.id).first()
+        self.assertTrue(moey.day == joey.day)
         # vol = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559725',
         #                  birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
         #                  vhours=0, education="Some college, no degree")  
@@ -245,6 +338,7 @@ class VolunteerTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
 
 
 

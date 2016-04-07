@@ -4,10 +4,13 @@ from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker, relationship
 from sqlalchemy import ForeignKey
 import json
+from flask import json
 import itertools
 from datetime import datetime
 import enums
 from enums import EducationEnum
+
+#import volunteerNeighborhoods
 from volunteerNeighborhoods import VolunteerNeighborhoods
 from volunteerSkills import VolunteerSkills
 from volunteerInterests import VolunteerInterests
@@ -26,20 +29,19 @@ class Volunteer(User):
                             ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
                             "Master's degree", "Doctoral or professional degree", name="education_enum"))
 
-    volunteerNeighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
-        back_populates='volunteers') #enum
-    volunteerInterests = relationship("VolunteerInterests", order_by=VolunteerInterests.id,
-        back_populates='volunteers') #enum?
-    volunteerSkills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
-    volunteerAvailability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
-        back_populates='volunteers') #this will need some discussion
+    # volunteerNeighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
+    #     back_populates='volunteers') #enum
+    # volunteerInterests = relationship("VolunteerInterests", order_by=VolunteerInterests.id,
+    #     back_populates='volunteers') #enum?
+    # volunteerSkills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
+    # volunteerAvailability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
+    #     back_populates='volunteers') #this will need some discussion
     vhours = Column(Integer) #will be a seperate table later, could be merged into events
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-            'bio', 'gender', 'vhours', 'neighborhoods', 'interests', 'skills', 
-            'education', 'availabilty', 'events')
+            'bio', 'gender', 'vhours','education', 'events')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
@@ -63,20 +65,20 @@ class Volunteer(User):
         self.bio = bio
         self.gender = gender
         self.vhours = vhours
-        self.volunteerNeighboorhoods = volunteerNeighborhoods
+        #self.volunteerNeighboorhoods = volunteerNeighborhoods
         self.education = education
-        if volunteerInterests is None:
-            self.volunteerInterests = []
-        else:
-            self.volunteerInterests = volunteerInterests
-        if volunteerSkills is None:
-            self.volunteerSkils = []
-        else:
-            self.volunteerSkills = volunteerSkills
-        if volunteerAvailability is None:
-            self.volunteerAvailability = []
-        else:
-            self.volunteerAvailability = volunteerAvailability
+        # if volunteerInterests is None:
+        #     self.volunteerInterests = []
+        # else:
+        #     self.volunteerInterests = volunteerInterests
+        # if volunteerSkills is None:
+        #     self.volunteerSkills = []
+        # else:
+        #     self.volunteerSkills = volunteerSkills
+        # if volunteerAvailability is None:
+        #     self.volunteerAvailability = []
+        # else:
+        #     self.volunteerAvailability = volunteerAvailability
 
     def set_password(self, password):
         self.passwordhash = generate_password_hash(password)
@@ -84,18 +86,25 @@ class Volunteer(User):
     def check_password(self, password):
         return check_password_hash(self.passwordhash, password)
 
-    # create a volunteer from a json blob
-    def createVolunteer(json):
-        v = Volunteer.fromdict(json)
-        s = Session()
-        try:
-            s.add(v)
-            s.commit()
-        except:
-            return False
-        finally:
-            s.close()
-            return True
+    def grab_neighborhoods(volun_id, json1):
+        n = json.loads(json.dumps(json1))
+        neighborhoods = n['neighborhoods']
+        VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
+
+    def grab_skills(volun_id, json1):
+        s = json.loads(json.dumps(json1))
+        skills = s['skills']
+        VolunteerSkills.createvskills(volun_id, skills)
+
+    def grab_interests(volun_id, json1):
+        i = json.loads(json.dumps(json1))
+        interests = i['interests']
+        VolunteerInterests.create_v_interests(volun_id, interests)
+
+    def grab_availability(volun_id, json1):
+        a = json.loads(json.dumps(json1))
+        avail = a['availability']
+        VolunteerAvailability.create_v_availability(volun_id, avail)
 
     # take in a user id, grab the volunteer from the database and return it
     def getVolunteer(self, id):
