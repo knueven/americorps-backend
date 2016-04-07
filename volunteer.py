@@ -39,7 +39,7 @@ class Volunteer(User):
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-            'bio', 'gender', 'vhours','education', 'availabilty', 'events')
+            'bio', 'gender', 'vhours','education', 'events')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
