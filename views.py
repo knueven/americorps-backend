@@ -1,6 +1,7 @@
 import volunteer
 import admin
 import orgmember
+import organization
 import event
 from flask import render_template,redirect, url_for, json, g
 from flask.ext.api import status
@@ -33,7 +34,7 @@ def create_user():
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-        if data['permissions'] == 'orgmember':
+        if data['permissions'] == 'orgmember': 
             if orgmember.OrgMember.createMember(data):
                 return success, status.HTTP_200_OK
             else:
@@ -42,7 +43,7 @@ def create_user():
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
     else:
-        return error3, status.HTTP_400_BAD_REQUEST
+        return error3, status.HTTP_400_BAD_REQUESTup
 
     # create a volunteer from a json blob
 def createVolunteer(json):
@@ -185,6 +186,15 @@ def parse_token(req):
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    session.pop('logged_in', None)
     return jsonify({'result': 'success'})
 
+@app.route('/organization', methods=['POST'])
+def org():
+    success = {'status': 'org created'}
+    error = {'error': "Error in JSON/SQL syntax"}
+    if request.method == 'POST':
+        data = request.json
+        if organization.Organization.createOrganization(data):
+            return success, status.HTTP_200_OK
+        else:
+            return error, status.HTTP_500_INTERNAL_SERVER_ERROR

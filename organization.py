@@ -1,6 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from db import Base, Session
+from datetime import datetime
+from flask import json
 
 class Organization(Base):
     __tablename__ = 'organizations'
@@ -11,9 +13,7 @@ class Organization(Base):
     state = Column(String(15), nullable=False)
     zip = Column(String(5), nullable=False)
     mission = Column(String(255), nullable=False)
-    email = Column(String(255), nullable=False)
-    phone = Column(String(15), nullable=False)
-    activity = Column(String(255), nullable=False)
+    poc = Column(Integer, ForeignKey('orgmembers.id'), nullable=True)
 
     @classmethod
     def fromdict(cls, d):
@@ -24,7 +24,7 @@ class Organization(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, missionStatement, email, phone, lastActivity):
+                 zip, mission, poc):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -32,43 +32,40 @@ class Organization(Base):
         else:
             self.zip = zip
 
-        # make sure the phone number is valid
-        if len(phone) < 10 or len(phone) > 15 or not(phone.isdigit()):
-            raise ValueError('a phone number must be between 10 and 15 digits')
-        else:
-            self.phone = phone
         self.name = name
         self.address = address
         self.city = city
         self.state = state
-        self.mission = missionStatement
-        self.email = email
-        self.activity = lastActivity
+        self.mission = mission
+        self.poc = poc
+        self.last_activity = datetime.now()
 
 
     def __repr__(self):
         return "Organization(%s, %s)" % (self.id, self.name)
 
-    def updateOrg(self, org_id, update_data):
-        session = Session()
-        try:
-            session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
-        except:
-            session.rollback()
-            raise ValueError("id not found")
-        finally:
-            session.close()
+def updateOrg(org_id, update_data):
+    session = Session()
+    try:
+        session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
+    except:
+        session.rollback()
+        print("here?")
+        raise ValueError("id not found")
+    finally:
+        session.close()
 
    # create an event from a json string
     def createOrganization(json1):
-        json_dict = json.loads(json1)
-        e = Organization.fromdict(json_dict)
+        e = Organization.fromdict(json1)
+        print(e)
         s = Session()
         try:
             s.add(e)
             s.commit()
         except:
+            print("here")
             return False
         finally:
             s.close()
-        return True
+            return True
