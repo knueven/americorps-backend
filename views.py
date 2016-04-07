@@ -118,40 +118,13 @@ def events():
     error = {'error': "Error in JSON/SQL syntax"}
     if request.method == 'POST':
         data = request.json
-        if createEvent(data):
+        if event.createEvent(data):
             return success, status.HTTP_200_OK
         else:
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
     if request.method == 'GET':
         return content, status.HTTP_200_OK
 
- # create an event from a json string
-def createEvent(json):
-    e = event.Event.fromdict(json)
-    s = Session()
-    try:
-        s.add(e)
-        s.commit()
-    except:
-        return False
-    finally:
-        s.close()
-        v2 = event.Event.fromdict(json)
-        print("???")
-        createEventEnums(v2, json)
-        return True
-
-def createEventEnums(v, json):
-    s = Session()
-    try:
-        v1 = s.query(Event).filter_by(name=v.name).first()
-        event.Event.grab_skills(v1.id, json)
-        event.Event.grab_interests(v1.id, json)
-    except:
-        return False
-    finally:
-        s.close()
-        return True
 
 @app.route('/login', methods=['POST'])
 def login():

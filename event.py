@@ -34,7 +34,7 @@ class Event(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, about, start_at, posted_at, end_at, org, capacity=None):
+                 zip, about, start_at, posted_at, end_at, org, capacity):
         self.name = name
         self.address = address
         self.city = city
@@ -83,4 +83,32 @@ class Event(Base):
         i = json.loads(json.dumps(json1))
         interests = i['interests']
         EventInterests.create_v_interests(volun_id, interests)
+
+ # create an event from a json string
+def createEvent(json):
+    e = Event.fromdict(json)
+    s = Session()
+    try:
+        s.add(e)
+        s.commit()
+    except:
+        return False
+    finally:
+        s.close()
+        v2 = Event.fromdict(json)
+        createEventEnums(v2, json)
+        return True
+
+def createEventEnums(v, json):
+    s = Session()
+    try:
+        v1 = s.query(Event).filter_by(name=v.name).first()
+        event.Event.grab_skills(v1.id, json)
+        event.Event.grab_interests(v1.id, json)
+    except:
+        return False
+    finally:
+        s.close()
+        return True
+
 
