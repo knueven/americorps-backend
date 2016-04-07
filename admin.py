@@ -1,11 +1,14 @@
 from user import User
 from db import Base, Session
 from sqlalchemy import *
-from sqlalchemy.orm import relation, sessionmaker
+from sqlalchemy.orm import relation, sessionmaker, relationship
+from sqlalchemy import ForeignKey
 import json
-from datetime import datetime
 import itertools
-
+from datetime import datetime
+import enums
+from sqlalchemy import exc
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Admin(User):
     __tablename__ = 'admins'
@@ -21,17 +24,29 @@ class Admin(User):
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
-    def __init__(self, name, email, passwordhash, phone, master, birthdate=None, bio=None, gender=None, last_active=datetime.now()):
+    def asdict(self):
+        dict_ = {}
+        for key in self.__mapper__.c.keys():
+                dict_[key] = getattr(self, key)
+        return dict_
+
+    def __init__(self, name, email, passwordhash, phone, master, birthdate=None, bio=None, gender=None):
         #will contain all these fields from user
         self.name = name
         self.email = email
-        self.passwordhash = passwordhash
+        self.set_password(passwordhash)
         self.phone = phone
-        self.last_active = last_active
+        self.last_active = datetime.now()
         self.master = master
         self.birthdate = birthdate
         self.bio = bio
         self.gender = gender
+
+    def set_password(self, password):
+        self.passwordhash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.passwordhash, password)
 
     #create an admin from a json blob
     def createAdmin(json):

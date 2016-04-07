@@ -1,7 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-from db import Base
+from db import Base, Session
+
 
 # abstract base class for Users
 class User(Base):

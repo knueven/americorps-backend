@@ -3,7 +3,8 @@ from db import Base, Session
 from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker
 from datetime import datetime
-
+from attendee import Attendee
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class OrgMember(User):
     __tablename__ = "orgmembers"
@@ -27,12 +28,18 @@ class OrgMember(User):
         df = {k: v for k, v in d.items() if k in allowed}
         return cls(**df)
 
+    def asdict(self):
+        dict_ = {}
+        for key in self.__mapper__.c.keys():
+                dict_[key] = getattr(self, key)
+        return dict_
+
     def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(), birthdate=None,
                  bio=None, gender=None, vhours=None, neighborhood=None, interests=None,
                  education=None, availability=None, events=None, org=None, poc=None):
         self.name = name
         self.email = email
-        self.passwordhash = passwordhash
+        self.set_password(passwordhash)
         self.phone = phone
         self.last_active = last_active
         self.birthdate = birthdate
@@ -46,6 +53,12 @@ class OrgMember(User):
         self.events = events
         self.org = org
         self.poc = poc
+
+    def set_password(self, password):
+        self.passwordhash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.passwordhash, password)
 
         # create a volunteer from a json blob
 
@@ -69,3 +82,13 @@ class OrgMember(User):
             return content
         else:
             raise ValueError("user does not exist")
+
+    def confirmAttendee(self, event, user):
+        s = Session()
+        attendee = s.query(Attendee).filter_by(event).filter_by(user).first()
+        attendee.confirmEvent()
+        s.commit()
+        s.close()
+
+
+

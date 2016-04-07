@@ -1,4 +1,4 @@
-from volunteer import Volunteer
+from admin import Admin
 from db import Session
 import unittest
 from datetime import datetime
@@ -12,34 +12,26 @@ class VolunteerTests(unittest.TestCase):
 
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
-                         vhours=0, education="Some college, no degree")
-        self.assertTrue(joey.name == 'Joey Wood')
-        self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
-        self.assertTrue(joey.passwordhash != 'lit')
-        self.assertTrue(joey.phone == '3015559721')
-        #self.assertTrue(joey.last_active == )
-        self.assertTrue(joey.birthdate == '05/26/1990')
-        self.assertTrue(joey.permissions == 'volunteer')
-        self.assertTrue(joey.bio == 'Snell rhymes with hell')
-        self.assertTrue(joey.gender == 'Male')
-        self.assertTrue(joey.vhours == 0)
-        #self.assertTrue(joey.neighborhoods.neighborhood == "Back Bay")
-        #self.assertTrue(joey.interests == "Teaching") 
-        #self.assertTrue(joey.skills == "Teaching")
-        self.assertTrue(joey.education == "Some college, no degree")
-        #self.assertTrue(joey.availability == 'Mondays @ 3pm - 6pm')
-
-
+        mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
+                       birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+        self.assertTrue(mickey.name == 'Mickey Mouse')
+        self.assertTrue(mickey.email == 'mickey@disney.com')
+        #self.assertTrue(mickey.passwordhash == 'mouse')
+        self.assertTrue(mickey.phone == '0765434567')
+        self.assertTrue(mickey.master)
+        #self.assertTrue(mickey.last_active == )
+        self.assertTrue(mickey.birthdate == '06/06/2006')
+        self.assertTrue(mickey.permissions == 'admin')
+        self.assertTrue(mickey.bio == 'Peace Walt')
+        self.assertTrue(mickey.gender == 'Male')
+        
     #test object write to the database.    
     def test_db_write(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate='05/26/1990', bio='Snell rhymes with hell', gender='Male',
-                         vhours=0, education="Some college, no degree")
+        mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
+                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
         s = Session()
         try:
-            s.add(joey)
+            s.add(mickey)
             s.commit()
             s.close()
             self.assertTrue(True)
@@ -49,104 +41,55 @@ class VolunteerTests(unittest.TestCase):
 # checks if the volunteer was added to the database after initialization
     def test_queryName(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
-                         vhours=0, education="Some college, no degree")        
-        poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        self.assertTrue(joey.name == poey.name)
-        self.assertTrue(joey.email == poey.email)
-        self.assertTrue(joey.passwordhash != poey.passwordhash)
-        self.assertTrue(joey.phone == poey.phone)
-        #self.assertTrue(joey.last_active == poey.last_active)
-        self.assertTrue(joey.birthdate == poey.birthdate)
-        self.assertTrue(joey.permissions == poey.permissions)
-        self.assertTrue(joey.bio == poey.bio)
-        self.assertTrue(joey.gender == poey.gender)
-        self.assertTrue(joey.vhours == poey.vhours)
-        #self.assertTrue(joey.neighborhoods == poey.neighborhoods)
-        #self.assertTrue(joey.interests == poey.interests) 
-        #self.assertTrue(joey.skills == poey.skills)
-        self.assertTrue(joey.education == poey.education)
-        #self.assertTrue(joey.availability == poey.availability)
-        #self.assertTrue(joey.events == poey.events)
+        mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
+                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+        sickey = session.query(Admin).filter_by(name='Mickey Mouse').first()
+        self.assertTrue(mickey.name == sickey.name)
+        self.assertTrue(mickey.email == sickey.email)
+        #self.assertTrue(mickey.passwordhash == sickey.passwordhash)
+        self.assertTrue(mickey.phone == sickey.phone)
+        self.assertTrue(mickey.master)
+        #self.assertTrue(mickey.last_active == )
+        self.assertTrue(mickey.birthdate == sickey.birthdate)
+        self.assertTrue(mickey.permissions == sickey.permissions)
+        self.assertTrue(mickey.bio == sickey.bio)
+        self.assertTrue(mickey.gender == sickey.gender)
                         
 
     # checks if the volunteer can be queried by email
     def test_queryEmail(self):
-
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
-                         vhours=0, education="Some college, no degree")
-        poey = session.query(Volunteer).filter_by(email='wood.jos@husky.neu.edu').first()
-        self.assertTrue(joey.name == poey.name)
-        self.assertTrue(joey.email == poey.email)
-        self.assertTrue(joey.passwordhash != poey.passwordhash)
-        self.assertTrue(joey.phone == poey.phone)
-        #self.assertTrue(joey.last_active == poey.last_active)
-        self.assertTrue(joey.birthdate == poey.birthdate)
-        self.assertTrue(joey.permissions == poey.permissions)
-        self.assertTrue(joey.bio == poey.bio)
-        self.assertTrue(joey.gender == poey.gender)
-        self.assertTrue(joey.vhours == poey.vhours)
-        #self.assertTrue(joey.neighborhoods == poey.neighborhoods)
-        #self.assertTrue(joey.interests == poey.interests) 
-        #self.assertTrue(joey.skills == poey.skills)
-        self.assertTrue(joey.education == poey.education)
-        #self.assertTrue(joey.availability == poey.availability)
-        #self.assertTrue(joey.events == poey.events)
+        mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
+                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+        sickey = session.query(Admin).filter_by(name='Mickey Mouse').first()
+        self.assertTrue(mickey.name == sickey.name)
+        self.assertTrue(mickey.email == sickey.email)
+        #self.assertTrue(mickey.passwordhash == sickey.passwordhash)
+        self.assertTrue(mickey.phone == sickey.phone)
+        self.assertTrue(mickey.master)
+        #self.assertTrue(mickey.last_active == )
+        self.assertTrue(mickey.birthdate == sickey.birthdate)
+        self.assertTrue(mickey.permissions == sickey.permissions)
+        self.assertTrue(mickey.bio == sickey.bio)
+        self.assertTrue(mickey.gender == sickey.gender)
                         
 
     # checks if the volunteer can be queried by phone
     def test_queryPhone(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
-                         vhours=0, education="Some college, no degree")         
-        poey = session.query(Volunteer).filter_by(phone='3015559721').first()
-        self.assertTrue(joey.name == poey.name)
-        self.assertTrue(joey.email == poey.email)
-      #  self.assertTrue(joey.passwordhash == poey.passwordhash)
-        self.assertTrue(joey.phone == poey.phone)
-        #self.assertTrue(joey.last_active == poey.last_active)
-        self.assertTrue(joey.birthdate == poey.birthdate)
-        self.assertTrue(joey.permissions == poey.permissions)
-        self.assertTrue(joey.bio == poey.bio)
-        self.assertTrue(joey.gender == poey.gender)
-        self.assertTrue(joey.vhours == poey.vhours)
-        #self.assertTrue(joey.neighborhoods == poey.neighborhoods)
-        #self.assertTrue(joey.interests == poey.interests) 
-        #self.assertTrue(joey.skills == poey.skills)
-        self.assertTrue(joey.education == poey.education)
-        #self.assertTrue(joey.availability == poey.availability)
-        #self.assertTrue(joey.events == poey.events)
-
-    #unit test for password hashing
-    def test_password_hash(self):
-        session = Session()
-        vol = Volunteer('Test', '2234@gmail.com', 'lit', '3015559725',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
-                         vhours=0, education="Some college, no degree")  
-        try:
-            session.add(vol)
-            session.commit()
-            poey = session.query(Volunteer).filter_by(phone='3015559725').first()
-            self.assertTrue(vol.passwordhash != 'lit')
-            self.assertTrue(poey.passwordhash != 'lit')
-            self.assertTrue(vol.check_password('lit'))
-            self.assertFalse(vol.check_password('lit2'))
-            session.close()
-            self.assertTrue(True)
-        except exc.SQLAlchemyError:
-            self.assertTrue(False)
-
-        # vol = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559725',
-        #                  birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
-        #                  vhours=0, education="Some college, no degree")  
-
-        
-     #   print(vol.passwordhash)
-       
+        mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
+                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+        sickey = session.query(Admin).filter_by(name='Mickey Mouse').first()
+        self.assertTrue(mickey.name == sickey.name)
+        self.assertTrue(mickey.email == sickey.email)
+        #self.assertTrue(mickey.passwordhash == sickey.passwordhash)
+        self.assertTrue(mickey.phone == sickey.phone)
+        self.assertTrue(mickey.master)
+        #self.assertTrue(mickey.last_active == )
+        self.assertTrue(mickey.birthdate == sickey.birthdate)
+        self.assertTrue(mickey.permissions == sickey.permissions)
+        self.assertTrue(mickey.bio == sickey.bio)
+        self.assertTrue(mickey.gender == sickey.gender)
                         
     
 
