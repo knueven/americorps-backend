@@ -1,6 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from db import Base, Session
+from datetime import datetime
 
 class Organization(Base):
     __tablename__ = 'organizations'
@@ -11,9 +12,7 @@ class Organization(Base):
     state = Column(String(15), nullable=False)
     zip = Column(String(5), nullable=False)
     mission = Column(String(255), nullable=False)
-    email = Column(String(255), nullable=False)
-    phone = Column(String(15), nullable=False)
-    activity = Column(String(255), nullable=False)
+    poc = Column(Integer, ForeignKey('orgmembers.id'))
 
     @classmethod
     def fromdict(cls, d):
@@ -24,7 +23,7 @@ class Organization(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, missionStatement, email, phone, lastActivity):
+                 zip, missionStatement, poc=None):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -32,18 +31,13 @@ class Organization(Base):
         else:
             self.zip = zip
 
-        # make sure the phone number is valid
-        if len(phone) < 10 or len(phone) > 15 or not(phone.isdigit()):
-            raise ValueError('a phone number must be between 10 and 15 digits')
-        else:
-            self.phone = phone
         self.name = name
         self.address = address
         self.city = city
         self.state = state
         self.mission = missionStatement
-        self.email = email
-        self.activity = lastActivity
+        self.poc = poc
+        self.last_activity = datetime.now()
 
 
     def __repr__(self):
