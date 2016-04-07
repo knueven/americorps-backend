@@ -24,7 +24,7 @@ class Organization(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, mission, poc=None):
+                 zip, mission, email, phone, poc=None):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -37,6 +37,8 @@ class Organization(Base):
         self.city = city
         self.state = state
         self.mission = mission
+        self.email = email
+        self.phone = phone
         self.poc = poc
         self.last_activity = datetime.now()
 
