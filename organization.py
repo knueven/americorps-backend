@@ -24,7 +24,7 @@ class Organization(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, mission, poc):
+                 zip, mission, poc=None):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -44,18 +44,7 @@ class Organization(Base):
     def __repr__(self):
         return "Organization(%s, %s)" % (self.id, self.name)
 
-def updateOrg(org_id, update_data):
-    session = Session()
-    try:
-        session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
-    except:
-        session.rollback()
-        print("here?")
-        raise ValueError("id not found")
-    finally:
-        session.close()
-
-   # create an event from a json string
+      # create an event from a json string
     def createOrganization(json1):
         e = Organization.fromdict(json1)
         print(e)
@@ -69,3 +58,16 @@ def updateOrg(org_id, update_data):
         finally:
             s.close()
             return True
+
+def updateOrg(org_id, update_data):
+    session = Session()
+    try:
+        session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
+    except:
+        session.rollback()
+        print("here?")
+        raise ValueError("id not found")
+    finally:
+        session.close()
+
+ 

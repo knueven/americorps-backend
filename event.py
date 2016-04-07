@@ -27,16 +27,14 @@ class Event(Base):
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'address', 'city', 'state', 'zip', 'about', 
-                   'start_at', 'posted_at', 'duration', 'eventNeighborhoods',
-                    'eventInterests', 'eventSkills', 'org', 'capacity')
+                   'start_at', 'posted_at', 'end_at', 'org', 'capacity')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, about, start_at, posted_at, duration, eventNeighborhoods,
-                 eventInterests, eventSkills, org, capacity=None):
+                 zip, about, start_at, posted_at, end_at, org, capacity=None):
         self.name = name
         self.address = address
         self.city = city
@@ -45,7 +43,7 @@ class Event(Base):
         self.about = about
         self.start_at = start_at
         self.posted_at = posted_at
-        self.duration = duration
+        self.end_at = end_at
         # self.eventNeighborhoods = eventNeighborhoods
         # self.eventInterests = eventInterests
         # self.eventSkills = eventSkills

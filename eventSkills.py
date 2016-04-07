@@ -26,7 +26,7 @@ class EventSkills(Base):
 						"Sports/Recreation", name="skills_enum"), nullable=False)
 	event_id = Column(Integer, ForeignKey('events.id'))
 
-	events = relationship("Event", back_populates="eventSkills")
+	#events = relationship("Event", back_populates="eventSkills")
 
 	def __init__(self, id, skill, event_id):
 		self.id = id

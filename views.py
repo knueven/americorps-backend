@@ -127,17 +127,17 @@ def events():
  # create an event from a json string
 def createEvent(json):
     #json_dict = json.loads(json1)
-    e = Event.fromdict(json)
+    e = event.Event.fromdict(json)
     s = Session()
-    try:
-        s.add(e)
-        s.commit()
-    except:
-        return False
-    finally:
-        s.close()
-        v2 = event.Event.fromdict(json)
-        createEventEnums(v2, json)
+    #try:
+    s.add(e)
+    s.commit()
+    #except:
+    #return False
+    #finally:
+    s.close()
+    v2 = event.Event.fromdict(json)
+    createEventEnums(v2, json)
     return True
 
 def createEventEnums(v, json):
