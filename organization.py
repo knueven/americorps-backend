@@ -17,14 +17,13 @@ class Organization(Base):
 
     @classmethod
     def fromdict(cls, d):
-        allowed = ('name', 'address', 'city', 'state', 'zip', 'mission', 
-                   'email', 'phone', 'activity')
+        allowed = ('name', 'address', 'city', 'state', 'zip', 'mission')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, mission, email, phone, poc=None):
+                 zip, mission, poc=None):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -37,8 +36,6 @@ class Organization(Base):
         self.city = city
         self.state = state
         self.mission = mission
-        self.email = email
-        self.phone = phone
         self.poc = poc
         self.last_activity = datetime.now()
 
