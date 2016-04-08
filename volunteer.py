@@ -9,8 +9,6 @@ import itertools
 from datetime import datetime
 import enums
 from enums import EducationEnum
-
-#import volunteerNeighborhoods
 from volunteerNeighborhoods import VolunteerNeighborhoods
 from volunteerSkills import VolunteerSkills
 from volunteerInterests import VolunteerInterests
@@ -25,22 +23,17 @@ class Volunteer(User):
     __mapper_args__ = {'polymorphic_identity' : 'volunteer'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the Volunteer will have all User fields
+    uhours = Column(Integer)
+    vhours = Column(Integer)
     education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree"
                             ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
                             "Master's degree", "Doctoral or professional degree", name="education_enum"))
 
-    # volunteerNeighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
-    #     back_populates='volunteers') #enum
-    # volunteerInterests = relationship("VolunteerInterests", order_by=VolunteerInterests.id,
-    #     back_populates='volunteers') #enum?
-    # volunteerSkills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
-    # volunteerAvailability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
-    #     back_populates='volunteers') #this will need some discussion
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-            'bio', 'gender', 'vhours','education', 'events')
+            'bio', 'gender', 'uhours', 'vhours','education', 'events')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
@@ -51,8 +44,8 @@ class Volunteer(User):
         return dict_
 
     def __init__(self, name, email, passwordhash, phone,
-        birthdate=None, bio=None, gender=None, volunteerNeighborhoods=None, volunteerInterests=None,
-        volunteerSkills=None, education=None, volunteerAvailability=None):
+                 birthdate=None, bio=None, gender=None, uhours=None, vhours=None,
+                 education=None):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
@@ -62,20 +55,10 @@ class Volunteer(User):
         self.permissions = 'volunteer'
         self.bio = bio
         self.gender = gender
-        #self.volunteerNeighboorhoods = volunteerNeighborhoods
+        self.uhours = uhours
+        self.vhours = vhours
         self.education = education
-        # if volunteerInterests is None:
-        #     self.volunteerInterests = []
-        # else:
-        #     self.volunteerInterests = volunteerInterests
-        # if volunteerSkills is None:
-        #     self.volunteerSkills = []
-        # else:
-        #     self.volunteerSkills = volunteerSkills
-        # if volunteerAvailability is None:
-        #     self.volunteerAvailability = []
-        # else:
-        #     self.volunteerAvailability = volunteerAvailability
+        
 
     def set_password(self, password):
         self.passwordhash = generate_password_hash(password)
