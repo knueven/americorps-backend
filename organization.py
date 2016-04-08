@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from db import Base, Session
 from datetime import datetime
 from flask import json
+from orgmember import OrgMember
 
 class Organization(Base):
     __tablename__ = 'organizations'
@@ -54,6 +55,7 @@ def updateOrg(org_id, update_data):
         raise ValueError("id not found")
     finally:
         session.close()
+        
 # create an event from a json string
 def createOrganization(json1):
     e = Organization.fromdict(json1)

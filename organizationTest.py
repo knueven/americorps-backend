@@ -9,26 +9,19 @@ class OrganizationTests(unittest.TestCase):
 	 #checks if the events fields are initialized correctly
     def test_init(self):
         race = Organization('Test Org', 'Mass Ave', 'Boston', 'MA', '02115', 
-            'doing charity things', 
-            '12345@gmail.com', '1234567890', 'walking')
+            'doing charity things')
         print('\n')
-        print(race.activity)
-        self.assertTrue(race.name == 'tTest Org' and
-                        race.address == 'Mass Ave' and
-                        race.city == 'Boston' and
-                        race.state == 'MA' and
-                        race.zip == '02115' and
-                        race.mission == 'doing charity things' and
-                        race.email == '12345@gmail.com' and
-                        race.phone == '1234567890' and
-                        race.activity == 'walking')
-
-
+        self.assertTrue(race.name == 'Test Org')
+        self.assertTrue(race.address == 'Mass Ave')
+        self.assertTrue(race.city == 'Boston')
+        self.assertTrue(race.state == 'MA')
+        self.assertTrue(race.zip == '02115')
+        self.assertTrue(race.mission == 'doing charity things')
+        
         #test object write to the database.    
     def test_db_write(self):
         race = Organization('Test Org', 'Mass Ave', 'Boston', 'MA', '02115', 
-           'doing charity things', 
-           '12345@gmail.com', '1234567890', 'walking around aimlessly')
+           'doing charity things')
         s = Session()
         try:
             s.add(race)
@@ -37,6 +30,18 @@ class OrganizationTests(unittest.TestCase):
             self.assertTrue(True)
         except exc.SQLAlchemyError:
             self.assertTrue(False)
+
+    def test_db_pull(self):
+        session = Session()
+        race = Organization('Test Org', 'Mass Ave', 'Boston', 'MA', '02115', 
+           'doing charity things')
+        face = session.query(Organization).filter_by(address='Mass Ave').first()
+        self.assertTrue(race.name == face.name)
+        self.assertTrue(race.city == face.city)
+        self.assertTrue(race.state == face.state)
+        self.assertTrue(race.mission == face.mission)
+
+        
 
 if __name__ == '__main__':
 	unittest.main()
