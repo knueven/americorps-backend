@@ -43,20 +43,6 @@ class Organization(Base):
     def __repr__(self):
         return "Organization(%s, %s)" % (self.id, self.name)
 
-      # create an event from a json string
-    def createOrganization(json1):
-        e = Organization.fromdict(json1)
-        print(e)
-        s = Session()
-        try:
-            s.add(e)
-            s.commit()
-        except:
-            print("here")
-            return False
-        finally:
-            s.close()
-            return True
 
 def updateOrg(org_id, update_data):
     session = Session()
@@ -68,3 +54,17 @@ def updateOrg(org_id, update_data):
         raise ValueError("id not found")
     finally:
         session.close()
+# create an event from a json string
+def createOrganization(json1):
+    e = Organization.fromdict(json1)
+    print(e)
+    s = Session()
+    try:
+        s.add(e)
+        s.commit()
+    except:
+        print("here")
+        return False
+    finally:
+        s.close()
+        return True
