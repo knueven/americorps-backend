@@ -2,12 +2,13 @@ from volunteer import Volunteer
 from db import Session
 from user import User
 import unittest
-from datetime import datetime
+from datetime import *
 from sqlalchemy import exc
 from volunteerNeighborhoods import VolunteerNeighborhoods
 from volunteerInterests import VolunteerInterests
 from volunteerSkills import VolunteerSkills
 from volunteerAvailability import VolunteerAvailability
+from attendee import Attendee
 # volunteer contains: name, email, passwordhash, phone, last_active,
 #			birthdate, permissions, bio, gender,
 #			uhours, vhours, education
@@ -17,13 +18,13 @@ class VolunteerTests(unittest.TestCase):
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")
         self.assertTrue(joey.name == 'Joey Wood')
         self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
         self.assertTrue(joey.passwordhash != 'lit')
         self.assertTrue(joey.phone == '3015559721')
-        self.assertTrue(joey.birthdate == '05/26/1990')
+        #self.assertTrue(joey.birthdate == '05/26/1990')
         self.assertTrue(joey.permissions == 'volunteer')
         self.assertTrue(joey.bio == 'Snell rhymes with hell')
         self.assertTrue(joey.gender == 'Male')
@@ -36,7 +37,7 @@ class VolunteerTests(unittest.TestCase):
     #test object write to the database.    
     def test_db_write(self):
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate='05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")
         s = Session()
         try:
@@ -51,7 +52,7 @@ class VolunteerTests(unittest.TestCase):
     def test_queryName(self):
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")        
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         self.assertTrue(joey.name == poey.name)
@@ -78,7 +79,7 @@ class VolunteerTests(unittest.TestCase):
 
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")
         poey = session.query(Volunteer).filter_by(email='wood.jos@husky.neu.edu').first()
         self.assertTrue(joey.name == poey.name)
@@ -99,7 +100,7 @@ class VolunteerTests(unittest.TestCase):
     def test_queryPhone(self):
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")         
         poey = session.query(Volunteer).filter_by(phone='3015559721').first()
         self.assertTrue(joey.name == poey.name)
@@ -117,7 +118,7 @@ class VolunteerTests(unittest.TestCase):
     def test_password_hash(self):
         session = Session()
         vol = Volunteer('Test', '2234@gmail.com', 'lit', '3015559725',
-                         birthdate= '05/26/1990', bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")  
         try:
             session.add(vol)
@@ -215,6 +216,14 @@ class VolunteerTests(unittest.TestCase):
         moey = VolunteerAvailability("Monday", doey.id)
         joey = session.query(VolunteerAvailability).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.day == joey.day)
+
+    def test_sign_up(self):
+        session = Session()
+        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        joey.addEvent(1)
+        event = session.query(Attendee).filter_by(userID=joey.id).first()
+        self.assertTrue(event.userID == joey.id)
+        session.close()
        
 
         

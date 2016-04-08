@@ -97,7 +97,7 @@ class Volunteer(User):
     def addEvent(self, eventid):
         s = Session()
         event = s.query(Event).filter_by(id=eventid).first()
-        a = Attendee()
+        a = Attendee(id, eventid)
         if event == null:
             raise ValueError("event does not exist")
         else:
@@ -105,6 +105,7 @@ class Volunteer(User):
                 a.addRelation(self.id, eventid)
             except False:
                 raise exc.ArgumentError('commit failed')
+        s.close()
 
     # create a volunteer from a json blob
 def createVolunteer(json):
