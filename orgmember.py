@@ -15,7 +15,7 @@ class OrgMember(User):
     __mapper_args__ = {'polymorphic_identity': 'orgmember'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the OrgMember will have all User fields
-    org = Column(Integer, ForeignKey('organizations.id'))  # object or id?
+    org = Column(Integer, ForeignKey('organizations.id'), nullable=False)  # object or id?
     poc = Column(Boolean, nullable=False)
 
     @classmethod
@@ -31,21 +31,21 @@ class OrgMember(User):
             dict_[key] = getattr(self, key)
         return dict_
 
-    def __init__(self, name, email, passwordhash, phone, poc, birthdate=None,
-                 bio=None, gender=None, org=None):
+    def __init__(self, name, email, passwordhash, phone, poc, org, birthdate=None,
+                 bio=None, gender=None):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        if phone > 15 :
+        if len(phone) > 15 :
             raise ValueError("phone number is too long")
-        elif phone < 10:
+        elif len(phone) < 10:
             raise ValueError("phone number is too short")
-        elif phone.isDigit() == False:
+        elif phone.isdigit() == False:
             raise ValueError("phone number must be a string of digits")
         else:
             self.phone = phone
         self.poc = poc
-        self.last_active = datetime.now()
+        self.last_activity = datetime.now()
         self.birthdate = birthdate
         self.bio = bio
         self.gender = gender
