@@ -109,6 +109,36 @@ class Volunteer(User):
             except False:
                 raise exc.ArgumentError('commit failed')
 
+    # create a volunteer from a json blob
+def createVolunteer(json):
+    v = Volunteer.fromdict(json)
+    s = Session()
+    try:
+        s.add(v)
+        s.commit()
+    except:
+        return False
+    finally:
+        s.close()
+        v2 = Volunteer.fromdict(json)
+        if createEnums(v2, json):
+            return True
+        else:
+            return False
+
+def createEnums(v, json):
+    s = Session()
+    try:
+        v1 = s.query(User).filter_by(email=v.email).first()
+        volunteer.Volunteer.grab_neighborhoods(v1.id, json)
+        volunteer.Volunteer.grab_skills(v1.id, json)
+        volunteer.Volunteer.grab_interests(v1.id, json)
+        volunteer.Volunteer.grab_availability(v1.id, json)
+    except:
+        return False
+    finally:
+        s.close()
+        return True
 
 
 

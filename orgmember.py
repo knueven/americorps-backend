@@ -104,6 +104,7 @@ def link_org(orgmember):
     print(json2)
     organization.updateOrg(o2_org, json2)
     return
+            
 
 def createMember(json):
     o = OrgMember.fromdict(json)
@@ -116,5 +117,7 @@ def createMember(json):
     finally:
         s.close()
         o2 = OrgMember.fromdict(json)
-        link_org(o2)
-        return True
+        if link_org(o2):
+            return True
+        else:
+            return False

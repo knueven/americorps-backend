@@ -17,11 +17,12 @@ class OrganizationTests(unittest.TestCase):
         self.assertTrue(race.state == 'MA')
         self.assertTrue(race.zip == '02115')
         self.assertTrue(race.mission == 'doing charity things')
-        
-        #test object write to the database.    
+
+
     def test_db_write(self):
         race = Organization('Test Org', 'Mass Ave', 'Boston', 'MA', '02115', 
            'doing charity things')
+        print(race.poc)
         s = Session()
         try:
             s.add(race)
