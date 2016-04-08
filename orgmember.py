@@ -6,6 +6,7 @@ from datetime import datetime
 from attendee import Attendee
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import json
+from sqlalchemy import exc
 import organization
 
 
@@ -35,7 +36,14 @@ class OrgMember(User):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        self.phone = phone
+        if phone > 15 :
+            raise ValueError("phone number is too long")
+        elif phone < 10:
+            raise ValueError("phone number is too short")
+        elif phone.isDigit() == False:
+            raise ValueError("phone number must be a string of digits")
+        else:
+            self.phone = phone
         self.poc = poc
         self.last_active = datetime.now()
         self.birthdate = birthdate
@@ -50,20 +58,6 @@ class OrgMember(User):
         return check_password_hash(self.passwordhash, password)
 
         # create a volunteer from a json blob
-
-    def createMember(json):
-        o = OrgMember.fromdict(json)
-        s = Session()
-        try:
-            s.add(o)
-            s.commit()
-        except:
-            return False
-        finally:
-            s.close()
-            o2 = OrgMember.fromdict(json)
-            link_org(o2)
-            return True
 
     def getOrgMember(self, id):
         s = Session()
@@ -102,8 +96,25 @@ def link_org(orgmember):
     o2_org = orgmember.org
     org_m = s.query(OrgMember).filter_by(email=orgmember.email).first()
     s.close()
-    org_id = org_m.id
+    if org_m:
+        org_id = org_m.id
+    else :
+        raise exc.InvalidRequestError("query failed")
     json2 = json.dumps({'poc': org_id})
     print(json2)
     organization.updateOrg(o2_org, json2)
     return
+
+def createMember(json):
+    o = OrgMember.fromdict(json)
+    s = Session()
+    try:
+        s.add(o)
+        s.commit()
+    except:
+        return False
+    finally:
+        s.close()
+        o2 = OrgMember.fromdict(json)
+        link_org(o2)
+        return True
