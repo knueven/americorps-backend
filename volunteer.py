@@ -67,8 +67,7 @@ class Volunteer(User):
         return check_password_hash(self.passwordhash, password)
 
     def grab_neighborhoods(volun_id, json1):
-        n = json.loads(json.dumps(json1))
-        neighborhoods = n['neighborhoods']
+        neighborhoods = json1['neighborhoods']
         VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
 
     def grab_skills(volun_id, json1):
@@ -130,10 +129,10 @@ def createEnums(v, json):
     s = Session()
     try:
         v1 = s.query(User).filter_by(email=v.email).first()
-        volunteer.Volunteer.grab_neighborhoods(v1.id, json)
-        volunteer.Volunteer.grab_skills(v1.id, json)
-        volunteer.Volunteer.grab_interests(v1.id, json)
-        volunteer.Volunteer.grab_availability(v1.id, json)
+        Volunteer.grab_neighborhoods(v1.id, json)
+        Volunteer.grab_skills(v1.id, json)
+        Volunteer.grab_interests(v1.id, json)
+        Volunteer.grab_availability(v1.id, json)
     except:
         return False
     finally:
