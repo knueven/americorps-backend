@@ -36,7 +36,6 @@ class Volunteer(User):
     # volunteerSkills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
     # volunteerAvailability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
     #     back_populates='volunteers') #this will need some discussion
-    vhours = Column(Integer) #will be a seperate table later, could be merged into events
 
     @classmethod
     def fromdict(cls, d):
@@ -52,8 +51,7 @@ class Volunteer(User):
         return dict_
 
     def __init__(self, name, email, passwordhash, phone,
-        birthdate=None, bio=None, gender=None,
-        vhours=None, volunteerNeighborhoods=None, volunteerInterests=None, 
+        birthdate=None, bio=None, gender=None, volunteerNeighborhoods=None, volunteerInterests=None,
         volunteerSkills=None, education=None, volunteerAvailability=None):
         self.name = name
         self.email = email
@@ -64,7 +62,6 @@ class Volunteer(User):
         self.permissions = 'volunteer'
         self.bio = bio
         self.gender = gender
-        self.vhours = vhours
         #self.volunteerNeighboorhoods = volunteerNeighborhoods
         self.education = education
         # if volunteerInterests is None:
@@ -128,6 +125,8 @@ class Volunteer(User):
                 a.addRelation(self.id, eventid)
             except False:
                 raise exc.ArgumentError('commit failed')
+
+
 
 
 

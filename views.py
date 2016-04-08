@@ -1,5 +1,6 @@
 import volunteer
 import admin
+from organization import *
 import orgmember
 import organization
 import event
@@ -17,11 +18,24 @@ def index():
     content = {'test content':'disregard'}
     return content, status.HTTP_404_NOT_FOUND
 
+@app.route('/organization/', methods=['POST'])
+def create_org():
+    success = {'status':'organization created, yay!'}
+    error = {'error': 'Error in JSON/SQL syntax'}
+    error3 = {'error': 'No organization data provided'}
+    data = request.json
+    if data:
+        if createOrganization(data):
+            return success, status.HTTP_200_OK
+        else:
+            return error, status.HTTP_500_INTERNAL_SERVER_ERROR
+    else:
+        return error3, status.HTTP_400_BAD_REQUEST
+
 @app.route('/user/', methods=['POST'])
 def create_user():
     success = {'status':'account created, yay!'}
     error = {'error': 'Error in JSON/SQL syntax'}
-    error2 = {'error': 'User already exists'}
     error3 = {'error': 'No user data provided'}
     data = request.json
     if data:
@@ -80,6 +94,34 @@ def createEnums(v, json):
     finally:
         s.close()
     return True
+@app.route('/organizations/<int:org_id>', methods=['GET', 'POST', 'DELETE'])
+def orgs(org_id):
+    error = {'error': 'Error in JSON/SQL syntax'}
+    updateSuccess = {'status':'Organization updated'}
+    updateError = {'error': 'Organization not found/input validation failed.'}
+    noOrg = {'error': 'Organization not found.'}
+    # update user
+    if request.method == 'POST':
+        data = request.json
+        if data:
+            s = Session()
+            o = s.query(Organization).filter_by(id=org_id).update(data)
+            if o:
+                s.commit()
+                s.close()
+                return updateSuccess, status.HTTP_200_OK
+            else:
+                return updateError, status.HTTP_400_BAD_REQUEST
+    if request.method == 'GET':
+        s = Session()
+        u = s.query(Organization).filter_by(id=org_id).first()
+        if u:
+            return jsonify(u.asdict()), status.HTTP_200_OK
+            s.close()
+        else:
+            return noOrg, status.HTTP_404_NOT_FOUND
+    if request.method == 'DELETE':
+        return error, HTTP_503_SERVICE_UNAVAILABLE
 
 
 @app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])

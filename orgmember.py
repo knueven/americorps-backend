@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import json
 import organization
 
+
 class OrgMember(User):
     __tablename__ = "orgmembers"
     __mapper_args__ = {'polymorphic_identity': 'orgmember'}
@@ -26,7 +27,7 @@ class OrgMember(User):
     def asdict(self):
         dict_ = {}
         for key in self.__mapper__.c.keys():
-                dict_[key] = getattr(self, key)
+            dict_[key] = getattr(self, key)
         return dict_
 
     def __init__(self, name, email, passwordhash, phone, poc, birthdate=None,
@@ -64,17 +65,6 @@ class OrgMember(User):
             link_org(o2)
             return True
 
-def link_org(orgmember):
-    s = Session()
-    o2_org = orgmember.org
-    org_m = s.query(OrgMember).filter_by(email = orgmember.email).first()
-    s.close()
-    org_id = org_m.id
-    json2 = json.dumps({'poc': org_id})
-    print(json2)
-    organization.updateOrg(o2_org, json2)
-    return
-
     def getOrgMember(self, id):
         s = Session()
         content = s.query(OrgMember).filter_by(id=id).first()
@@ -87,9 +77,33 @@ def link_org(orgmember):
     def confirmAttendee(self, event, user):
         s = Session()
         attendee = s.query(Attendee).filter_by(event).filter_by(user).first()
-        attendee.confirmEvent()
-        s.commit()
-        s.close()
+        if attendee:
+            attendee.confirmed = True
+            s.commit()
+            s.close()
+            return True
+        else:
+            return False
+
+    def validateHour(self, event, user):
+        s = Session()
+        attendee = s.query(Attendee).filter_by(event).filter_by(user).first()
+        if attendee:
+            attendee.hoursValidated = True
+            s.commit()
+            s.close()
+            return True
+        else:
+            return False
 
 
-
+def link_org(orgmember):
+    s = Session()
+    o2_org = orgmember.org
+    org_m = s.query(OrgMember).filter_by(email=orgmember.email).first()
+    s.close()
+    org_id = org_m.id
+    json2 = json.dumps({'poc': org_id})
+    print(json2)
+    organization.updateOrg(o2_org, json2)
+    return

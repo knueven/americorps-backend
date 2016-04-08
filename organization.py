@@ -68,5 +68,3 @@ def updateOrg(org_id, update_data):
         raise ValueError("id not found")
     finally:
         session.close()
-
- 

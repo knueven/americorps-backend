@@ -8,6 +8,7 @@ import enums
 from eventNeighborhoods import EventNeighborhoods
 from eventSkills import EventSkills
 from eventInterests import EventInterests
+from datetime import *
 
 class Event(Base):
     __tablename__ = 'events'
@@ -18,9 +19,9 @@ class Event(Base):
     state = Column(String(15), nullable=False)
     zip = Column(String(5), nullable=False)
     about = Column(String(255), nullable=False)
-    start_at = Column(String(255), nullable=False)    
-    posted_at = Column(String(255), nullable=False)
-    end_at = Column(String(255), nullable=False)
+    start_at = Column(DateTime(255), nullable=False)
+    posted_at = Column(DateTime(255), nullable=False)
+    end_at = Column(DateTime(255), nullable=False)
     org = Column(Integer, ForeignKey('organizations.id'), nullable=False)
     capacity = Column(Integer, nullable=True)
 
@@ -32,6 +33,8 @@ class Event(Base):
         return cls(**df)
 
 
+
+
     # all these fields are strings
     def __init__(self, name, address, city, state,
                  zip, about, start_at, posted_at, end_at, org, capacity):
@@ -39,7 +42,10 @@ class Event(Base):
         self.address = address
         self.city = city
         self.state = state
-        self.zip = zip
+        if len(zip) != 5 or zip.isdigit() == False:
+            raise ValueError("zip codes must be 5 digits long")
+        else:
+            self.zip = zip
         self.about = about
         self.start_at = start_at
         self.posted_at = posted_at
@@ -48,7 +54,10 @@ class Event(Base):
         # self.eventInterests = eventInterests
         # self.eventSkills = eventSkills
         self.org = org
-        self.capacity = capacity
+        if capacity < 0:
+            raise ValueError("capacity cannot be less than zero")
+        else:
+            self.capacity = capacity
 
         # if eventInterests is None:
         #     self.eventInterests = []
@@ -103,12 +112,13 @@ def createEventEnums(v, json):
     s = Session()
     try:
         v1 = s.query(Event).filter_by(name=v.name).first()
-        event.Event.grab_skills(v1.id, json)
-        event.Event.grab_interests(v1.id, json)
+        Event.grab_skills(v1.id, json)
+        Event.grab_interests(v1.id, json)
     except:
         return False
     finally:
         s.close()
         return True
+
 
 
