@@ -68,21 +68,19 @@ class Volunteer(User):
 
     def grab_neighborhoods(volun_id, json1):
         neighborhoods = json1['neighborhoods']
+        print(neighborhoods)
         VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
 
     def grab_skills(volun_id, json1):
-        s = json.loads(json.dumps(json1))
-        skills = s['skills']
+        skills = json1['skills']
         VolunteerSkills.createvskills(volun_id, skills)
 
     def grab_interests(volun_id, json1):
-        i = json.loads(json.dumps(json1))
-        interests = i['interests']
+        interests = json1['interests']
         VolunteerInterests.create_v_interests(volun_id, interests)
 
     def grab_availability(volun_id, json1):
-        a = json.loads(json.dumps(json1))
-        avail = a['availability']
+        avail = json1['availability']
         VolunteerAvailability.create_v_availability(volun_id, avail)
 
     # take in a user id, grab the volunteer from the database and return it
@@ -129,11 +127,14 @@ def createEnums(v, json):
     s = Session()
     try:
         v1 = s.query(User).filter_by(email=v.email).first()
+        print(v1)
+        print(v1.id)
         Volunteer.grab_neighborhoods(v1.id, json)
         Volunteer.grab_skills(v1.id, json)
         Volunteer.grab_interests(v1.id, json)
         Volunteer.grab_availability(v1.id, json)
     except:
+        print("false?")
         return False
     finally:
         s.close()
