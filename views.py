@@ -50,7 +50,7 @@ def create_user():
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
         if data['permissions'] == 'orgmember': 
-            if orgmember.OrgMember.createMember(data):
+            if orgmember.createMember(data):
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR

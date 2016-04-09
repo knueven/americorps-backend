@@ -9,6 +9,9 @@ from volunteerInterests import VolunteerInterests
 from volunteerSkills import VolunteerSkills
 from volunteerAvailability import VolunteerAvailability
 from attendee import Attendee
+import volunteerTest
+import string
+import random
 # volunteer contains: name, email, passwordhash, phone, last_active,
 #			birthdate, permissions, bio, gender,
 #			uhours, vhours, education
@@ -17,11 +20,13 @@ class VolunteerTests(unittest.TestCase):
 
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+        N=10
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        joey = Volunteer('Joey Wood', email, 'lit', '3015559721',
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")
         self.assertTrue(joey.name == 'Joey Wood')
-        self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
+        self.assertTrue(joey.email == email)
         self.assertTrue(joey.passwordhash != 'lit')
         self.assertTrue(joey.phone == '3015559721')
         #self.assertTrue(joey.birthdate == '05/26/1990')
@@ -36,7 +41,9 @@ class VolunteerTests(unittest.TestCase):
 
     #test object write to the database.    
     def test_db_write(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+        N=20
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        joey = Volunteer('Joey Wood', email, 'lit', '3015559721',
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")
         s = Session()
@@ -116,8 +123,10 @@ class VolunteerTests(unittest.TestCase):
 
     #unit test for password hashing
     def test_password_hash(self):
+        N = 15
         session = Session()
-        vol = Volunteer('Test', '2234@gmail.com', 'lit', '3015559725',
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        vol = Volunteer('Test', email, 'lit', '3015559725',
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")  
         try:

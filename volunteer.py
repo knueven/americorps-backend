@@ -128,14 +128,11 @@ def createEnums(v, json):
     s = Session()
     try:
         v1 = s.query(User).filter_by(email=v.email).first()
-        print(v1)
-        print(v1.id)
         Volunteer.grab_neighborhoods(v1.id, json)
         Volunteer.grab_skills(v1.id, json)
         Volunteer.grab_interests(v1.id, json)
         Volunteer.grab_availability(v1.id, json)
     except:
-        print("false?")
         return False
     finally:
         s.close()

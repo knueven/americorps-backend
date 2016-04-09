@@ -49,6 +49,7 @@ def updateOrg(org_id, update_data):
     session = Session()
     try:
         session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
+        session.commit()
     except:
         session.rollback()
         raise ValueError("id not found")
