@@ -10,16 +10,14 @@ import string
 #			vhours=None, neighborhood=None, interests=None, 
 #			skills=None, education=None, availability=None, events=None
 
-class VolunteerTests(unittest.TestCase):
+class AdminTests(unittest.TestCase):
 
     #checks if the volunteer's fields are initialized correctly
-    def test_init(self):
-        N=15
-        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        mickey = Admin('Mickey Mouse', email, 'mouse', '0765434567', True,
+    def test_01_init(self):
+        mickey = Admin('Mickey Mouse', 'wood.jos@husky.neu.edu', 'mouse', '0765434567', True,
                        birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
         self.assertTrue(mickey.name == 'Mickey Mouse')
-        self.assertTrue(mickey.email == email)
+        self.assertTrue(mickey.email == 'wood.jos@husky.neu.edu')
         #self.assertTrue(mickey.passwordhash == 'mouse')
         self.assertTrue(mickey.phone == '0765434567')
         self.assertTrue(mickey.master)
@@ -30,7 +28,7 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(mickey.gender == 'Male')
         
     #test object write to the database.    
-    def test_db_write(self):
+    def test_02_db_write(self):
         N=15
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         mickey = Admin('Mickey Mouse', email, 'mouse', '0765434567', True,
@@ -45,7 +43,7 @@ class VolunteerTests(unittest.TestCase):
             self.assertTrue(False)
 
 # checks if the volunteer was added to the database after initialization
-    def test_queryName(self):
+    def test_03_queryName(self):
         session = Session()
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
                          birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
@@ -63,7 +61,7 @@ class VolunteerTests(unittest.TestCase):
                         
 
     # checks if the volunteer can be queried by email
-    def test_queryEmail(self):
+    def test_04_queryEmail(self):
         session = Session()
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
                          birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
@@ -81,7 +79,7 @@ class VolunteerTests(unittest.TestCase):
                         
 
     # checks if the volunteer can be queried by phone
-    def test_queryPhone(self):
+    def test_05_queryPhone(self):
         session = Session()
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
                          birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
