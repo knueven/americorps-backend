@@ -2,7 +2,7 @@ from user import User
 from db import Base, Session
 from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker
-from datetime import datetime
+from datetime import datetime, date
 from attendee import Attendee
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import json
@@ -29,7 +29,11 @@ class OrgMember(User):
     def asdict(self):
         dict_ = {}
         for key in self.__mapper__.c.keys():
-            dict_[key] = getattr(self, key)
+            result = getattr(self, key)
+            if isinstance(result, date):
+                dict_[key] = str(result)
+            else:
+                dict_[key] = result
         return dict_
 
     def __init__(self, name, email, passwordhash, phone, poc, org, birthdate=None,
