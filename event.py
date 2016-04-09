@@ -2,7 +2,6 @@ from sqlalchemy import *
 from sqlalchemy import exc
 from sqlalchemy.orm import relation, sessionmaker, relationship
 from db import Base, Session
-#import organization
 import json
 import enums
 from eventNeighborhoods import EventNeighborhoods
@@ -83,13 +82,17 @@ class Event(Base):
         EventInterests.create_v_interests(volun_id, interests)
 
     def deleteSelf(self, session):
-        try:
-            for attendee in session.query(Attendee).filter_by(eventID=self.id):
-                session.delete(attendee)
-            session.delete(self)
-        except:
+        attendees = session.query(Attendee).filter_by(eventID=self.id)
+        if not(attendees):
             return False
-        return True
+        else:
+            try:
+                for attendee in attendees:
+                    session.delete(attendee)
+                session.delete(self)
+            except:
+                return False
+            return True
 
 # create an event from a json string
 def createEvent(json):

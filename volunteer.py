@@ -115,6 +115,24 @@ class Volunteer(User):
             finally:
                 s.close()
 
+    def deleteSelf(self):
+        s = Session()
+        attendees = s.query(Attendee).filter_by(userID=self.id)
+        if not(attendees):
+            return False
+        else:
+            try:
+                for a in attendees:
+                    s.delete(a)
+                s.delete(self)
+                s.commit()
+            except:
+                print("delete failed")
+                return False
+            finally:
+                s.close()
+            return True
+
     # create a volunteer from a json blob
 def createVolunteer(json):
     v = Volunteer.fromdict(json)

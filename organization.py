@@ -47,15 +47,19 @@ class Organization(Base):
 
     def deleteSelf(self, session):
         check = True
-        for e in session.query(Event).filter_by(org=self.id):
-             check = e.deleteSelf(session) and check
-        try:
-            for member in session.query(OrgMember).filter_by(org=self.id):
-                session.delete(member)
-            session.delete(self)
-        except:
+        events = session.query(Event).filter_by(org=self.id)
+        if not(events):
             return False
-        return check
+        else:
+            for e in events:
+                 check = e.deleteSelf(session) and check
+            try:
+                for member in session.query(OrgMember).filter_by(org=self.id):
+                    session.delete(member)
+                session.delete(self)
+            except:
+                return False
+            return check
 
 def updateOrg(org_id, update_data):
     session = Session()

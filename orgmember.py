@@ -105,6 +105,17 @@ class OrgMember(User):
             s.close
         return isSuccessful
 
+    def deleteSelf(self):
+        s = Session()
+        try:
+            s.delete(self)
+            s.commit()
+        except:
+            return False
+        finally:
+            s.close
+        return True
+
 def link_org(orgmember):
     s = Session()
     o2_org = orgmember.org

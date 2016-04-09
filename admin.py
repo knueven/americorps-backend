@@ -78,7 +78,7 @@ class Admin(User):
         else:
             raise ValueError("user does not exist")
 
-    def deleteAccount(self):
+    def deleteSelf(self):
         s = Session()
         try:
             s.delete(self)
