@@ -114,15 +114,16 @@ def createVolunteer(json):
     try:
         s.add(v)
         s.commit()
+        n = True
     except:
-        return False
-    finally:
         s.close()
-        v2 = Volunteer.fromdict(json)
-        if createEnums(v2, json):
-            return True
-        else:
-            return False
+        return False
+    s.close()
+    v2 = Volunteer.fromdict(json)
+    if createEnums(v2, json):
+        return True
+    else:
+        return False
 
 def createEnums(v, json):
     s = Session()
