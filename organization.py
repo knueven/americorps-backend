@@ -1,9 +1,10 @@
 from sqlalchemy import *
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import exc
 from db import Base, Session
 from datetime import datetime
 from flask import json
-import orgmember
+from event import Event
+from orgmember import OrgMember
 
 class Organization(Base):
     __tablename__ = 'organizations'
@@ -44,6 +45,17 @@ class Organization(Base):
     def __repr__(self):
         return "Organization(%s, %s)" % (self.id, self.name)
 
+    def deleteSelf(self, session):
+        check = True
+        for e in session.query(Event).filter_by(org=self.id):
+             check = e.deleteSelf(session) and check
+        try:
+            for member in session.query(OrgMember).filter_by(org=self.id):
+                session.delete(member)
+            session.delete(self)
+        except:
+            return False
+        return check
 
 def updateOrg(org_id, update_data):
     session = Session()
@@ -70,3 +82,4 @@ def createOrganization(json1):
     finally:
         s.close()
     return True
+
