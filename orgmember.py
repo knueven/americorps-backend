@@ -5,54 +5,52 @@ from sqlalchemy.orm import relation, sessionmaker
 from datetime import datetime
 from attendee import Attendee
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import json
+from sqlalchemy import exc
+from event import Event
+import organization
+
 
 class OrgMember(User):
     __tablename__ = "orgmembers"
     __mapper_args__ = {'polymorphic_identity': 'orgmember'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the OrgMember will have all User fields
-    vhours = Column(Integer)  # will be a seperate table later, could be merged into events
-    neighborhood = Column(String(255))  # seperate table Neighborhoods
-    interests = Column(String(255))  # enum?
-    education = Column(String(255))  # seperate table
-    availability = Column(String(255))  # this will need some discussion
-    events = Column(String(255))  # will need to foreignkey to another table later
-    org = Column(Integer, ForeignKey('organizations.id'))  # object or id?
+    org = Column(Integer, ForeignKey('organizations.id'), nullable=False)  # object or id?
     poc = Column(Boolean, nullable=False)
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate',
-                   'bio', 'gender', 'vhours', 'neighborhood', 'interests',
-                   'education', 'availabilty', 'events', 'org', 'poc')
+                   'bio', 'gender', 'org', 'poc')
         df = {k: v for k, v in d.items() if k in allowed}
         return cls(**df)
 
     def asdict(self):
         dict_ = {}
         for key in self.__mapper__.c.keys():
-                dict_[key] = getattr(self, key)
+            dict_[key] = getattr(self, key)
         return dict_
 
-    def __init__(self, name, email, passwordhash, phone, last_active=datetime.now(), birthdate=None,
-                 bio=None, gender=None, vhours=None, neighborhood=None, interests=None,
-                 education=None, availability=None, events=None, org=None, poc=None):
+    def __init__(self, name, email, passwordhash, phone, poc, org, birthdate=None,
+                 bio=None, gender=None):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        self.phone = phone
-        self.last_active = last_active
+        if len(phone) > 15 :
+            raise ValueError("phone number is too long")
+        elif len(phone) < 10:
+            raise ValueError("phone number is too short")
+        elif phone.isdigit() == False:
+            raise ValueError("phone number must be a string of digits")
+        else:
+            self.phone = phone
+        self.poc = poc
+        self.last_activity = datetime.now()
         self.birthdate = birthdate
         self.bio = bio
         self.gender = gender
-        self.vhours = vhours
-        self.neighborhood = neighborhood
-        self.interests = interests
-        self.education = education
-        self.availability = availability
-        self.events = events
         self.org = org
-        self.poc = poc
 
     def set_password(self, password):
         self.passwordhash = generate_password_hash(password)
@@ -61,18 +59,6 @@ class OrgMember(User):
         return check_password_hash(self.passwordhash, password)
 
         # create a volunteer from a json blob
-
-    def createMember(json):
-        o = OrgMember.fromdict(json)
-        s = Session()
-        try:
-            s.add(o)
-            s.commit()
-        except:
-            return False
-        finally:
-            s.close()
-        return True
 
     def getOrgMember(self, id):
         s = Session()
@@ -86,9 +72,77 @@ class OrgMember(User):
     def confirmAttendee(self, event, user):
         s = Session()
         attendee = s.query(Attendee).filter_by(event).filter_by(user).first()
-        attendee.confirmEvent()
+        if attendee:
+            attendee.confirmed = True
+            s.commit()
+            s.close()
+            return True
+        else:
+            return False
+
+    def validateHour(self, event, user):
+        s = Session()
+        attendee = s.query(Attendee).filter_by(event).filter_by(user).first()
+        if attendee:
+            attendee.hoursValidated = True
+            s.commit()
+            s.close()
+            return True
+        else:
+            return False
+
+    def deleteEvent(self, eventID):
+        s = Session()
+        event = s.query(Event).filter_by(id=eventID).first()
+        if event.org != self.org:
+            raise PermissionError("this user does not have permission to delete this event")
+        isSuccessful = event.deleteSelf(s)
+        try:
+            s.commit()
+        except:
+            raise exc.SQLAlchemyError("commit failed")
+        finally:
+            s.close
+        return isSuccessful
+
+    def deleteSelf(self):
+        s = Session()
+        try:
+            s.delete(self)
+            s.commit()
+        except:
+            return False
+        finally:
+            s.close
+        return True
+
+def link_org(orgmember):
+    s = Session()
+    o2_org = orgmember.org
+    org_m = s.query(OrgMember).filter_by(email=orgmember.email).first()
+    s.close()
+    if org_m:
+        org_id = org_m.id
+    else :
+        print (exc.InvalidRequestError("query failed"))
+        return False
+    json2 = json.dumps({'poc': org_id})
+    organization.updateOrg(o2_org, json2)
+    return True
+            
+
+def createMember(json):
+    o = OrgMember.fromdict(json)
+    s = Session()
+    try:
+        s.add(o)
         s.commit()
+    except:
+        return False
+    finally:
         s.close()
-
-
-
+    o2 = OrgMember.fromdict(json)
+    if link_org(o2):
+        return True
+    else:
+        return False

@@ -7,6 +7,7 @@ import json
 import itertools
 from datetime import datetime
 import enums
+from organization import Organization
 from sqlalchemy import exc
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -35,7 +36,14 @@ class Admin(User):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        self.phone = phone
+        if len(phone) > 15:
+            raise ValueError('phone number is too long')
+        elif len(phone) < 10:
+            raise ValueError('phone number is too short')
+        elif phone.isdigit() == False:
+            raise ValueError('phone number must be a string of integers')
+        else:
+            self.phone = phone
         self.last_active = datetime.now()
         self.master = master
         self.birthdate = birthdate
@@ -69,5 +77,29 @@ class Admin(User):
             return content
         else:
             raise ValueError("user does not exist")
+
+    def deleteSelf(self):
+        s = Session()
+        try:
+            s.delete(self)
+            s.commit()
+        except:
+            return False
+        finally:
+            s.close()
+        return True
+
+    def deleteOrg(self, orgID):
+        s = Session()
+        org = s.query(Organization).filter_by(id=orgID).first()
+        if org:
+            isSuccessful = org.deleteSelf(s)
+            if isSuccessful:
+                s.commit()
+        else:
+            raise exc.NoReferenceError
+        s.close()
+        return isSuccessful
+
 
 

@@ -18,12 +18,16 @@ class Attendee(Base):
     key = Column(Integer, primary_key=True, nullable=False)
     userID = Column(Integer, ForeignKey('users.id'), nullable=False)
     eventID = Column(Integer, ForeignKey('events.id'), nullable=False)
-    confirmed = Column(Boolean)
+    confirmed = Column(Boolean, nullable=False)
+    hours = Column(Integer)
+    hoursValidated = Column(Boolean, nullable=False)
 
-    def __init__(self, user=None, event=None):
+    def __init__(self, user, event):
         self.userID = user
         self.eventID = event
-        self.confirmed = False
+        self.confirmed = True
+        self.hours = 0
+        self.hoursValidated = True
 
     def addRelation(self, user, event):
         s = Session()
@@ -37,7 +41,7 @@ class Attendee(Base):
             s.close()
         return True
 
-    def confirmEvent(self):
-        self.confirmed = True
+
+
 
 

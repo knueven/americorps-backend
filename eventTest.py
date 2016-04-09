@@ -1,4 +1,5 @@
 from event import Event
+import event
 from db import Session
 import unittest
 from organization import Organization
@@ -8,11 +9,11 @@ from sqlalchemy import exc
 
 # event contains: id, name, address, city, state, zip, about, start_at, posted_at, duration, interests, skills, org
 class EventTests(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
-        org = Organization('Cancer Research Center', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!',
-                           'admin@ccr.org', '6177793535', 'cancer')
-        org.id = -1
+        org = Organization('Cancer Research Center', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!')
+        org.id = 1
         s = Session()
         s.add(org)
         try:
@@ -22,73 +23,68 @@ class EventTests(unittest.TestCase):
         s.close()
 
     # checks if the events fields are initialized correctly
-    def test_init(self):
+    def test_01_init(self):
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     '04/02/2016 13:00', '03/27/2016 24:00:00', 2, 'cancer', 'running', -1)
-        self.assertTrue(race.name == 'Race for the Cure' and
-                        race.address == 'Mass Ave' and
-                        race.city == 'Boston' and
-                        race.state == 'MA' and
-                        race.zip == '02115' and
-                        race.about == 'Running a marathon to raise money for cancer research' and
-                        race.start_at == '04/02/2016 13:00' and
-                        race.posted_at == '03/27/2016 24:00:00' and
-                        race.duration == 2 and
-                        race.interests == 'cancer' and
-                        race.skills == 'running' and
-                        race.org == -1)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 25)
+        self.assertEqual(race.name, 'Race for the Cure')
+        self.assertEqual(race.address, 'Mass Ave')
+        self.assertEqual(race.city, 'Boston')
+        self.assertEqual(race.state, 'MA')
+        self.assertEqual(race.zip, '02115')
+        self.assertEqual(race.about, 'Running a marathon to raise money for cancer research')
+        self.assertEqual(str(race.start_at), '2016-04-02 13:00:00')
+        self.assertEqual(str(race.end_at), '2016-04-02 14:00:00')
+        self.assertEqual(race.org, 1)
+        self.assertEqual(race.capacity, 25)
 
     # test object write to the database.
-    def test_db_write(self):
+    def test_02_db_write(self):
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
-                     'Running a marathon to raise money for cancer research', '04/02/2016 13:00', '03/27/2016 24:00:00',
-                     2, 'cancer', 'running', -1)
+                     'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
+                     datetime(2016, 4, 2, 14, 0, 0), 1, 30)
         s = Session()
 
         s.add(race)
         s.commit()
         s.close()
-        if s.query(Event).filter_by(name='Cancer Researcg Center').first:
+        if s.query(Event).filter_by(name='Race for the Cure').first():
             self.assertTrue(True)
         else:
             self.assertTrue(False)  # checks if the event was added to the database after initialization
 
-    def test_db_delete(self):
-        s= Session()
-        try:
-            event1 = s.query(Event).filter_by(name='Race for the Cure').first()
-            s.delete(event1)
-            s.commit
-        except exc.SQLAlchemyError:
-            self.assertTrue(False)
+    #def test_db_delete(self):
+#        s = Session()
+#        try:
+#            event1 = s.query(Event).filter_by(name='Race for the Cure').first()
+#            s.delete(event1)
+#            s.commit
+#        except exc.SQLAlchemyError:
+#            self.assertTrue(False)
 
 
 
-    def test_create_event(self):
-        json = {"name": "Event1","address": "1 something street", "city": "Boston", "state": "MA", "zip": "02115", "about": "ok", "start_at": "04/02/2016 13:00","posted_at": "03/27/2016 24:00:00","duration": 2, "interests": "stuff", "skills" : "sporty", "org": 1}
+    def test_03_create_event(self):
+        json = {"name": "Event1","address": "1 something street", "city": "Boston", "state": "MA", "zip": "02115", "about": "ok", "start_at": "04/02/2016 13:00","posted_at": "03/27/2016 24:00:00","end_at": "04/02/2016 15:00", "org": 1, "capacity": 25}
         try: 
-            Event.createEvent(json)
+            event.createEvent(json)
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
     def test_query(self):
         session = Session()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
-                     'Running a marathon to raise money for cancer research', '04/02/2016 13:00', '03/27/2016 24:00:00',
-                     2, 'cancer', 'running', -1)
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
         qrace = session.query(Event).filter_by(name='Race for the Cure').first()
-        self.assertTrue(race.name == qrace.name and
-                        race.address == qrace.address and
-                        race.city == qrace.city and
-                        race.state == qrace.state and
-                        race.zip == qrace.zip and
-                        race.about == qrace.about and
-                        race.start_at == qrace.start_at and
-                        race.posted_at == qrace.posted_at and
-                        race.duration == qrace.duration and
-                        race.interests == qrace.interests and
-                        race.skills == qrace.skills)
+        self.assertTrue(race.name == qrace.name)
+        self.assertTrue(race.address == qrace.address)
+        self.assertTrue(race.city == qrace.city)
+        self.assertTrue(race.state == qrace.state)
+        self.assertTrue(race.zip == qrace.zip)
+        self.assertTrue(race.about == qrace.about)
+        self.assertTrue(race.start_at == qrace.start_at)
+        self.assertTrue(race.end_at == qrace.end_at)
 
 # # race.zip is a string of letters - should be 5 ints
 # def test_zip_letters(self):
@@ -154,20 +150,19 @@ class EventTests(unittest.TestCase):
 #     session.close()
 
 # not sure if we still need this
-    def test_org_exists(self):
-        session = Session()
-        race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
-                     'Running a marathon to raise money for cancer research',
-                     '04/02/2016 13:00', '03/27/2016 24:00:00', 2, 'cancer', 'running', -1)
-        org = Organization('Cancer Research Center', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!',
-                           'admin@ccr.org', '6177793535', 'cancer')
-        query = session.query(Organization).filter_by(name=org.name).first()
-        if query:
-            self.assertTrue(org.name == query.name and
-                            org.address == query.address and
-                            org.city == query.city)
-        else:
-            self.assertTrue(False)
+#    def test_org_exists(self):
+ #       session = Session()
+#        race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
+#                     'Running a marathon to raise money for cancer research',
+#                     '04/02/2016 13:00', '03/27/2016 24:00:00','04/02/2016 15:00', 1, 35)
+#        org = Organization('Cancer Research Center', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!')
+#        query = session.query(Organization).filter_by(name=org.name).first()
+#        if query:
+#            self.assertTrue(org.name == query.name and
+#                            org.address == query.address and
+#                            org.city == query.city)
+#        else:
+#            self.assertTrue(False)
 
 
 if __name__ == '__main__':

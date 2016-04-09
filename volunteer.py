@@ -4,6 +4,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relation, sessionmaker, relationship
 from sqlalchemy import ForeignKey
 import json
+from flask import json
 import itertools
 from datetime import datetime
 import enums
@@ -22,24 +23,17 @@ class Volunteer(User):
     __mapper_args__ = {'polymorphic_identity' : 'volunteer'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the Volunteer will have all User fields
+    uhours = Column(Integer)
+    vhours = Column(Integer)
     education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree"
                             ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
                             "Master's degree", "Doctoral or professional degree", name="education_enum"))
 
-    volunteerNeighborhoods = relationship("VolunteerNeighborhoods", order_by=VolunteerNeighborhoods.id,
-        back_populates='volunteers') #enum
-    volunteerInterests = relationship("VolunteerInterests", order_by=VolunteerInterests.id,
-        back_populates='volunteers') #enum?
-    volunteerSkills = relationship("VolunteerSkills", order_by=VolunteerSkills.id, back_populates='volunteers')
-    volunteerAvailability = relationship("VolunteerAvailability", order_by=VolunteerAvailability.id,
-        back_populates='volunteers') #this will need some discussion
-    vhours = Column(Integer) #will be a seperate table later, could be merged into events
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-            'bio', 'gender', 'vhours', 'neighborhoods', 'interests', 'skills', 
-            'education', 'availabilty', 'events')
+            'bio', 'gender', 'uhours', 'vhours','education', 'events')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
@@ -50,33 +44,28 @@ class Volunteer(User):
         return dict_
 
     def __init__(self, name, email, passwordhash, phone,
-        birthdate=None, bio=None, gender=None,
-        vhours=None, volunteerNeighborhoods=None, volunteerInterests=None, 
-        volunteerSkills=None, education=None, volunteerAvailability=None):
+                 birthdate=None, bio=None, gender=None, uhours=None, vhours=None,
+                 education=None):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        self.phone = phone
+        if len(phone) > 15:
+            raise ValueError('phone number is too long')
+        elif len(phone) < 10:
+            raise ValueError('phone number is too short')
+        elif phone.isdigit() == False:
+            raise ValueError('phone number must be a string of integers')
+        else:
+            self.phone = phone
         self.last_active = datetime.now()
         self.birthdate = birthdate
         self.permissions = 'volunteer'
         self.bio = bio
         self.gender = gender
+        self.uhours = uhours
         self.vhours = vhours
-        self.volunteerNeighboorhoods = volunteerNeighborhoods
         self.education = education
-        if volunteerInterests is None:
-            self.volunteerInterests = []
-        else:
-            self.volunteerInterests = volunteerInterests
-        if volunteerSkills is None:
-            self.volunteerSkils = []
-        else:
-            self.volunteerSkills = volunteerSkills
-        if volunteerAvailability is None:
-            self.volunteerAvailability = []
-        else:
-            self.volunteerAvailability = volunteerAvailability
+        
 
     def set_password(self, password):
         self.passwordhash = generate_password_hash(password)
@@ -84,18 +73,22 @@ class Volunteer(User):
     def check_password(self, password):
         return check_password_hash(self.passwordhash, password)
 
-    # create a volunteer from a json blob
-    def createVolunteer(json):
-        v = Volunteer.fromdict(json)
-        s = Session()
-        try:
-            s.add(v)
-            s.commit()
-        except:
-            return False
-        finally:
-            s.close()
-            return True
+    def grab_neighborhoods(volun_id, json1):
+        neighborhoods = json1['neighborhoods']
+        print(neighborhoods)
+        VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
+
+    def grab_skills(volun_id, json1):
+        skills = json1['skills']
+        VolunteerSkills.createvskills(volun_id, skills)
+
+    def grab_interests(volun_id, json1):
+        interests = json1['interests']
+        VolunteerInterests.create_v_interests(volun_id, interests)
+
+    def grab_availability(volun_id, json1):
+        avail = json1['availability']
+        VolunteerAvailability.create_v_availability(volun_id, avail)
 
     # take in a user id, grab the volunteer from the database and return it
     def getVolunteer(self, id):
@@ -111,7 +104,7 @@ class Volunteer(User):
     def addEvent(self, eventid):
         s = Session()
         event = s.query(Event).filter_by(id=eventid).first()
-        a = Attendee()
+        a = Attendee(id, eventid)
         if event == null:
             raise ValueError("event does not exist")
         else:
@@ -119,6 +112,59 @@ class Volunteer(User):
                 a.addRelation(self.id, eventid)
             except False:
                 raise exc.ArgumentError('commit failed')
+            finally:
+                s.close()
+
+    def deleteSelf(self):
+        s = Session()
+        attendees = s.query(Attendee).filter_by(userID=self.id)
+        if not(attendees):
+            return False
+        else:
+            try:
+                for a in attendees:
+                    s.delete(a)
+                s.delete(self)
+                s.commit()
+            except:
+                print("delete failed")
+                return False
+            finally:
+                s.close()
+            return True
+
+    # create a volunteer from a json blob
+def createVolunteer(json):
+    v = Volunteer.fromdict(json)
+    s = Session()
+    try:
+        s.add(v)
+        s.commit()
+        n = True
+    except:
+        s.close()
+        return False
+    s.close()
+    v2 = Volunteer.fromdict(json)
+    if createEnums(v2, json):
+        return True
+    else:
+        return False
+
+def createEnums(v, json):
+    s = Session()
+    try:
+        v1 = s.query(User).filter_by(email=v.email).first()
+        Volunteer.grab_neighborhoods(v1.id, json)
+        Volunteer.grab_skills(v1.id, json)
+        Volunteer.grab_interests(v1.id, json)
+        Volunteer.grab_availability(v1.id, json)
+    except:
+        return False
+    finally:
+        s.close()
+    return True
+
 
 
 

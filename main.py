@@ -15,6 +15,9 @@ import admin
 import organization
 import orgmember
 import event
+import eventInterests
+import eventNeighborhoods
+import eventSkills
 import attendee
 import sys
 

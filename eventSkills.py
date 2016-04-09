@@ -6,8 +6,8 @@ from sqlalchemy import Enum
 from db import Base, Session
 from enums import SkillsEnum
 
-class VolunteerSkills(Base):
-	__tablename__ = 'volunteerSkills'
+class EventSkills(Base):
+	__tablename__ = 'eventSkills'
 
 	id = Column(Integer, primary_key=True)
 	skill = Column(Enum("Public Relations/Public Speaking",
@@ -24,22 +24,23 @@ class VolunteerSkills(Base):
 						"Event Planning",
 						"Management",
 						"Sports/Recreation", name="skills_enum"), nullable=False)
-	volunteer_id = Column(Integer, ForeignKey('volunteers.id'))
+	event_id = Column(Integer, ForeignKey('events.id'))
 
-	#volunteers = relationship("Volunteer", back_populates="volunteerSkills")
+	#events = relationship("Event", back_populates="eventSkills")
 
-	def __init__(self, skill, volunteer_id):
+	def __init__(self, skill, event_id):
+		#self.id = id
 		self.skill = skill
-		self.volunteer_id = volunteer_id
+		self.event_id = event_id
 
 	def __repr__(self):
-		return "<VolunteerSkills(skill='%s')>" % (self.day)
+		return "<EventSkills(skill='%s')>" % (self.day)
 
-	def createvskills(volunteer_id, skills):
+	def createvskills(event_id, skills):
 		s = Session()
 		try:
 			for sk in skills: 
-				v = VolunteerSkills(sk, volunteer_id)
+				v = EventSkills(sk, event_id)
 				s.add(v)
 
 			s.commit()
@@ -48,4 +49,3 @@ class VolunteerSkills(Base):
 		finally:
 			s.close()
 		return True
-

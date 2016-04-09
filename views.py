@@ -1,6 +1,8 @@
 import volunteer
 import admin
+from organization import *
 import orgmember
+import organization
 import event
 from flask import render_template,redirect, url_for, json, g
 from flask.ext.api import status
@@ -10,21 +12,35 @@ from app import app
 from user import User
 import jwt
 from datetime import datetime, timedelta
+from event import Event
 @app.route('/')
 def index():
     content = {'test content':'disregard'}
     return content, status.HTTP_404_NOT_FOUND
 
+@app.route('/organization/', methods=['POST'])
+def create_org():
+    success = {'status':'organization created, yay!'}
+    error = {'error': 'Error in JSON/SQL syntax'}
+    error3 = {'error': 'No organization data provided'}
+    data = request.json
+    if data:
+        if createOrganization(data):
+            return success, status.HTTP_200_OK
+        else:
+            return error, status.HTTP_500_INTERNAL_SERVER_ERROR
+    else:
+        return error3, status.HTTP_400_BAD_REQUEST
+
 @app.route('/user/', methods=['POST'])
 def create_user():
     success = {'status':'account created, yay!'}
     error = {'error': 'Error in JSON/SQL syntax'}
-    error2 = {'error': 'User already exists'}
     error3 = {'error': 'No user data provided'}
     data = request.json
     if data:
         if data['permissions'] == 'volunteer':
-            if volunteer.Volunteer.createVolunteer(data):
+            if volunteer.createVolunteer(data):
                 return success, status.HTTP_200_OK
             else: 
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -33,8 +49,8 @@ def create_user():
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-        if data['permissions'] == 'orgmember':
-            if orgmember.OrgMember.createMember(data):
+        if data['permissions'] == 'orgmember': 
+            if orgmember.createMember(data):
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -42,7 +58,37 @@ def create_user():
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
     else:
-        return error3, status.HTTP_400_BAD_REQUEST
+        return error3, status.HTTP_400_BAD_REQUESTup
+
+@app.route('/organizations/<int:org_id>', methods=['GET', 'POST', 'DELETE'])
+def orgs(org_id):
+    error = {'error': 'Error in JSON/SQL syntax'}
+    updateSuccess = {'status':'Organization updated'}
+    updateError = {'error': 'Organization not found/input validation failed.'}
+    noOrg = {'error': 'Organization not found.'}
+    # update user
+    if request.method == 'POST':
+        data = request.json
+        if data:
+            s = Session()
+            o = s.query(Organization).filter_by(id=org_id).update(data)
+            if o:
+                s.commit()
+                s.close()
+                return updateSuccess, status.HTTP_200_OK
+            else:
+                return updateError, status.HTTP_400_BAD_REQUEST
+    if request.method == 'GET':
+        s = Session()
+        u = s.query(Organization).filter_by(id=org_id).first()
+        if u:
+            return jsonify(u.asdict()), status.HTTP_200_OK
+            s.close()
+        else:
+            return noOrg, status.HTTP_404_NOT_FOUND
+    if request.method == 'DELETE':
+        return error, HTTP_503_SERVICE_UNAVAILABLE
+
 
 @app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])
 def users(user_id):
@@ -80,12 +126,13 @@ def events():
     error = {'error': "Error in JSON/SQL syntax"}
     if request.method == 'POST':
         data = request.json
-        if event.Event.createEvent(data):
+        if event.createEvent(data):
             return success, status.HTTP_200_OK
         else:
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
     if request.method == 'GET':
         return content, status.HTTP_200_OK
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -121,6 +168,15 @@ def parse_token(req):
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    session.pop('logged_in', None)
     return jsonify({'result': 'success'})
 
+@app.route('/organization', methods=['POST'])
+def org():
+    success = {'status': 'org created'}
+    error = {'error': "Error in JSON/SQL syntax"}
+    if request.method == 'POST':
+        data = request.json
+        if organization.Organization.createOrganization(data):
+            return success, status.HTTP_200_OK
+        else:
+            return error, status.HTTP_500_INTERNAL_SERVER_ERROR
