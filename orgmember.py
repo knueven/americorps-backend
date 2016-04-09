@@ -99,7 +99,7 @@ def link_org(orgmember):
     if org_m:
         org_id = org_m.id
     else :
-        raise exc.InvalidRequestError("query failed")
+        print (exc.InvalidRequestError("query failed"))
         return False
     json2 = json.dumps({'poc': org_id})
     organization.updateOrg(o2_org, json2)
