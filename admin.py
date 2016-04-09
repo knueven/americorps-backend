@@ -5,7 +5,7 @@ from sqlalchemy.orm import relation, sessionmaker, relationship
 from sqlalchemy import ForeignKey
 import json
 import itertools
-from datetime import datetime
+from datetime import datetime, date
 import enums
 from organization import Organization
 from sqlalchemy import exc
