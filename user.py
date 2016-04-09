@@ -9,7 +9,7 @@ class User(Base):
 	__tablename__ = 'users'
 	id = Column(Integer, primary_key=True, nullable=False)
 	name = Column(String(75), nullable=False)
-	email = Column(String(60), nullable=False)
+	email = Column(String(60), nullable=False, unique=True)
 	passwordhash = Column(String(255), nullable=False) 
 	phone = Column(String(15), nullable=False)
 	permissions = Column(Enum('volunteer', 'orgmember', 'admin'), nullable=False)
