@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey
 import json
 from flask import json
 import itertools
-from datetime import datetime
+from datetime import datetime, date
 import enums
 from enums import EducationEnum
 from volunteerNeighborhoods import VolunteerNeighborhoods
@@ -40,7 +40,11 @@ class Volunteer(User):
     def asdict(self):
         dict_ = {}
         for key in self.__mapper__.c.keys():
-                dict_[key] = getattr(self, key)
+                result = getattr(self, key)
+                if isinstance(result, date):
+                    dict_[key] = str(result)
+                else:
+                    dict_[key] = result
         return dict_
 
     def __init__(self, name, email, passwordhash, phone,

@@ -28,7 +28,11 @@ class Admin(User):
     def asdict(self):
         dict_ = {}
         for key in self.__mapper__.c.keys():
-                dict_[key] = getattr(self, key)
+                result = getattr(self, key)
+                if isinstance(result, date):
+                    dict_[key] = str(result)
+                else:
+                    dict_[key] = result
         return dict_
 
     def __init__(self, name, email, passwordhash, phone, master, birthdate=None, bio=None, gender=None):
