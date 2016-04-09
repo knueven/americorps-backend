@@ -27,16 +27,16 @@ class EventTests(unittest.TestCase):
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
                      datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 25)
-        self.assertTrue(race.name == 'Race for the Cure')
-        self.assertTrue(race.address == 'Mass Ave')
-        self.assertTrue(race.city == 'Boston')
-        self.assertTrue(race.state == 'MA')
-        self.assertTrue(race.zip == '02115')
-        self.assertTrue(race.about == 'Running a marathon to raise money for cancer research')
-        #self.assertTrue(race.start_at == '04/02/2016 13:00')
-        #self.assertTrue(race.end_at == '04/02/2016 14:00')
-        self.assertTrue(race.org == 1)
-        self.assertTrue(race.capacity == 25)
+        self.assertEqual(race.name, 'Race for the Cure')
+        self.assertEqual(race.address, 'Mass Ave')
+        self.assertEqual(race.city, 'Boston')
+        self.assertEqual(race.state, 'MA')
+        self.assertEqual(race.zip, '02115')
+        self.assertEqual(race.about, 'Running a marathon to raise money for cancer research')
+        self.assertEqual(str(race.start_at), '2016-04-02 13:00:00')
+        self.assertEqual(str(race.end_at), '2016-04-02 14:00:00')
+        self.assertEqual(race.org, 1)
+        self.assertEqual(race.capacity, 25)
 
     # test object write to the database.
     def test_db_write(self):
