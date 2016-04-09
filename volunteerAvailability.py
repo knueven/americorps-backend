@@ -28,13 +28,14 @@ class VolunteerAvailability(Base):
 
     def create_v_availability(volunteer_id, avail):
         s = Session()
-        for a in avail:
-            v = VolunteerAvailability(a, volunteer_id)
-            try:
+        try:
+            for a in avail:
+                v = VolunteerAvailability(a, volunteer_id)
                 s.add(v)
-            except:
-                s.rollback()
-                return False
-        s.commit()
-        s.close()
+                s.commit()
+        except:
+            s.rollback()
+            return False
+        finally:
+            s.close()
         return True

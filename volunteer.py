@@ -112,7 +112,8 @@ class Volunteer(User):
                 a.addRelation(self.id, eventid)
             except False:
                 raise exc.ArgumentError('commit failed')
-        s.close()
+            finally:
+                s.close()
 
     # create a volunteer from a json blob
 def createVolunteer(json):
@@ -144,7 +145,7 @@ def createEnums(v, json):
         return False
     finally:
         s.close()
-        return True
+    return True
 
 
 

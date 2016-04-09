@@ -36,5 +36,5 @@ class VolunteerInterests(Base):
 			return False
 		finally:
 			s.close()
-			return True
+		return True
 

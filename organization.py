@@ -69,4 +69,4 @@ def createOrganization(json1):
         return False
     finally:
         s.close()
-        return True
+    return True

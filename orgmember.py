@@ -116,8 +116,8 @@ def createMember(json):
         return False
     finally:
         s.close()
-        o2 = OrgMember.fromdict(json)
-        if link_org(o2):
-            return True
-        else:
-            return False
+    o2 = OrgMember.fromdict(json)
+    if link_org(o2):
+        return True
+    else:
+        return False

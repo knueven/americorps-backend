@@ -93,9 +93,9 @@ def createEvent(json):
         return False
     finally:
         s.close()
-        v2 = Event.fromdict(json)
-        createEventEnums(v2, json)
-        return True
+    v2 = Event.fromdict(json)
+    createEventEnums(v2, json)
+    return True
 
 def createEventEnums(v, json):
     s = Session()
@@ -107,7 +107,7 @@ def createEventEnums(v, json):
         return False
     finally:
         s.close()
-        return True
+    return True
 
 
 

@@ -48,4 +48,4 @@ class EventSkills(Base):
 			return False
 		finally:
 			s.close()
-			return True
+		return True
