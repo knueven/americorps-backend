@@ -35,7 +35,14 @@ class Admin(User):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        self.phone = phone
+        if len(phone) > 15:
+            raise ValueError('phone number is too long')
+        elif len(phone) < 10:
+            raise ValueError('phone number is too short')
+        elif phone.isDigit() == False:
+            raise ValueError('phone number must be a string of integers')
+        else:
+            self.phone = phone
         self.last_active = datetime.now()
         self.master = master
         self.birthdate = birthdate
