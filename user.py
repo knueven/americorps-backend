@@ -15,7 +15,7 @@ class User(Base):
 	permissions = Column(Enum('volunteer', 'orgmember', 'admin'), nullable=False)
 	last_active = Column(DateTime(timezone=False), nullable=True)
 	token = Column(String(50))
-	birthdate = Column(DateTime)
+	birthdate = Column(Date)
 	bio = Column(String(10000))
 	gender = Column(Enum('Male', 'Female', 'Other'))
 	__mapper_args__ = {

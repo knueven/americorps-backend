@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from db import Base, Session
 from datetime import datetime
 from flask import json
-from orgmember import OrgMember
+import orgmember
 
 class Organization(Base):
     __tablename__ = 'organizations'

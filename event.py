@@ -28,7 +28,7 @@ class Event(Base):
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'address', 'city', 'state', 'zip', 'about', 
-                   'start_at', 'posted_at', 'end_at', 'org', 'capacity')
+                   'start_at', 'end_at', 'org', 'capacity')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
@@ -37,7 +37,7 @@ class Event(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, about, start_at, posted_at, end_at, org, capacity):
+                 zip, about, start_at, end_at, org, capacity):
         self.name = name
         self.address = address
         self.city = city
@@ -48,25 +48,13 @@ class Event(Base):
             self.zip = zip
         self.about = about
         self.start_at = start_at
-        self.posted_at = posted_at
+        self.posted_at = datetime.now()
         self.end_at = end_at
-        # self.eventNeighborhoods = eventNeighborhoods
-        # self.eventInterests = eventInterests
-        # self.eventSkills = eventSkills
         self.org = org
         if capacity < 0:
             raise ValueError("capacity cannot be less than zero")
         else:
             self.capacity = capacity
-
-        # if eventInterests is None:
-        #     self.eventInterests = []
-        # else:
-        #     self.eventInterests = eventInterests
-        # if eventSkills is None:
-        #     self.eventSkils = []
-        # else:
-        #     self.eventSkills = eventSkills
 
         # Update a user (must exist)
     def updateEvent(self, event_id, update_data):
@@ -92,6 +80,7 @@ class Event(Base):
         i = json.loads(json.dumps(json1))
         interests = i['interests']
         EventInterests.create_v_interests(volun_id, interests)
+
 
  # create an event from a json string
 def createEvent(json):

@@ -22,7 +22,7 @@ class Attendee(Base):
     hours = Column(Integer)
     hoursValidated = Column(Boolean, nullable=False)
 
-    def __init__(self, user=None, event=None):
+    def __init__(self, user, event):
         self.userID = user
         self.eventID = event
         self.confirmed = True

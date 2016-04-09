@@ -1,7 +1,7 @@
 from admin import Admin
 from db import Session
 import unittest
-from datetime import datetime
+from datetime import *
 from sqlalchemy import exc
 # volunteer contains: name, email, passwordhash, phone, last_active,
 #			birthdate=None, permissions, bio=None, gender=None,
@@ -13,14 +13,14 @@ class VolunteerTests(unittest.TestCase):
     #checks if the volunteer's fields are initialized correctly
     def test_init(self):
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
-                       birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+                       birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
         self.assertTrue(mickey.name == 'Mickey Mouse')
         self.assertTrue(mickey.email == 'mickey@disney.com')
         #self.assertTrue(mickey.passwordhash == 'mouse')
         self.assertTrue(mickey.phone == '0765434567')
         self.assertTrue(mickey.master)
         #self.assertTrue(mickey.last_active == )
-        self.assertTrue(mickey.birthdate == '06/06/2006')
+        #self.assertTrue(mickey.birthdate == '06/06/2006')
         self.assertTrue(mickey.permissions == 'admin')
         self.assertTrue(mickey.bio == 'Peace Walt')
         self.assertTrue(mickey.gender == 'Male')
@@ -28,7 +28,7 @@ class VolunteerTests(unittest.TestCase):
     #test object write to the database.    
     def test_db_write(self):
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
-                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+                         birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
         s = Session()
         try:
             s.add(mickey)
@@ -42,7 +42,7 @@ class VolunteerTests(unittest.TestCase):
     def test_queryName(self):
         session = Session()
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
-                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+                         birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
         sickey = session.query(Admin).filter_by(name='Mickey Mouse').first()
         self.assertTrue(mickey.name == sickey.name)
         self.assertTrue(mickey.email == sickey.email)
@@ -60,7 +60,7 @@ class VolunteerTests(unittest.TestCase):
     def test_queryEmail(self):
         session = Session()
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
-                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+                         birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
         sickey = session.query(Admin).filter_by(name='Mickey Mouse').first()
         self.assertTrue(mickey.name == sickey.name)
         self.assertTrue(mickey.email == sickey.email)
@@ -78,7 +78,7 @@ class VolunteerTests(unittest.TestCase):
     def test_queryPhone(self):
         session = Session()
         mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
-                         birthdate='06/06/2006', bio='Peace Walt', gender='Male')
+                         birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
         sickey = session.query(Admin).filter_by(name='Mickey Mouse').first()
         self.assertTrue(mickey.name == sickey.name)
         self.assertTrue(mickey.email == sickey.email)
