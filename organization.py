@@ -4,7 +4,7 @@ from db import Base, Session
 from datetime import datetime
 from flask import json
 from event import Event
-from orgmember import OrgMember
+import organization
 
 class Organization(Base):
     __tablename__ = 'organizations'

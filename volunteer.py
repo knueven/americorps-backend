@@ -53,7 +53,7 @@ class Volunteer(User):
             raise ValueError('phone number is too long')
         elif len(phone) < 10:
             raise ValueError('phone number is too short')
-        elif phone.isDigit() == False:
+        elif phone.isdigit() == False:
             raise ValueError('phone number must be a string of integers')
         else:
             self.phone = phone

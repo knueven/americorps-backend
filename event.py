@@ -2,7 +2,7 @@ from sqlalchemy import *
 from sqlalchemy import exc
 from sqlalchemy.orm import relation, sessionmaker, relationship
 from db import Base, Session
-import organization
+#import organization
 import json
 import enums
 from eventNeighborhoods import EventNeighborhoods

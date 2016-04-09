@@ -12,7 +12,7 @@ import string
 class OrgMemberTests(unittest.TestCase):
 
     #checks if the orgmembers's fields are initialized correctly
-    def test_init(self):
+    def test_01_init(self):
         N=15
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         michael = OrgMember('Michael Jordan', email, 'bulls', '6208675309', True, 1,
@@ -23,13 +23,12 @@ class OrgMemberTests(unittest.TestCase):
         self.assertTrue(michael.phone == '6208675309')
         self.assertTrue(michael.poc)
         self.assertTrue(michael.org == 1)
-        print(michael.birthdate)
         #self.assertTrue(michael.birthdate == '2006-04-02')
         self.assertTrue(michael.permissions == 'orgmember')
         self.assertTrue(michael.bio == 'They see me rollin...')
         self.assertTrue(michael.gender == 'Female')
 
-    def test_db_write(self):
+    def test_02_db_write(self):
         N=15
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         michael = OrgMember('Michael Jordan', email, 'bulls', '6208675309', True, 1,
@@ -44,7 +43,7 @@ class OrgMemberTests(unittest.TestCase):
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
-    def test_db_pull(self):
+    def test_03_db_pull(self):
         session = Session()
         michael = OrgMember('Michael Jordan', 'ballin@aol.com', 'bulls', '6208675309', True, 1,
                             birthdate=date(2006, 4, 2),
@@ -54,8 +53,6 @@ class OrgMemberTests(unittest.TestCase):
         #self.assertTrue(michael.email == sichael.email)
         self.assertTrue(michael.passwordhash != sichael.passwordhash)
         self.assertTrue(michael.phone == sichael.phone)
-        print(michael.birthdate)
-        print(sichael.birthdate)
         self.assertTrue(michael.birthdate >= sichael.birthdate)
         self.assertTrue(michael.permissions == sichael.permissions)
         self.assertTrue(michael.bio == sichael.bio)

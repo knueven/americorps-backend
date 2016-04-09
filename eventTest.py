@@ -23,7 +23,7 @@ class EventTests(unittest.TestCase):
         s.close()
 
     # checks if the events fields are initialized correctly
-    def test_init(self):
+    def test_01_init(self):
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
                      datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 25)
@@ -39,7 +39,7 @@ class EventTests(unittest.TestCase):
         self.assertEqual(race.capacity, 25)
 
     # test object write to the database.
-    def test_db_write(self):
+    def test_02_db_write(self):
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
                      datetime(2016, 4, 2, 14, 0, 0), 1, 30)
@@ -64,7 +64,7 @@ class EventTests(unittest.TestCase):
 
 
 
-    def test_create_event(self):
+    def test_03_create_event(self):
         json = {"name": "Event1","address": "1 something street", "city": "Boston", "state": "MA", "zip": "02115", "about": "ok", "start_at": "04/02/2016 13:00","posted_at": "03/27/2016 24:00:00","end_at": "04/02/2016 15:00", "org": 1, "capacity": 25}
         try: 
             event.createEvent(json)

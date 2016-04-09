@@ -3,11 +3,13 @@ import unittest
 from organization import Organization
 from datetime import datetime
 from sqlalchemy import exc
+import orgmember
+
 #allowed = ('name', 'address', 'city', 'state', 'zip', 'mission', 'email', 'phone', 'activity')
 class OrganizationTests(unittest.TestCase):
 
 	 #checks if the events fields are initialized correctly
-    def test_init(self):
+    def test_01_init(self):
         race = Organization('Test Org', 'Mass Ave', 'Boston', 'MA', '02115', 
             'doing charity things')
         print('\n')
@@ -19,10 +21,9 @@ class OrganizationTests(unittest.TestCase):
         self.assertTrue(race.mission == 'doing charity things')
 
 
-    def test_db_write(self):
+    def test_02_db_write(self):
         race = Organization('Test Org', 'Mass Ave', 'Boston', 'MA', '02115', 
            'doing charity things')
-        print(race.poc)
         s = Session()
         try:
             s.add(race)
@@ -32,7 +33,7 @@ class OrganizationTests(unittest.TestCase):
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
-    def test_db_pull(self):
+    def test_03_db_pull(self):
         session = Session()
         race = Organization('Test Org', 'Mass Ave', 'Boston', 'MA', '02115', 
            'doing charity things')
