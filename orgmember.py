@@ -7,6 +7,7 @@ from attendee import Attendee
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import json
 from sqlalchemy import exc
+from event import Event
 import organization
 
 
@@ -90,6 +91,19 @@ class OrgMember(User):
         else:
             return False
 
+    def deleteEvent(self, eventID):
+        s = Session()
+        event = s.query(Event).filter_by(id=eventID).first()
+        if event.org != self.org
+            raise PermissionError("this user does not have permission to delete this event")
+        isSuccessful = event.deleteSelf(s)
+        try:
+            s.commit()
+        except:
+            raise exc.SQLAlchemyError("commit failed")
+        finally:
+            s.close
+        return isSuccessful
 
 def link_org(orgmember):
     s = Session()
