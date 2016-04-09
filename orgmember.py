@@ -94,7 +94,7 @@ class OrgMember(User):
     def deleteEvent(self, eventID):
         s = Session()
         event = s.query(Event).filter_by(id=eventID).first()
-        if event.org != self.org
+        if event.org != self.org:
             raise PermissionError("this user does not have permission to delete this event")
         isSuccessful = event.deleteSelf(s)
         try:
