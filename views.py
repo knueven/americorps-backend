@@ -141,11 +141,11 @@ def login():
     user = s.query(User).filter_by(email=json_data['email']).first()
     s.close()
     if user and user.check_password(json_data['passwordhash']):
-        session['logged_in'] = True
-        status = True
-        return create_token(user)
+        #session['logged_in'] = True
+        #status = True
+        return create_token(user), status.HTTP_200_OK
     else:
-        status = False
+        #status = False
         return jsonify({'result': status})
 
 def create_token(user):
@@ -169,14 +169,3 @@ def parse_token(req):
 @app.route('/logout', methods=['GET'])
 def logout():
     return jsonify({'result': 'success'})
-
-@app.route('/organization', methods=['POST'])
-def org():
-    success = {'status': 'org created'}
-    error = {'error': "Error in JSON/SQL syntax"}
-    if request.method == 'POST':
-        data = request.json
-        if organization.Organization.createOrganization(data):
-            return success, status.HTTP_200_OK
-        else:
-            return error, status.HTTP_500_INTERNAL_SERVER_ERROR
