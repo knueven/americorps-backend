@@ -85,7 +85,6 @@ def updateOrg(org_id, update_data):
 # create an event from a json string
 def createOrganization(json1):
     e = Organization.fromdict(json1)
-    print(e)
     s = Session()
     try:
         s.add(e)

@@ -79,7 +79,7 @@ class Volunteer(User):
 
     def grab_neighborhoods(volun_id, json1):
         neighborhoods = json1['neighborhoods']
-        print(neighborhoods)
+        #print(neighborhoods)
         VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
 
     def grab_skills(volun_id, json1):
