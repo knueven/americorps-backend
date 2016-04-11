@@ -133,6 +133,16 @@ def events():
     if request.method == 'GET':
         return content, status.HTTP_200_OK
 
+@app.route('/event/signup', methods=['POST'])
+def signup():
+    error = {'error': "Error in JSON/SQL syntax"}
+    success = {'success': 'signup successful!'}
+    if request.method == 'POST':
+        data = request.json
+        if (volunteer.addEvent(data['eventid'], data['userid'])):
+            return success, status.HTTP_200_OK
+        else: 
+            return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
 @app.route('/login', methods=['POST'])
 def login():

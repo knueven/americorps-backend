@@ -104,21 +104,6 @@ class Volunteer(User):
         else:
             raise ValueError("user does not exist")
 
-    # take an event and add it to this user's events
-    def addEvent(self, eventid):
-        s = Session()
-        event = s.query(Event).filter_by(id=eventid).first()
-        a = Attendee(id, eventid)
-        if event == null:
-            raise ValueError("event does not exist")
-        else:
-            try:
-                a.addRelation(self.id, eventid)
-            except False:
-                raise exc.ArgumentError('commit failed')
-            finally:
-                s.close()
-
     def deleteSelf(self):
         s = Session()
         attendees = s.query(Attendee).filter_by(userID=self.id)
@@ -168,6 +153,22 @@ def createEnums(v, json):
     finally:
         s.close()
     return True
+
+# take an event and add it to this user's events
+def addEvent(eventid, userid):
+    s = Session()
+    event = s.query(Event).filter_by(id=eventid).first()
+    a = Attendee(userid, eventid)
+    if event == null:
+        raise ValueError("event does not exist")
+    else:
+        try:
+            a.addRelation(userid, eventid)
+        except False:
+            raise exc.ArgumentError('commit failed')
+        finally:
+            s.close()
+        return True
 
 
 
