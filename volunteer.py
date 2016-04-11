@@ -51,6 +51,7 @@ class Volunteer(User):
                  birthdate=None, bio=None, gender=None, uhours=None, vhours=None,
                  education=None):
         self.name = name
+        # needs an @ and a .~~~
         self.email = email
         self.set_password(passwordhash)
         if len(phone) > 15:
@@ -62,7 +63,7 @@ class Volunteer(User):
         else:
             self.phone = phone
         self.last_active = datetime.now()
-        self.birthdate = birthdate
+        self.birthdate = str(datetime)
         self.permissions = 'volunteer'
         self.bio = bio
         self.gender = gender
