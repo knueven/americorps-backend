@@ -28,6 +28,9 @@ class Volunteer(User):
     education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree"
                             ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
                             "Master's degree", "Doctoral or professional degree", name="education_enum"))
+    birthdate = Column(Date)
+    bio = Column(String(10000))
+    gender = Column(Enum('Male', 'Female', 'Other'))
 
 
     @classmethod
@@ -47,9 +50,8 @@ class Volunteer(User):
                     dict_[key] = result
         return dict_
 
-    def __init__(self, name, email, passwordhash, phone,
-                 birthdate=None, bio=None, gender=None, uhours=None, vhours=None,
-                 education=None):
+    def __init__(self, name, email, passwordhash, phone, uhours=None, vhours=None,
+                 education=None, birthdate=None, bio=None, gender=None):
         self.name = name
         # needs an @ and a .~~~
         self.email = email
