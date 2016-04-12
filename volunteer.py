@@ -63,7 +63,7 @@ class Volunteer(User):
         else:
             self.phone = phone
         self.last_active = datetime.now()
-        self.birthdate = str(datetime)
+        self.birthdate = birthdate
         self.permissions = 'volunteer'
         self.bio = bio
         self.gender = gender

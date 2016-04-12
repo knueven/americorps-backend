@@ -75,7 +75,7 @@ class EventTests(unittest.TestCase):
         session = Session()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 20)
         qrace = session.query(Event).filter_by(name='Race for the Cure').first()
         self.assertTrue(race.name == qrace.name)
         self.assertTrue(race.address == qrace.address)

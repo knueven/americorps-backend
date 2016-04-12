@@ -1,4 +1,4 @@
-from volunteer import Volunteer
+from volunteer import *
 from db import Session
 from user import User
 import unittest
@@ -231,7 +231,7 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         event = session.query(Event).filter_by(state='MA').first()
-        joey.addEvent(event.id)
+        addEvent(event.id, joey.id)
         attendee = session.query(Attendee).filter_by(userID=joey.id).first()
         self.assertTrue(attendee.userID == joey.id)
         session.close()
