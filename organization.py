@@ -4,22 +4,25 @@ from db import Base, Session
 from datetime import datetime, date
 from flask import json
 from event import Event
+from user import User
 import organization
+from werkzeug.security import generate_password_hash, check_password_hash
 
-class Organization(Base):
+class Organization(User):
     __tablename__ = 'organizations'
-    id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(String(255), nullable=False)
+    __mapper_args__ = {'polymorphic_identity' : 'organization'}
+    id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     address = Column(String(255), nullable=False)
     city = Column(String(30), nullable=False)
     state = Column(String(15), nullable=False)
     zip = Column(String(5), nullable=False)
     mission = Column(String(255), nullable=False)
-    poc = Column(Integer, ForeignKey('orgmembers.id'), nullable=True)
+    poc = Column(String(60), nullable=False)
 
     @classmethod
     def fromdict(cls, d):
-        allowed = ('name', 'address', 'city', 'state', 'zip', 'mission')
+        allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active',
+                   'address', 'city', 'state', 'zip', 'mission', 'poc')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
@@ -33,9 +36,8 @@ class Organization(Base):
                     dict_[key] = result
         return dict_
 
-    # all these fields are strings
-    def __init__(self, name, address, city, state,
-                 zip, mission, poc=None):
+    def __init__(self, name, email, passwordhash, phone, address, city, state,
+                 zip, mission, poc):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -44,6 +46,17 @@ class Organization(Base):
             self.zip = zip
 
         self.name = name
+        self.email = email
+        self.set_password(passwordhash)
+        if len(phone) > 15 :
+            raise ValueError("phone number is too long")
+        elif len(phone) < 10:
+            raise ValueError("phone number is too short")
+        elif phone.isdigit() == False:
+            raise ValueError("phone number must be a string of digits")
+        else:
+            self.phone = phone
+        self.permissions = 'organization'
         self.address = address
         self.city = city
         self.state = state
@@ -54,6 +67,13 @@ class Organization(Base):
 
     def __repr__(self):
         return "Organization(%s, %s)" % (self.id, self.name)
+
+    def set_password(self, password):
+        self.passwordhash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.passwordhash, password)
+
 
     def deleteSelf(self, session):
         check = True

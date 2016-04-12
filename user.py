@@ -12,12 +12,9 @@ class User(Base):
 	email = Column(String(60), nullable=False, unique=True)
 	passwordhash = Column(String(255), nullable=False) 
 	phone = Column(String(15), nullable=False)
-	permissions = Column(Enum('volunteer', 'orgmember', 'admin'), nullable=False)
+	permissions = Column(Enum('volunteer', 'organization', 'admin'), nullable=False)
 	last_active = Column(DateTime(timezone=False), nullable=True)
 	token = Column(String(50))
-	birthdate = Column(Date)
-	bio = Column(String(10000))
-	gender = Column(Enum('Male', 'Female', 'Other'))
 	__mapper_args__ = {
 		'polymorphic_identity':'user',
 		'polymorphic_on': permissions

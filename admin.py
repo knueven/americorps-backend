@@ -17,6 +17,9 @@ class Admin(User):
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the only additional field an admin has is the master admin flag
     master = Column(Boolean, nullable=False)
+    birthdate = Column(Date)
+    bio = Column(String(10000))
+    gender = Column(Enum('Male', 'Female', 'Other'))
 
     @classmethod
     def fromdict(cls, d):
