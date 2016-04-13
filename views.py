@@ -52,8 +52,8 @@ def create_user():
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-        if data['permissions'] == 'orgmember': 
-            if orgmember.createMember(data):
+        if data['permissions'] == 'organization': 
+            if organization.createOrganization(data):
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -152,11 +152,15 @@ def login():
     s = Session()
     json_data = request.json
     user = s.query(User).filter_by(email=json_data['email']).first()
+    error = "Login Failed"
     s.close()
     if user and user.check_password(json_data['passwordhash']):
         #session['logged_in'] = True
         #status = True
-        return create_token(user), status.HTTP_200_OK
+        if create_token(user) is not None:
+            return create_token(user), status.HTTP_200_OK
+        else:
+            return jsonify({'result': "Login Failed" }), status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
         #status = False
         return jsonify({'result': status}), status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -181,16 +185,13 @@ def create_token(user):
             d = admin.Admin.asdict(us)
         if (user.permissions == 'organization'):
             us = s.query(Organization).filter_by(id=user.id).first()
-            d =organization.Organization.asdict()
+            d =organization.Organization.asdict(us)
     except:
-        print("this shouldn't happen")
+        return None
     finally:
         s.close() 
-    m = {"token": token, "user": d}
-    n = json.dumps(m)
-    print("SOS")
-    print(json.dumps(m))
-    return n
+    m = {'token': token, 'user': d}
+    return m
 
 
 def parse_token(req):
