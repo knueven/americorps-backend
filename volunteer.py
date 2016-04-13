@@ -31,6 +31,7 @@ class Volunteer(User):
     birthdate = Column(Date)
     bio = Column(String(10000))
     gender = Column(Enum('Male', 'Female', 'Other'))
+    contact = Column(Boolean, nullable=False)
 
 
     @classmethod
@@ -50,7 +51,7 @@ class Volunteer(User):
                     dict_[key] = result
         return dict_
 
-    def __init__(self, name, email, passwordhash, phone, uhours=None, vhours=None,
+    def __init__(self, name, email, passwordhash, phone, contact, uhours=None, vhours=None,
                  education=None, birthdate=None, bio=None, gender=None):
         self.name = name
         # needs an @ and a .~~~
@@ -72,6 +73,7 @@ class Volunteer(User):
         self.uhours = uhours
         self.vhours = vhours
         self.education = education
+        self.contact = contact
         
 
     def set_password(self, password):
@@ -124,6 +126,21 @@ class Volunteer(User):
             finally:
                 s.close()
             return True
+
+    def log_hours(self, eventid, hours):
+        s = Session()
+        self.vhours = hours
+        attendee = s.query(Attendee).filter_by(eventID=eventid, userID=self.id).first()
+        if attendee:
+            try:
+                attendee.hours = hours
+                s.commit()
+            except:
+                print("hour log failed")
+                return false
+        else:
+            return false
+        
 
     # create a volunteer from a json blob
 def createVolunteer(json):

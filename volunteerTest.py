@@ -23,13 +23,14 @@ class VolunteerTests(unittest.TestCase):
     def test_01_init(self):
         N=10
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        joey = Volunteer('Joey Wood', email, 'lit', '3015559721',
+        joey = Volunteer('Joey Wood', email, 'lit', '3015559721', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")
         self.assertTrue(joey.name == 'Joey Wood')
         self.assertTrue(joey.email == email)
         self.assertTrue(joey.passwordhash != 'lit')
         self.assertTrue(joey.phone == '3015559721')
+        self.assertTrue(joey.contact)
         #self.assertTrue(joey.birthdate == '05/26/1990')
         self.assertTrue(joey.permissions == 'volunteer')
         self.assertTrue(joey.bio == 'Snell rhymes with hell')
@@ -44,7 +45,7 @@ class VolunteerTests(unittest.TestCase):
     def test_02_db_write(self):
         N=20
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        joey = Volunteer('Joey Wood', email, 'lit', '3015559721',
+        joey = Volunteer('Joey Wood', email, 'lit', '3015559721', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")
         s = Session()
@@ -59,7 +60,7 @@ class VolunteerTests(unittest.TestCase):
 # checks if the volunteer was added to the database after initialization
     def test_03_queryName(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")        
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
@@ -67,6 +68,7 @@ class VolunteerTests(unittest.TestCase):
         #self.assertTrue(joey.email == poey.email)
         self.assertTrue(joey.passwordhash != poey.passwordhash)
         self.assertTrue(joey.phone == poey.phone)
+        self.assertTrue(joey.contact and poey.contact)
         self.assertTrue(joey.birthdate == poey.birthdate)
         self.assertTrue(joey.permissions == poey.permissions)
         self.assertTrue(joey.bio == poey.bio)
@@ -107,7 +109,7 @@ class VolunteerTests(unittest.TestCase):
     # checks if the volunteer can be queried by phone
     def test_05_queryPhone(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721',
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")         
         poey = session.query(Volunteer).filter_by(phone='3015559721').first()
@@ -127,7 +129,7 @@ class VolunteerTests(unittest.TestCase):
         N = 15
         session = Session()
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        vol = Volunteer('Test', email, 'lit', '3015559725',
+        vol = Volunteer('Test', email, 'lit', '3015559725', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")  
         try:
@@ -235,11 +237,23 @@ class VolunteerTests(unittest.TestCase):
         attendee = session.query(Attendee).filter_by(userID=joey.id).first()
         self.assertTrue(attendee.userID == joey.id)
         session.close()
-       
 
+    def test_16_hour_logging(self):
+        session = Session()
+        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        event = session.query(Event).filter_by(state='MA').first()
+        if joey and event:
+            try:
+                joey.log_hours(event.id, 4)
+            except exc.SQLAlchemyError:
+                self.assertTrue(False)
+        else:
+            return false
+        attendee = session.query(Attendee).filter_by(eventID=event.id, userID=joey.id).first()
+        self.assertTrue(attendee.hours == 4)
+        session.close()
         
-
-
+       
 
 
 if __name__ == '__main__':
