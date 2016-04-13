@@ -1,4 +1,7 @@
 import volunteer
+from volunteer import Volunteer
+from organization import Organization
+from admin import Admin
 import admin
 from organization import *
 import orgmember
@@ -156,7 +159,7 @@ def login():
         return create_token(user), status.HTTP_200_OK
     else:
         #status = False
-        return jsonify({'result': status})
+        return jsonify({'result': status}), status.HTTP_500_INTERNAL_SERVER_ERROR
 
 def create_token(user):
     payload = {
@@ -167,9 +170,27 @@ def create_token(user):
         #expiry
         'exp': datetime.utcnow() + timedelta(days=1)
     }
- 
+    s = Session()
     token = jwt.encode(payload, app.secret_key, algorithm='HS256')
-    return token
+    try:
+        if (user.permissions == 'volunteer'):
+            us = s.query(Volunteer).filter_by(id=user.id).first()
+            d = volunteer.Volunteer.asdict(us)
+        if (user.permissions == 'admin'):
+            us = s.query(Admin).filter_by(id=user.id).first()
+            d = admin.Admin.asdict(us)
+        if (user.permissions == 'organization'):
+            us = s.query(Organization).filter_by(id=user.id).first()
+            d =organization.Organization.asdict()
+    except:
+        print("this shouldn't happen")
+    finally:
+        s.close() 
+    m = {"token": token, "user": d}
+    n = json.dumps(m)
+    print("SOS")
+    print(json.dumps(m))
+    return n
 
 
 def parse_token(req):
