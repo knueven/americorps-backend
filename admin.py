@@ -13,11 +13,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class Admin(User):
     __tablename__ = 'admins'
+    __mapper_args__ = {'polymorphic_identity' : 'admin'}
     id = Column(Integer, ForeignKey('users.id'), primary_key=True, nullable=False)
     # the only additional field an admin has is the master admin flag
-    master = Column(Boolean, nullable=false)
-
-    __mapper_args__ = {'polymorphic_identity' : 'admin'}
+    master = Column(Boolean, nullable=False)
+    birthdate = Column(Date)
+    bio = Column(String(10000))
+    gender = Column(Enum('Male', 'Female', 'Other'))
 
     @classmethod
     def fromdict(cls, d):
@@ -49,6 +51,7 @@ class Admin(User):
         else:
             self.phone = phone
         self.last_active = datetime.now()
+        self.permissions = 'admin'
         self.master = master
         self.birthdate = birthdate
         self.bio = bio
@@ -64,6 +67,7 @@ class Admin(User):
     def createAdmin(json):
         a = Admin.fromdict(json)
         s = Session()
+        #print(a.asdict())
         try:
             s.add(a)
             s.commit()

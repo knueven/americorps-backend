@@ -1,4 +1,7 @@
 import volunteer
+from volunteer import Volunteer
+from organization import Organization
+from admin import Admin
 import admin
 from organization import *
 import orgmember
@@ -49,8 +52,8 @@ def create_user():
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
-        if data['permissions'] == 'orgmember': 
-            if orgmember.createMember(data):
+        if data['permissions'] == 'organization': 
+            if organization.createOrganization(data):
                 return success, status.HTTP_200_OK
             else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -133,20 +136,34 @@ def events():
     if request.method == 'GET':
         return content, status.HTTP_200_OK
 
+@app.route('/event/signup', methods=['POST'])
+def signup():
+    error = {'error': "Error in JSON/SQL syntax"}
+    success = {'success': 'signup successful!'}
+    if request.method == 'POST':
+        data = request.json
+        if (volunteer.addEvent(data['eventid'], data['userid'])):
+            return success, status.HTTP_200_OK
+        else: 
+            return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
 @app.route('/login', methods=['POST'])
 def login():
     s = Session()
     json_data = request.json
     user = s.query(User).filter_by(email=json_data['email']).first()
+    error = "Login Failed"
     s.close()
     if user and user.check_password(json_data['passwordhash']):
-        session['logged_in'] = True
-        status = True
-        return create_token(user)
+        #session['logged_in'] = True
+        #status = True
+        if create_token(user) is not None:
+            return create_token(user), status.HTTP_200_OK
+        else:
+            return jsonify({'result': "Login Failed" }), status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
-        status = False
-        return jsonify({'result': status})
+        #status = False
+        return jsonify({'result': status}), status.HTTP_500_INTERNAL_SERVER_ERROR
 
 def create_token(user):
     payload = {
@@ -157,9 +174,24 @@ def create_token(user):
         #expiry
         'exp': datetime.utcnow() + timedelta(days=1)
     }
- 
+    s = Session()
     token = jwt.encode(payload, app.secret_key, algorithm='HS256')
-    return token
+    try:
+        if (user.permissions == 'volunteer'):
+            us = s.query(Volunteer).filter_by(id=user.id).first()
+            d = volunteer.Volunteer.asdict(us)
+        if (user.permissions == 'admin'):
+            us = s.query(Admin).filter_by(id=user.id).first()
+            d = admin.Admin.asdict(us)
+        if (user.permissions == 'organization'):
+            us = s.query(Organization).filter_by(id=user.id).first()
+            d =organization.Organization.asdict(us)
+    except:
+        return None
+    finally:
+        s.close() 
+    m = {'token': token, 'user': d}
+    return m
 
 
 def parse_token(req):
@@ -169,14 +201,3 @@ def parse_token(req):
 @app.route('/logout', methods=['GET'])
 def logout():
     return jsonify({'result': 'success'})
-
-@app.route('/organization', methods=['POST'])
-def org():
-    success = {'status': 'org created'}
-    error = {'error': "Error in JSON/SQL syntax"}
-    if request.method == 'POST':
-        data = request.json
-        if organization.Organization.createOrganization(data):
-            return success, status.HTTP_200_OK
-        else:
-            return error, status.HTTP_500_INTERNAL_SERVER_ERROR

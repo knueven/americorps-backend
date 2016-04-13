@@ -28,6 +28,9 @@ class Volunteer(User):
     education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree"
                             ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
                             "Master's degree", "Doctoral or professional degree", name="education_enum"))
+    birthdate = Column(Date)
+    bio = Column(String(10000))
+    gender = Column(Enum('Male', 'Female', 'Other'))
 
 
     @classmethod
@@ -47,10 +50,10 @@ class Volunteer(User):
                     dict_[key] = result
         return dict_
 
-    def __init__(self, name, email, passwordhash, phone,
-                 birthdate=None, bio=None, gender=None, uhours=None, vhours=None,
-                 education=None):
+    def __init__(self, name, email, passwordhash, phone, uhours=None, vhours=None,
+                 education=None, birthdate=None, bio=None, gender=None):
         self.name = name
+        # needs an @ and a .~~~
         self.email = email
         self.set_password(passwordhash)
         if len(phone) > 15:
@@ -79,7 +82,7 @@ class Volunteer(User):
 
     def grab_neighborhoods(volun_id, json1):
         neighborhoods = json1['neighborhoods']
-        print(neighborhoods)
+        #print(neighborhoods)
         VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
 
     def grab_skills(volun_id, json1):
@@ -103,21 +106,6 @@ class Volunteer(User):
             return content
         else:
             raise ValueError("user does not exist")
-
-    # take an event and add it to this user's events
-    def addEvent(self, eventid):
-        s = Session()
-        event = s.query(Event).filter_by(id=eventid).first()
-        a = Attendee(id, eventid)
-        if event == null:
-            raise ValueError("event does not exist")
-        else:
-            try:
-                a.addRelation(self.id, eventid)
-            except False:
-                raise exc.ArgumentError('commit failed')
-            finally:
-                s.close()
 
     def deleteSelf(self):
         s = Session()
@@ -168,6 +156,22 @@ def createEnums(v, json):
     finally:
         s.close()
     return True
+
+# take an event and add it to this user's events
+def addEvent(eventid, userid):
+    s = Session()
+    event = s.query(Event).filter_by(id=eventid).first()
+    a = Attendee(userid, eventid)
+    if event == null:
+        raise ValueError("event does not exist")
+    else:
+        try:
+            a.addRelation(userid, eventid)
+        except False:
+            raise exc.ArgumentError('commit failed')
+        finally:
+            s.close()
+        return True
 
 
 

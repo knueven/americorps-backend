@@ -5,6 +5,8 @@ import unittest
 from organization import Organization
 from datetime import datetime
 from sqlalchemy import exc
+import random
+import string
 
 
 # event contains: id, name, address, city, state, zip, about, start_at, posted_at, duration, interests, skills, org
@@ -12,8 +14,11 @@ class EventTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        org = Organization('Cancer Research Center', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!')
-        org.id = 1
+        N=15
+        logemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        pocemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        org = Organization('Cancer Research Center', logemail, 'fire101', '3198023836', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!', pocemail)
+
         s = Session()
         s.add(org)
         try:
@@ -27,6 +32,7 @@ class EventTests(unittest.TestCase):
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
                      datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 25)
+        
         self.assertEqual(race.name, 'Race for the Cure')
         self.assertEqual(race.address, 'Mass Ave')
         self.assertEqual(race.city, 'Boston')
@@ -40,10 +46,11 @@ class EventTests(unittest.TestCase):
 
     # test object write to the database.
     def test_02_db_write(self):
+        s = Session()
+        org = s.query(Organization).filter_by(state="MA").first()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
-                     datetime(2016, 4, 2, 14, 0, 0), 1, 30)
-        s = Session()
+                     datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
 
         s.add(race)
         s.commit()
