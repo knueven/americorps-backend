@@ -102,7 +102,7 @@ def orgs(org_id):
             return deleteError, status.HTTP_400_BAD_REQUEST
         s.commit()
         s.close()
-        return deleteSuccess
+        return deleteSuccess, status.HTTP_200_OK
 
 
 @app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])
