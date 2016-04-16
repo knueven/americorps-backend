@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import exc
 import random
 import string
+from user import User
 
 #allowed = ('name', 'address', 'city', 'state', 'zip', 'mission', 'email', 'phone', 'activity')
 class OrganizationTests(unittest.TestCase):
@@ -59,6 +60,23 @@ class OrganizationTests(unittest.TestCase):
         self.assertTrue(org.state == borg.state)
         self.assertTrue(org.mission == borg.mission)
 
+    def test_04_updating_name(self):
+        session = Session()
+        test = session.query(User).filter_by(name='Test Org').first()
+        q = session.query(User).filter_by(id=test.id)
+        q = q.update({"name":"Wood Joey"})
+        test = session.query(User).filter_by(id=test.id).first()
+        self.assertTrue(test.name == 'Wood Joey')
+        session.close()
+
+    def test_05_updating_email(self):
+        session = Session()
+        test = session.query(User).filter_by(name='Test Org').first()
+        q = session.query(User).filter_by(id=test.id)
+        q = q.update({"email":"wood.jos@husky.neu.edu"})
+        test = session.query(User).filter_by(id=test.id).first()
+        self.assertTrue(test.email == 'wood.jos@husky.neu.edu')
+        session.close()
         
 
 if __name__ == '__main__':
