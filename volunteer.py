@@ -118,8 +118,8 @@ class Volunteer(User):
                 except:
                     raise exc.SQLAlchemyError("failed to delete availability " + r.id)
 
-    def deleteSelf(self):
-        s = Session()
+    def deleteSelf(self, session):
+        s = session
 
         # delete all the attendee rows involving this user
         attendees = s.query(Attendee).filter_by(userID=self.id)
@@ -147,9 +147,6 @@ class Volunteer(User):
             s.delete(self)
         except:
             raise exc.SQLAlchemyError("failed to delete volunteer " + self.id)
-        finally:
-            s.commit()
-            s.close()
 
     def log_hours(self, eventid, hours):
         s = Session()
