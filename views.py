@@ -111,6 +111,7 @@ def users(user_id):
     updateSuccess = {'status':'account updated'}
     updateError = {'error': 'User not found/input validation failed.'}
     noUser = {'error': 'User not found.'}
+    deleteSuccess = {'status' : 'account deleted'}
     # update user
     if request.method == 'POST':
         data = request.json
@@ -132,7 +133,23 @@ def users(user_id):
         else:
             return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
-        return error, HTTP_503_SERVICE_UNAVAILABLE 
+        s = Session()
+        user = s.query(User).filter_by(id=user_id).first()
+        if not(user):
+            return noUser, status.HTTP_404_NOT_FOUND
+        else:
+            try:
+                user.deleteSelf(s)
+            except exc.SQLAlchemyError as e:
+                deleteError = {'error' : e.args}
+                return deleteError, status.HTTP_400_BAD_REQUEST
+            finally:
+                s.commit()
+                s.close()
+            return deleteSuccess, status.HTTP_200_OK
+
+
+
 
 @app.route('/event', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def events():
