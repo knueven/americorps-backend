@@ -95,30 +95,12 @@ class OrgMember(User):
         else:
             return False
 
-    def deleteEvent(self, eventID):
-        s = Session()
-        event = s.query(Event).filter_by(id=eventID).first()
-        if event.org != self.org:
-            raise PermissionError("this user does not have permission to delete this event")
-        isSuccessful = event.deleteSelf(s)
-        try:
-            s.commit()
-        except:
-            raise exc.SQLAlchemyError("commit failed")
-        finally:
-            s.close
-        return isSuccessful
-
-    def deleteSelf(self):
-        s = Session()
+    def deleteSelf(self, session):
+        s = session
         try:
             s.delete(self)
-            s.commit()
         except:
-            return False
-        finally:
-            s.close
-        return True
+            raise exc.SQLAlchemyError("failed to delete orgMember " + self.id)
 
 def link_org(orgmember):
     s = Session()

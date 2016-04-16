@@ -43,9 +43,9 @@ class Admin(User):
         self.email = email
         self.set_password(passwordhash)
         if len(phone) > 15:
-            raise ValueError('phone number is too long')
+            raise ValueError ('phone number is too long')
         elif len(phone) < 10:
-            raise ValueError('phone number is too short')
+            raise ValueError ('phone number is too short')
         elif phone.isdigit() == False:
             raise ValueError('phone number must be a string of integers')
         else:
@@ -72,10 +72,9 @@ class Admin(User):
             s.add(a)
             s.commit()
         except:
-            return False
+            raise exc.SQLAlchemyError("error: commit failed")
         finally:
             s.close()
-        return True
 
     def getAdmin(self, id):
         s = Session()
@@ -86,28 +85,22 @@ class Admin(User):
         else:
             raise ValueError("user does not exist")
 
-    def deleteSelf(self):
-        s = Session()
+    def deleteSelf(self, session):
+        s = session
         try:
             s.delete(self)
-            s.commit()
         except:
-            return False
-        finally:
-            s.close()
-        return True
+            raise exc.SQLAlchemyError("failed to delete admin " + self.id)
 
     def deleteOrg(self, orgID):
         s = Session()
         org = s.query(Organization).filter_by(id=orgID).first()
-        if org:
-            isSuccessful = org.deleteSelf(s)
-            if isSuccessful:
-                s.commit()
-        else:
-            raise exc.NoReferenceError
+        try:
+            org.deleteSelf(s)
+            s.commit()
+        except:
+            raise exc.SQLAlchemyError("error: commit failed")
         s.close()
-        return isSuccessful
 
 
 
