@@ -112,20 +112,18 @@ class Volunteer(User):
     def deleteSelf(self):
         s = Session()
         attendees = s.query(Attendee).filter_by(userID=self.id)
-        if not(attendees):
+        if attendees:
+            for a in attendees:
+                s.delete(a)
+        try:
+            s.delete(self)
+            s.commit()
+        except:
+            print("delete failed")
             return False
-        else:
-            try:
-                for a in attendees:
-                    s.delete(a)
-                s.delete(self)
-                s.commit()
-            except:
-                print("delete failed")
-                return False
-            finally:
-                s.close()
-            return True
+        finally:
+            s.close()
+        return True
 
     def log_hours(self, eventid, hours):
         s = Session()
