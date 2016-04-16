@@ -109,21 +109,47 @@ class Volunteer(User):
         else:
             raise ValueError("user does not exist")
 
+    def deleteSelfFrom(self,table, session):
+        rows = session.query(table).filter_by(volunteer_id=self.id)
+        if rows:
+            for r in rows:
+                try:
+                    session.delete(r)
+                except:
+                    raise exc.SQLAlchemyError("failed to delete availability " + r.id)
+
     def deleteSelf(self):
         s = Session()
+
+        # delete all the attendee rows involving this user
         attendees = s.query(Attendee).filter_by(userID=self.id)
         if attendees:
             for a in attendees:
-                s.delete(a)
+                try:
+                    s.delete(a)
+                except:
+                    raise exc.SQLAlchemyError("failed to delete " + table.__tablename__ + " " + a.key)
+
+        # delete all the availability rows involving this user
+        self.deleteSelfFrom(VolunteerAvailability,s)
+
+        # delete all the interest rows involving this user
+        self.deleteSelfFrom(VolunteerInterests,s)
+
+        # delete all the neighborhood rows involving this user
+        self.deleteSelfFrom(VolunteerNeighborhoods, s)
+
+        # delete all the skill rows involving this user
+        self.deleteSelfFrom(VolunteerSkills,s)
+
+        # delete this user
         try:
             s.delete(self)
-            s.commit()
         except:
-            print("delete failed")
-            return False
+            raise exc.SQLAlchemyError("failed to delete volunteer " + self.id)
         finally:
+            s.commit()
             s.close()
-        return True
 
     def log_hours(self, eventid, hours):
         s = Session()
