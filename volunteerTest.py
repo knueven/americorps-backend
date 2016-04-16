@@ -255,9 +255,10 @@ class VolunteerTests(unittest.TestCase):
 
     def test_17_updating_name(self):
         session = Session()
-        q = session.query(User).filter_by(id=3)
+        joey = session.query(User).filter_by(name='Joey Wood').first()
+        q = session.query(User).filter_by(id=joey.id)
         q = q.update({"name":"Wood Joey"})
-        joey = session.query(User).filter_by(id=3).first()
+        joey = session.query(User).filter_by(id=joey.id).first()
         self.assertTrue(joey.name == 'Wood Joey')
         session.close()
 
@@ -266,6 +267,7 @@ class VolunteerTests(unittest.TestCase):
         joey = session.query(User).filter_by(name='Joey Wood').first()
         q = session.query(User).filter_by(id=joey.id)
         q = q.update({"email":"wood.jos@husky.neu.edu"})
+        joey = session.query(User).filter_by(id=joey.id).first()
         self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
         session.close()
 

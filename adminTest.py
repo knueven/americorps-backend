@@ -1,6 +1,7 @@
 from admin import Admin
 from db import Session
 import unittest
+from user import User
 from datetime import *
 from sqlalchemy import exc
 import random
@@ -94,6 +95,24 @@ class AdminTests(unittest.TestCase):
         self.assertTrue(mickey.permissions == sickey.permissions)
         self.assertTrue(mickey.bio == sickey.bio)
         self.assertTrue(mickey.gender == sickey.gender)
+
+    def test_06_updating_name(self):
+        session = Session()
+        mickey = session.query(User).filter_by(name='Mickey Mouse').first()
+        q = session.query(User).filter_by(id=mickey.id)
+        q = q.update({"name":"Wood Joey"})
+        mickey = session.query(User).filter_by(id=mickey.id).first()
+        self.assertTrue(mickey.name == 'Wood Joey')
+        session.close()
+
+    def test_07_updating_email(self):
+        session = Session()
+        mickey = session.query(User).filter_by(name='Mickey Mouse').first()
+        q = session.query(User).filter_by(id=mickey.id)
+        q = q.update({"email":"wood.jos@husky.neu.edu"})
+        mickey = session.query(User).filter_by(id=mickey.id).first()
+        self.assertTrue(mickey.email == 'wood.jos@husky.neu.edu')
+        session.close()
                         
     
 
