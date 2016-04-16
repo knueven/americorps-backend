@@ -78,7 +78,7 @@ class EventTests(unittest.TestCase):
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
-    def test_query(self):
+    def test_04_query(self):
         session = Session()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
@@ -92,6 +92,24 @@ class EventTests(unittest.TestCase):
         self.assertTrue(race.about == qrace.about)
         self.assertTrue(race.start_at == qrace.start_at)
         self.assertTrue(race.end_at == qrace.end_at)
+
+    def test_05_updating_name(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        q = session.query(Event).filter_by(id=race.id)
+        q = q.update({"name":"Wood Joey"})
+        race = session.query(Event).filter_by(id=race.id).first()
+        self.assertTrue(race.name == 'Wood Joey')
+        session.close()
+
+    def test_06_updating_zip(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        q = session.query(Event).filter_by(id=race.id)
+        q = q.update({"zip":"02120"})
+        race = session.query(Event).filter_by(id=race.id).first()
+        self.assertTrue(race.zip == '02120')
+        session.close()
 
 # # race.zip is a string of letters - should be 5 ints
 # def test_zip_letters(self):
