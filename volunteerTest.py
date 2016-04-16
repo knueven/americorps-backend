@@ -252,6 +252,30 @@ class VolunteerTests(unittest.TestCase):
         attendee = session.query(Attendee).filter_by(eventID=event.id, userID=joey.id).first()
         self.assertTrue(attendee.hours == 4)
         session.close()
+
+    def test_17_updating_name(self):
+        session = Session()
+        q = session.query(User).filter_by(id=3)
+        q = q.update({"name":"Wood Joey"})
+        joey = session.query(User).filter_by(id=3).first()
+        self.assertTrue(joey.name == 'Wood Joey')
+        session.close()
+
+    def test_18_updating_email(self):
+        session = Session()
+        joey = session.query(User).filter_by(name='Joey Wood').first()
+        q = session.query(User).filter_by(id=joey.id)
+        q = q.update({"email":"wood.jos@husky.neu.edu"})
+        self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
+        session.close()
+
+    #def test_19_delete_self(self):
+#        session = Session()
+#        joey = session.query(User).filter_by(name='Joey Wood').first()
+#        jid = joey.id
+#        self.assertTrue(joey.deleteSelf())
+#        session.close()
+        
         
        
 
