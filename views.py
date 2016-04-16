@@ -69,6 +69,7 @@ def orgs(org_id):
     updateSuccess = {'status':'Organization updated'}
     updateError = {'error': 'Organization not found/input validation failed.'}
     noOrg = {'error': 'Organization not found.'}
+    deleteSuccess = {'status' : 'Organization deleted'}
     # update user
     if request.method == 'POST':
         data = request.json
@@ -85,12 +86,23 @@ def orgs(org_id):
         s = Session()
         u = s.query(Organization).filter_by(id=org_id).first()
         if u:
-            return jsonify(u.asdict()), status.HTTP_200_OK
             s.close()
+            return jsonify(u.asdict()), status.HTTP_200_OK
         else:
             return noOrg, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
-        return error, HTTP_503_SERVICE_UNAVAILABLE
+        s = Session()
+        org = s.query(Organization).filter_by(id=org_id).first()
+        if not(org):
+            return noOrg, status.HTTP_404_NOT_FOUND
+        try:
+            org.deleteSelf(s)
+        except exc.SQLAlchemyError as e:
+            deleteError = {'error': str(e)}
+            return deleteError, status.HTTP_400_BAD_REQUEST
+        s.commit()
+        s.close()
+        return deleteSuccess
 
 
 @app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])

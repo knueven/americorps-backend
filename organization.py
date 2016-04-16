@@ -5,6 +5,7 @@ from datetime import datetime, date
 from flask import json
 from event import Event
 from user import User
+from orgmember import OrgMember
 import organization
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -76,20 +77,22 @@ class Organization(User):
 
 
     def deleteSelf(self, session):
-        check = True
         events = session.query(Event).filter_by(org=self.id)
-        if not(events):
-            return False
-        else:
+        if events:
             for e in events:
-                 check = e.deleteSelf(session) and check
-            try:
-                for member in session.query(OrgMember).filter_by(org=self.id):
-                    session.delete(member)
-                session.delete(self)
-            except:
-                return False
-            return check
+                e.deleteSelf(session)
+        members = session.query(OrgMember).filter_by(org=self.id)
+        if members:
+            for m in members:
+                try:
+                    session.delete(m)
+                except:
+                    raise exc.SQLAlchemyError("failed to delete OrgMember " + m.id)
+        try:
+            session.delete(self)
+        except:
+            raise exc.SQLAlchemyError("failed to delete Organization " + self.id)
+
 
 def updateOrg(org_id, update_data):
     session = Session()

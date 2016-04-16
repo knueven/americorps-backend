@@ -83,16 +83,16 @@ class Event(Base):
 
     def deleteSelf(self, session):
         attendees = session.query(Attendee).filter_by(eventID=self.id)
-        if not(attendees):
-            return False
-        else:
-            try:
-                for attendee in attendees:
+        if attendees:
+            for attendee in attendees:
+                try:
                     session.delete(attendee)
+                except:
+                    raise exc.SQLAlchemyError("failed to delete attendee " + attendee.key)
+            try:
                 session.delete(self)
             except:
-                return False
-            return True
+                raise exc.SQLAlchemyError("failed to delete event " + self.id)
 
 # create an event from a json string
 def createEvent(json):
