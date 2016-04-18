@@ -6,6 +6,7 @@ from sqlalchemy import exc
 import random
 import string
 from user import User
+from event import Event
 
 #allowed = ('name', 'address', 'city', 'state', 'zip', 'mission', 'email', 'phone', 'activity')
 class OrganizationTests(unittest.TestCase):
@@ -45,6 +46,7 @@ class OrganizationTests(unittest.TestCase):
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
+
     def test_03_db_pull(self):
         session = Session()
         org = Organization('Test Org', 'wood.jos@gmail.com', 'fire', '6208675309',
@@ -77,6 +79,51 @@ class OrganizationTests(unittest.TestCase):
         test = session.query(User).filter_by(id=test.id).first()
         self.assertTrue(test.email == 'wood.jos@husky.neu.edu')
         session.close()
+
+    def test_06_add_event(self):
+        s = Session()
+        org = s.query(Organization).filter_by(name="Test Org").first()
+        race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
+                     'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
+                     datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
+
+        s.add(race)
+        s.commit()
+        s.close()
+        if s.query(Event).filter_by(name='Race for the Cure').first():
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)        
+
+
+    def test_07_delete_self(self):
+        session = Session()
+        test = session.query(User).filter_by(name='Test Org').first()
+        tid = test.id
+        self.assertTrue(test != None)
+        test.deleteSelf(session)
+        org = session.query(User).filter_by(id=tid).first()
+        self.assertTrue(org == None)
+        events = session.query(Event).filter_by(org=id).first()
+        self.assertTrue(events == None)
+        session.close()
+
+    def test_08_password_check(self):
+        session = Session()
+        test = session.query(User).filter_by(name='Test Org').first()
+        try:
+            self.assertTrue(test.passwordhash != 'fire')
+            self.assertTrue(test.check_password('fire'))
+            self.assertFalse(test.check_password('Fire'))
+            self.assertFalse(test.check_password('firee'))
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+        session.close()
+
+#    def test_08_create_org(self):
+    
+        
+        
         
 
 if __name__ == '__main__':

@@ -94,16 +94,16 @@ class Organization(User):
             raise exc.SQLAlchemyError("failed to delete Organization " + self.id)
 
 
-def updateOrg(org_id, update_data):
-    session = Session()
-    try:
-        session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
-        session.commit()
-    except:
-        session.rollback()
-        raise ValueError("id not found")
-    finally:
-        session.close()
+#def updateOrg(org_id, update_data):
+#    session = Session()
+#    try:
+#        session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
+#        session.commit()
+#    except:
+#        session.rollback()
+#        raise ValueError("id not found")
+#    finally:
+#        session.close()
         
 # create an event from a json string
 def createOrganization(json1):
