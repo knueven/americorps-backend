@@ -47,7 +47,7 @@ def create_user():
         if data['permissions'] == 'volunteer':
             if volunteer.createVolunteer(data):
                 return success, status.HTTP_200_OK
-            else: 
+            else:
                 return error, status.HTTP_500_INTERNAL_SERVER_ERROR
         if data['permissions'] == 'admin':
             if admin.Admin.createAdmin(data):
@@ -164,10 +164,10 @@ def login():
         if create_token(user) is not None:
             return create_token(user), status.HTTP_200_OK
         else:
-            return jsonify({'result': "Login Failed" }), status.HTTP_500_INTERNAL_SERVER_ERROR
+            return jsonify({'result': "Token Failed" }), status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
         #status = False
-        return jsonify({'result': error}), status.HTTP_500_INTERNAL_SERVER_ERROR
+        return jsonify({'result': error}), status.HTTP_401_UNAUTHORIZED
 
 def create_token(user):
     payload = {
