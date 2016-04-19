@@ -111,68 +111,32 @@ class EventTests(unittest.TestCase):
         self.assertTrue(race.zip == '02120')
         session.close()
 
-# # race.zip is a string of letters - should be 5 ints
-# def test_zip_letters(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', 'abcdef',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'zip-codes must be a string of 5 integers')
+    # # race.zip is a string of letters - should be 5 ints
+    def test_07_zip_letters(self):
+        
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', 'abcde',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
 
 # # race.zip is too long - should be 5 ints
-# def test_zip_length(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '123456789',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'zip-codes must be a string of 5 integers')
+    def test_08_zip_length(self):
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '021155',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
 
-# # race.start_at is a string of letters - should be in the form mm/dd/yyyy, hh:mm
-# def test_startAt_letters(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', 'oops', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'start time must be in the form mm/dd/yyyy hh:mm')
 
-# # race.start_at is improperly formatted - should be in the form mm/dd/yyyy, hh:mm
-# def test_startAt_format(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', 'April 12, 2016 1pm', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'start time must be in the form mm/dd/yyyy hh:mm')
+# # race.zip is too short - should be 5 ints
+    def test_09_zip_length(self):
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '0211',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
 
-# # race.start_at cannot be in the past
-# def test_startAt_past(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', 'April 12, 2014 1pm', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'start time must be in the form mm/dd/yyyy hh:mm')
 
-# # race.posted_at is a string of letters - should be in the form mm/dd/yyyy, hh:mm:ss
-# def test_postedAt_letters(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', 'oops',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'post time must be in the form mm/dd/yyyy hh:mm:ss')
-
-# # race.posted_at is improperly formatted - should be in the form mm/dd/yyyy, hh:mm:ss
-# def test_postedAt_format(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', 'March 27, 2016 12am',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'post time must be in the form mm/dd/yyyy hh:mm:ss')
-
-# These tests require the Interest and Skills Enumerations to be created
-
-# # race.interests should exist in the interests table
-# def test_interests_exists(self):
-#     session = Session()
-#     self.assertEqual(self.race.interests, session.query(Interests).filter_by(name=self.race.interests).first())
-#     session.close()
-#
-# # race.skills should exist in the skills table
-# def test_skills_exists(self):
-#     session = Session()
-#     self.assertEqual(self.race.skills, session.query(Skills).filter_by(name=self.race.skills).first())
-#     session.close()
+# # race.capacity cant be less than 0
+    def test_10_zip_length(self):
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  -1)
 
 # not sure if we still need this
 #    def test_org_exists(self):
