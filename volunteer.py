@@ -36,7 +36,7 @@ class Volunteer(User):
 
     @classmethod
     def fromdict(cls, d):
-        allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
+        allowed = ('name', 'email', 'passwordhash', 'phone', 'contact', 'last_active', 'birthdate', 
             'bio', 'gender', 'uhours', 'vhours','education', 'events')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
@@ -57,7 +57,7 @@ class Volunteer(User):
         # needs an @ and a .~~~
         self.email = email
         self.set_password(passwordhash)
-        if len(phone) > 15:
+        if len(phone) > 10:
             raise ValueError('phone number is too long')
         elif len(phone) < 10:
             raise ValueError('phone number is too short')
@@ -109,7 +109,7 @@ class Volunteer(User):
         else:
             raise ValueError("user does not exist")
 
-    def deleteSelfFrom(self,table, session):
+    def deleteSelfFrom(self, table, session):
         rows = session.query(table).filter_by(volunteer_id=self.id)
         if rows:
             for r in rows:
@@ -131,16 +131,16 @@ class Volunteer(User):
                     raise exc.SQLAlchemyError("failed to delete " + table.__tablename__ + " " + a.key)
 
         # delete all the availability rows involving this user
-        self.deleteSelfFrom(VolunteerAvailability,s)
+        self.deleteSelfFrom(VolunteerAvailability, s)
 
         # delete all the interest rows involving this user
-        self.deleteSelfFrom(VolunteerInterests,s)
+        self.deleteSelfFrom(VolunteerInterests, s)
 
         # delete all the neighborhood rows involving this user
         self.deleteSelfFrom(VolunteerNeighborhoods, s)
 
         # delete all the skill rows involving this user
-        self.deleteSelfFrom(VolunteerSkills,s)
+        self.deleteSelfFrom(VolunteerSkills, s)
 
         # delete this user
         try:
