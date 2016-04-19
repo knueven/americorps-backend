@@ -167,7 +167,7 @@ def login():
             return jsonify({'result': "Login Failed" }), status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
         #status = False
-        return jsonify({'result': status}), status.HTTP_500_INTERNAL_SERVER_ERROR
+        return jsonify({'result': error}), status.HTTP_500_INTERNAL_SERVER_ERROR
 
 def create_token(user):
     payload = {
