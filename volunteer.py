@@ -158,9 +158,12 @@ class Volunteer(User):
                 s.commit()
             except:
                 print("hour log failed")
-                return false
+                return False
+            finally:
+                s.close()
+            return True
         else:
-            return false
+            return False
         
 
     # create a volunteer from a json blob

@@ -151,6 +151,32 @@ def users(user_id):
             return deleteSuccess, status.HTTP_200_OK
 
 
+@app.route('/user/loghours', methods=['POST'])
+def hours():
+    noVolunteer = {'error': 'Volunteer not found.'}
+    wrong = {'error': 'JSON incorrect - need volunteer, event, and hours'}
+    correct = {'status': 'hours logged!'}
+    wrong2 = {'error': 'error logging hours'}
+    data = request.json
+    s = Session()
+    vo = s.query(Volunteer).filter_by(id=data['volunteerid']).first()
+    if not(vo):
+        return noVolunteer, status.HTTP_404_NOT_FOUND
+    else:
+        eventid = data["eventid"]
+        hours = data["hours"]
+        if eventid and hours:
+            if vo.log_hours(eventid, hours):
+                return correct, status.HTTP_200_OK
+            else:
+                return wrong2, status.HTTP_500_INTERNAL_SERVER_ERROR
+        else: 
+            return wrong, status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+
+
+
 
 
 @app.route('/event', methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -180,7 +206,7 @@ def signup():
 
 
 @app.route('/login', methods=['POST'])
-@cross_origin()
+@cross_origin(headers=['Content-Type','Authorization'])
 def login():
     s = Session()
     json_data = request.json
