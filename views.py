@@ -178,6 +178,7 @@ def create_token(user):
         #expiry
         'exp': datetime.utcnow() + timedelta(days=1)
     }
+    
     s = Session()
     token = jwt.encode(payload, app.secret_key, algorithm='HS256')
     try:
