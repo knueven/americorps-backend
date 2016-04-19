@@ -85,21 +85,33 @@ class Volunteer(User):
         return check_password_hash(self.passwordhash, password)
 
     def grab_neighborhoods(volun_id, json1):
-        neighborhoods = json1['neighborhoods']
-        #print(neighborhoods)
-        VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
+        if json1['neighborhoods']:
+            neighborhoods = json1['neighborhoods']
+            #print(neighborhoods)
+            VolunteerNeighborhoods.create_v_neighborhood(volun_id, neighborhoods)
+        else:
+            return
 
     def grab_skills(volun_id, json1):
-        skills = json1['skills']
-        VolunteerSkills.createvskills(volun_id, skills)
+        if json1['skills']:
+            skills = json1['skills']
+            VolunteerSkills.createvskills(volun_id, skills)
+        else:
+            return
 
     def grab_interests(volun_id, json1):
-        interests = json1['interests']
-        VolunteerInterests.create_v_interests(volun_id, interests)
+        if json1['interests']:
+            interests = json1['interests']
+            VolunteerInterests.create_v_interests(volun_id, interests)
+        else:
+            return
 
     def grab_availability(volun_id, json1):
-        avail = json1['availability']
-        VolunteerAvailability.create_v_availability(volun_id, avail)
+        if json1['availability']:
+            avail = json1['availability']
+            VolunteerAvailability.create_v_availability(volun_id, avail)
+        else:
+            return
 
     # take in a user id, grab the volunteer from the database and return it
     def getVolunteer(self, id):
@@ -177,6 +189,7 @@ def createVolunteer(json):
         s.commit()
         n = True
     except:
+        print("here3")
         s.close()
         return False
     s.close()
@@ -184,6 +197,7 @@ def createVolunteer(json):
     if createEnums(v2, json):
         return True
     else:
+        print("here2")
         return False
 
 def createEnums(v, json):
@@ -195,6 +209,7 @@ def createEnums(v, json):
         Volunteer.grab_interests(v1.id, json)
         Volunteer.grab_availability(v1.id, json)
     except:
+        print("here4")
         return False
     finally:
         s.close()
