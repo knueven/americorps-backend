@@ -1,6 +1,6 @@
 from db import Session
 import unittest
-from organization import Organization
+from organization import *
 from datetime import datetime
 from sqlalchemy import exc
 import random
@@ -120,10 +120,54 @@ class OrganizationTests(unittest.TestCase):
             self.assertTrue(False)
         session.close()
 
-#    def test_08_create_org(self):
+    def test_09_create_org(self):
+        session = Session()
+        N = 15
+        logemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        pocemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        json = {'name':'Test Org', 'email':logemail, 'passwordhash':'fire',
+                           'phone':'6208675309', 'address':'Mass Ave', 'city':'Boston',
+                           'state':'MA', 'zip':'02115', 'mission':'doing charity things',
+                           'poc':pocemail}
+        try:
+            organization.createOrganization(json)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+        
+
+    def test_10_zip_long(self):
+        self.assertRaises(ValueError, Organization, 'Test Org', 'wood.jos@gmail.com', 'fire', '6208675309',
+                            'Mass Ave', 'Boston', 'MA', '021155', 
+                            'doing charity things', 'jos.wood@husky.neu.edu')
+
+
+    def test_11_zip_short(self):
+        self.assertRaises(ValueError, Organization, 'Test Org', 'wood.jos@gmail.com', 'fire', '6208675309',
+                            'Mass Ave', 'Boston', 'MA', '0211', 
+                            'doing charity things', 'jos.wood@husky.neu.edu')
+
+    def test_12_zip_letters(self):
+        self.assertRaises(ValueError, Organization, 'Test Org', 'wood.jos@gmail.com', 'fire', '6208675309',
+                            'Mass Ave', 'Boston', 'MA', 'abcde', 
+                            'doing charity things', 'jos.wood@husky.neu.edu')
+
+    def test_13_phone_long(self):
+        self.assertRaises(ValueError, Organization, 'Test Org', 'wood.jos@gmail.com', 'fire', '62086753099',
+                            'Mass Ave', 'Boston', 'MA', '02115', 
+                            'doing charity things', 'jos.wood@husky.neu.edu')
+
+    def test_14_phone_short(self):
+        self.assertRaises(ValueError, Organization, 'Test Org', 'wood.jos@gmail.com', 'fire', '620867530',
+                            'Mass Ave', 'Boston', 'MA', '02115', 
+                            'doing charity things', 'jos.wood@husky.neu.edu')
+
+    def test_15_phone_letters(self):
+        self.assertRaises(ValueError, Organization, 'Test Org', 'wood.jos@gmail.com', 'fire', 'abcdefghij',
+                            'Mass Ave', 'Boston', 'MA', '02115', 
+                            'doing charity things', 'jos.wood@husky.neu.edu')
+
     
-        
-        
+               
         
 
 if __name__ == '__main__':
