@@ -16,6 +16,8 @@ from user import User
 import jwt
 from datetime import datetime, timedelta
 from event import Event
+from flask.ext.cors import CORS, cross_origin
+
 @app.route('/')
 def index():
     content = {'test content':'disregard'}
@@ -147,7 +149,9 @@ def signup():
         else: 
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
+
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     s = Session()
     json_data = request.json
