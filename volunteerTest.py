@@ -271,12 +271,60 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
         session.close()
 
-    #def test_19_delete_self(self):
+    def test_19_create_volunteer(self):
+        json = {'name': 'Joey Wood', 'email': 'wood.jos@husky.neu.edu', 'passwordhash': 'lit',
+                'phone': '3015559721', 'contact': true, 'birthdate':'03/27/2016', 'bio': 'Snell rhymes with hell',
+                'gender': 'Male', 'uhours': 0, 'vhours': 0, 'education': "Some college, no degree"}
+        try:
+            createVolunteer(json)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+        
+
+    #def test_20_delete_self(self):
+#        #Session = sessionmaker(autoflush=False)
 #        session = Session()
 #        joey = session.query(User).filter_by(name='Joey Wood').first()
 #        jid = joey.id
-#        self.assertTrue(joey.deleteSelf())
+#        moey = session.query(User).filter_by(id=jid).first()
+#        self.assertTrue(moey != None)
+#        ints = session.query(VolunteerInterests).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(ints != None)
+#        skills = session.query(VolunteerSkills).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(skills != None)
+#        neigh = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(neigh != None)
+#        avail = session.query(VolunteerAvailability).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(avail != None)
+#        joey.deleteSelf(session)
+#        
+#        moey = session.query(User).filter_by(id=jid).first()
+#        self.assertTrue(moey == None)
+#        ints = session.query(VolunteerInterests).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(ints == None)
+#        skills = session.query(VolunteerSkills).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(skills == None)
+#        neigh = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(neigh == None)
+#        avail = session.query(VolunteerAvailability).filter_by(volunteer_id=jid).first()
+#        self.assertTrue(avail == None)
 #        session.close()
+
+    def test_21_phone_long(self):
+        self.assertRaises(ValueError, Volunteer, 'Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '30155597211', True,
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
+                         uhours=0, vhours=0, education="Some college, no degree")
+
+    def test_22_phone_short(self):
+        self.assertRaises(ValueError, Volunteer, 'Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '301555972', True,
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
+                         uhours=0, vhours=0, education="Some college, no degree")
+
+    def test_23_phone_letters(self):
+        self.assertRaises(ValueError, Volunteer, 'Joey Wood', 'wood.jos@husky.neu.edu', 'lit', 'abcdefghij', True,
+                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
+                         uhours=0, vhours=0, education="Some college, no degree")
+        
         
         
        
