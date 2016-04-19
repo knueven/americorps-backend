@@ -151,7 +151,7 @@ def signup():
 
 
 @app.route('/login', methods=['POST'])
-@cross_origin()
+@cross_origin(headers=['Content-Type','Authorization'])
 def login():
     s = Session()
     json_data = request.json
