@@ -262,7 +262,7 @@ def create_token(user):
         return None
     finally:
         s.close() 
-    m = {'token': token, 'user': d}
+    m = {'token': str(token), 'user': d}
     return m
 
 
