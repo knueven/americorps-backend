@@ -96,7 +96,9 @@ class Event(Base):
                     session.delete(attendee)
                 except:
                     raise exc.SQLAlchemyError("failed to delete attendee " + attendee.key)
+            session.commit()
             try:
+                session.commit()
                 session.delete(self)
             except:
                 raise exc.SQLAlchemyError("failed to delete event " + self.id)

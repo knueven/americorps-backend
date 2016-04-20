@@ -97,22 +97,9 @@ class OrganizationTests(unittest.TestCase):
         if s.query(Event).filter_by(name='Race for the Cure').first():
             self.assertTrue(True)
         else:
-            self.assertTrue(False)        
+            self.assertTrue(False)
 
-
-    def test_07_delete_self(self):
-        session = Session()
-        test = session.query(User).filter_by(name='Test Org').first()
-        tid = test.id
-        self.assertTrue(test != None)
-        test.deleteSelf(session)
-        org = session.query(User).filter_by(id=tid).first()
-        self.assertTrue(org == None)
-        events = session.query(Event).filter_by(org=id).first()
-        self.assertTrue(events == None)
-        session.close()
-
-    def test_08_password_check(self):
+    def test_07_password_check(self):
         session = Session()
         test = session.query(User).filter_by(name='Test Org').first()
         try:
@@ -124,7 +111,7 @@ class OrganizationTests(unittest.TestCase):
             self.assertTrue(False)
         session.close()
 
-    def test_09_create_org(self):
+    def test_08_create_org(self):
         session = Session()
         N = 15
         logemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
@@ -137,6 +124,20 @@ class OrganizationTests(unittest.TestCase):
             organization.createOrganization(json)
         except exc.SQLAlchemyError:
             self.assertTrue(False)
+
+
+    def test_09_delete_self(self):
+        session = Session()
+        test = session.query(User).filter_by(name='Test Org').first()
+        tid = test.id
+        self.assertTrue(test != None)
+        test.deleteSelf(session)
+        org = session.query(User).filter_by(id=tid).first()
+        self.assertTrue(org == None)
+        events = session.query(Event).filter_by(org=id).first()
+        self.assertTrue(events == None)
+        session.close()
+
         
 
     def test_10_zip_long(self):
