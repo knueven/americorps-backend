@@ -12,39 +12,17 @@ from event import Event
 class OrganizationTests(unittest.TestCase):
 
 
-    @classmethod
-    def setUpClass(cls):
-        org0 = Organization('Cancer Research Center', 'crc@gmail.com', 'password101', '3198023836', '350 Mass Ave',
-                           'Boston', 'MA', '02115', 'Looking for a Cure!', 'jane@gmail.com',
-                            pics="http://www.imbcr.org/wp-content/uploads/2013/09/slider-5.jpg,http://www.worldwidecancerresearch.org/media/1131/Streaking-Bacteria2109.jpg,https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQEsnGcKjN0soZy1XqtG5MPluFD-MZ2nHtmE8nAh6LlLDXzQZt6lA,http://smhs.gwu.edu/sites/default/files/styles/875-x-variable/public/field/image/Research_website_460x220.png?itok=0rdPVS_m")
-
-        org1 = Organization('Homeless Shelter', 'hs@hotmail.com', 'p@ssword', '3456789870', '174 Hillside St',
-                            'Boston', 'MA', '02120', 'Help feed the homeless!', 'joey@gmail.com',
-                            pics="http://cdn.citylab.com/media/img/citylab/2012/01/16/homelesssheltermain/lead_large.jpg,http://www.panhandlepost.com/wp-content/uploads/2013/02/Homeless-Shelter.jpg,https://upload.wikimedia.org/wikipedia/commons/a/a2/Meals_on_Wheels_food_prep.jpg,http://www.cvrm.org/wp-content/uploads/2011/06/givefoodsupplies_web.jpg")
-
-        org2 = Organization('Dog Watchers', 'dw@gmail.com', 'puppies', '0987654321', '720 Columbus Ave',
-                            'Boston', 'MA', '02120', 'Walk puppies!', 'shivi@icloud.com',
-                            pics="http://f.tqn.com/y/dogs/1/W/3/K/0/-/pet-sitter-124465293-resized.jpg,http://cdn.bleacherreport.net/images_root/slides/photos/001/278/794/diaz5_display_image.jpg?1315512623,http://celebritydogwatcher.com/wp-content/uploads/2008/02/cesarmillan.jpg,http://cdn01.cdn.justjaredjr.com/wp-content/uploads/pictures/2011/04/shake-dog/davis-cleveland-dog-tv-watcher-10.jpg")
-        
-        s = Session()
-        s.add(org0)
-        s.add(org1)
-        s.add(org2)
-        
-        try:
-            s.commit()
-        except exc.SQLAlchemyError:
-            s.rollback()
-        s.close()
 
 	 #checks if the events fields are initialized correctly
     def test_01_init(self):
-        
-        org = Organization('Test Org', 'wood.jos@gmail.com', 'fire', '6208675309',
+        N=15
+        logemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        pocemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        org = Organization('Test Org', logemail, 'fire', '6208675309',
                             'Mass Ave', 'Boston', 'MA', '02115', 
-                            'doing charity things', 'jos.wood@husky.neu.edu')
+                            'doing charity things', pocemail)
         self.assertTrue(org.name == 'Test Org')
-        self.assertTrue(org.email == 'wood.jos@gmail.com')
+        #self.assertTrue(org.email == 'wood.jos@gmail.com')
         #password encrypted
         self.assertTrue(org.phone == '6208675309')
         self.assertTrue(org.address == 'Mass Ave')
@@ -52,7 +30,7 @@ class OrganizationTests(unittest.TestCase):
         self.assertTrue(org.state == 'MA')
         self.assertTrue(org.zip == '02115')
         self.assertTrue(org.mission == 'doing charity things')
-        self.assertTrue(org.poc == 'jos.wood@husky.neu.edu')
+        #self.assertTrue(org.poc == 'jos.wood@husky.neu.edu')
 
 
     def test_02_db_write(self):
@@ -101,9 +79,9 @@ class OrganizationTests(unittest.TestCase):
         session = Session()
         test = session.query(User).filter_by(name='Test Org').first()
         q = session.query(User).filter_by(id=test.id)
-        q = q.update({"email":"wood.jos@husky.neu.edu"})
+        q = q.update({"email":"jos.wood@husky.neu.edu"})
         test = session.query(User).filter_by(id=test.id).first()
-        self.assertTrue(test.email == 'wood.jos@husky.neu.edu')
+        self.assertTrue(test.email == 'jos.wood@husky.neu.edu')
         session.close()
 
     def test_06_add_event(self):
