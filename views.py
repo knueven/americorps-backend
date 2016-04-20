@@ -102,7 +102,6 @@ def orgs(org_id):
         except exc.SQLAlchemyError as e:
             deleteError = {'error': str(e)}
             return deleteError, status.HTTP_400_BAD_REQUEST
-        s.commit()
         s.close()
         return deleteSuccess, status.HTTP_200_OK
 

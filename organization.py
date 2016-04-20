@@ -83,6 +83,7 @@ class Organization(User):
         if events:
             for e in events:
                 e.deleteSelf(session)
+            session.commit()
         members = session.query(OrgMember).filter_by(org=self.id)
         if members:
             for m in members:
@@ -94,6 +95,7 @@ class Organization(User):
             session.delete(self)
         except:
             raise exc.SQLAlchemyError("failed to delete Organization " + self.id)
+        session.commit()
 
 
 #def updateOrg(org_id, update_data):
