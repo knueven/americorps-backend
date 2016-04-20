@@ -32,12 +32,13 @@ class Volunteer(User):
     bio = Column(String(10000))
     gender = Column(Enum('Male', 'Female', 'Other'))
     contact = Column(Boolean, nullable=False)
+    pic = Column(String(1000))
 
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'contact', 'last_active', 'birthdate', 
-            'bio', 'gender', 'uhours', 'vhours','education', 'events')
+            'bio', 'gender', 'uhours', 'vhours','education', 'events', 'pic')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
@@ -52,7 +53,7 @@ class Volunteer(User):
         return dict_
 
     def __init__(self, name, email, passwordhash, phone, contact, uhours=None, vhours=None,
-                 education=None, birthdate=None, bio=None, gender=None):
+                 education=None, birthdate=None, bio=None, gender=None, pic=None):
         self.name = name
         # needs an @ and a .~~~
         self.email = email
@@ -74,6 +75,7 @@ class Volunteer(User):
         self.vhours = vhours
         self.education = education
         self.contact = contact
+        self.pic = pic
         
 
     def set_password(self, password):

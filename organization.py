@@ -19,11 +19,12 @@ class Organization(User):
     zip = Column(String(5), nullable=False)
     mission = Column(String(255), nullable=False)
     poc = Column(String(60), nullable=False)
+    pics = Column(String(5000))
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active',
-                   'address', 'city', 'state', 'zip', 'mission', 'poc')
+                   'address', 'city', 'state', 'zip', 'mission', 'poc', 'pics')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
@@ -38,7 +39,7 @@ class Organization(User):
         return dict_
 
     def __init__(self, name, email, passwordhash, phone, address, city, state,
-                 zip, mission, poc):
+                 zip, mission, poc, pics=None):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -64,6 +65,7 @@ class Organization(User):
         self.mission = mission
         self.poc = poc
         self.last_activity = datetime.now()
+        self.pics = pics
 
 
     def __repr__(self):
