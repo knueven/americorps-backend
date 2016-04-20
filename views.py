@@ -130,8 +130,8 @@ def users(user_id):
         s = Session()
         u = s.query(User).filter_by(id=user_id).first()
         if u:
-            return jsonify(u.asdict()), status.HTTP_200_OK
             s.close()
+            return jsonify(u.asdict()), status.HTTP_200_OK
         else:
             return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
@@ -205,6 +205,18 @@ def event(event_id):
                 return updateSuccess, status.HTTP_200_OK
             else:
                 return updateError, status.HTTP_400_BAD_REQUEST
+
+@app.route('/event/get_all', methods=['GET'])
+def get_all():
+    if request.method == 'GET':
+        s = Session()
+        events = s.query(Event).all()
+        events_Json = []
+        for e in events:
+            events_Json.append(jsonify(e.asdict))
+        return events_Json, status.HTTP_200_OK
+
+
 
 @app.route('/event/signup', methods=['POST'])
 def signup():

@@ -32,8 +32,15 @@ class Event(Base):
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
-
-
+    def asdict(self):
+        dict_ = {}
+        for key in self.__mapper__.c.keys():
+                result = getattr(self, key)
+                if isinstance(result, date):
+                    dict_[key] = str(result)
+                else:
+                    dict_[key] = result
+        return dict_
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
