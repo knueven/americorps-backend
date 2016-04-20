@@ -144,7 +144,6 @@ def users(user_id):
                 deleteError = {'error' : e.args}
                 return deleteError, status.HTTP_400_BAD_REQUEST
             finally:
-                s.commit()
                 s.close()
             return deleteSuccess, status.HTTP_200_OK
 
