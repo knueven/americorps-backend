@@ -93,6 +93,7 @@ class Organization(User):
                     raise exc.SQLAlchemyError("failed to delete OrgMember " + m.id)
         try:
             session.delete(self)
+            session.commit()
         except:
             raise exc.SQLAlchemyError("failed to delete Organization " + self.id)
         session.commit()
