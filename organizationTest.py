@@ -100,17 +100,17 @@ class OrganizationTests(unittest.TestCase):
             self.assertTrue(False)        
 
 
-    def test_07_delete_self(self):
-        session = Session()
-        test = session.query(User).filter_by(name='Test Org').first()
-        tid = test.id
-        self.assertTrue(test != None)
-        test.deleteSelf(session)
-        org = session.query(User).filter_by(id=tid).first()
-        self.assertTrue(org == None)
-        events = session.query(Event).filter_by(org=id).first()
-        self.assertTrue(events == None)
-        session.close()
+    #def test_07_delete_self(self):
+    #    session = Session()
+    #    test = session.query(User).filter_by(name='Test Org').first()
+    #    tid = test.id
+    #    self.assertTrue(test != None)
+    #    test.deleteSelf(session)
+    #    org = session.query(User).filter_by(id=tid).first()
+    #    self.assertTrue(org == None)
+    #    events = session.query(Event).filter_by(org=id).first()
+    #    self.assertTrue(events == None)
+    #    session.close()
 
     def test_08_password_check(self):
         session = Session()
