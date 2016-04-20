@@ -1,6 +1,5 @@
 import volunteer
 from volunteer import Volunteer
-from organization import Organization
 from admin import Admin
 import admin
 from organization import *
@@ -211,9 +210,10 @@ def get_all():
     if request.method == 'GET':
         s = Session()
         events = s.query(Event).all()
-        events_Json = []
+        events_Json = {'results':[]}
         for e in events:
-            events_Json.append(jsonify(e.asdict))
+            print(Event.asdict(e))
+            events_Json['results'].append(Event.asdict(e))
         return events_Json, status.HTTP_200_OK
 
 
