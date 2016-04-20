@@ -179,10 +179,12 @@ def hours():
 
 
 
-@app.route('/event', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def events():
+@app.route('/event/<int:event_id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def event(event_id):
     content = {'events': 'test'}
     success = {'status': 'event created'}
+    updateSuccess = {'status':'account updated'}
+    updateError = {'error': 'User not found/input validation failed.'}
     error = {'error': "Error in JSON/SQL syntax"}
     if request.method == 'POST':
         data = request.json
@@ -192,6 +194,17 @@ def events():
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
     if request.method == 'GET':
         return content, status.HTTP_200_OK
+    if request.method == 'POST':
+        data = request.json
+        if data:
+            s = Session()
+            u = s.query(Event).filter_by(id=event_id).update(data)
+            if u:
+                s.commit()
+                s.close()
+                return updateSuccess, status.HTTP_200_OK
+            else:
+                return updateError, status.HTTP_400_BAD_REQUEST
 
 @app.route('/event/signup', methods=['POST'])
 def signup():
