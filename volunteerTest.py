@@ -24,8 +24,9 @@ class VolunteerTests(unittest.TestCase):
         N=10
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         joey = Volunteer('Joey Wood', email, 'lit', '3015559721', True,
-                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")
+                         birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
+                         uhours=0, vhours=0, education="Some college, no degree",
+                         pic="https://www.google.com/imgres?imgurl=http%3A%2F%2Fwww.peopleplace.eu%2Fimage%2Fnew%2Fslide1.jpg&imgrefurl=http%3A%2F%2Fwww.peopleplace.eu%2F&docid=lyjdXkOPdJV8bM&tbnid=u7uxEKYTPiGTmM%3A&w=2000&h=1333&bih=673&biw=1020&ved=0ahUKEwiJ3vq2yJzMAhUMdD4KHTtfDV0QMwhvKAYwBg&iact=mrc&uact=8")
         self.assertTrue(joey.name == 'Joey Wood')
         self.assertTrue(joey.email == email)
         self.assertTrue(joey.passwordhash != 'lit')
@@ -33,24 +34,36 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.contact)
         #self.assertTrue(joey.birthdate == '05/26/1990')
         self.assertTrue(joey.permissions == 'volunteer')
-        self.assertTrue(joey.bio == 'Snell rhymes with hell')
+        self.assertTrue(joey.bio == 'CS Major')
         self.assertTrue(joey.gender == 'Male')
         self.assertTrue(joey.uhours == 0)
         self.assertTrue(joey.vhours == 0)
         self.assertTrue(joey.education == "Some college, no degree")
+        self.assertTrue(joey.pic == 'https://www.google.com/imgres?imgurl=http%3A%2F%2Fwww.peopleplace.eu%2Fimage%2Fnew%2Fslide1.jpg&imgrefurl=http%3A%2F%2Fwww.peopleplace.eu%2F&docid=lyjdXkOPdJV8bM&tbnid=u7uxEKYTPiGTmM%3A&w=2000&h=1333&bih=673&biw=1020&ved=0ahUKEwiJ3vq2yJzMAhUMdD4KHTtfDV0QMwhvKAYwBg&iact=mrc&uact=8')
 
 
 
     #test object write to the database.    
     def test_02_db_write(self):
-        N=20
-        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        joey = Volunteer('Joey Wood', email, 'lit', '3015559721', True,
-                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")
+        #N=20
+        #email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
+                         birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
+                         uhours=0, vhours=0, education="Some college, no degree",
+                         pic='http://www.wired.com/wp-content/uploads/2014/09/parks-recreation-binge-ft.jpg')
+        olivia = Volunteer('Olivia', 'olivia@husky.neu.edu', 'sratlyfe', '4029834098', True,
+                           birthdate=date(1720, 10, 30), bio='Vote for Pedro', gender='Female',
+                           uhours=0, vhours=0, education='Less than High School',
+                           pic='https://upload.wikimedia.org/wikipedia/en/a/a3/Parks_recreation_canvassing.jpg')
+        andrew= Volunteer('Andrew', 'andrew@husky.neu.edu', 'sqlalchemy', '9852039385', True,
+                          birthdate=date(1993, 12, 22), bio='Yahoo4ever', gender='Male',
+                          uhours=0, vhours=0, education='Doctoral or professional degree',
+                          pic='http://cdn.fansided.com/wp-content/blogs.dir/340/files/2014/12/ben-wyatt-parks-and-rec.png')
         s = Session()
         try:
             s.add(joey)
+            s.add(olivia)
+            s.add(andrew)
             s.commit()
             s.close()
             self.assertTrue(True)
@@ -61,7 +74,7 @@ class VolunteerTests(unittest.TestCase):
     def test_03_queryName(self):
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
-                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")        
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         self.assertTrue(joey.name == poey.name)
@@ -110,7 +123,7 @@ class VolunteerTests(unittest.TestCase):
     def test_05_queryPhone(self):
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
-                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")         
         poey = session.query(Volunteer).filter_by(phone='3015559721').first()
         self.assertTrue(joey.name == poey.name)
@@ -130,7 +143,7 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         vol = Volunteer('Test', email, 'lit', '3015559725', True,
-                         birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
+                         birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")  
         try:
             session.add(vol)
@@ -149,10 +162,18 @@ class VolunteerTests(unittest.TestCase):
     def test_07_interests_write(self):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        olivia = session.query(Volunteer).filter_by(name='Olivia').first()
+        andrew = session.query(Volunteer).filter_by(name='Andrew').first()
         moey = VolunteerInterests("Youth", joey.id)
+        doey = VolunteerInterests("Animals", joey.id)
+        livia = VolunteerInterests("Health", olivia.id)
+        drew = VolunteerInterests("Education", andrew.id)
         self.assertTrue(moey.interest == "Youth")
         try:
             session.add(moey)
+            session.add(doey)
+            session.add(livia)
+            session.add(drew)
             session.commit()
             session.close()
             self.assertTrue(True)
@@ -165,14 +186,23 @@ class VolunteerTests(unittest.TestCase):
         moey = VolunteerInterests("Youth", doey.id)
         joey = session.query(VolunteerInterests).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.interest == joey.interest)
+        session.close()
 
     def test_09_neighborhood_write(self):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        olivia = session.query(Volunteer).filter_by(name='Olivia').first()
+        andrew = session.query(Volunteer).filter_by(name='andrew').first()
         moey = VolunteerNeighborhoods("Back Bay", joey.id)
+        dolivia = VolunteerNeighborhoods("Allston", olivia.id)
+        solivia = VolunteerNeighborhoods("Brighton", olivia.id)
+        andrew = VolunteerNeighborhoods("West End", andrew.id)
         self.assertTrue(moey.neighborhood == "Back Bay")
         try:
             session.add(moey)
+            session.add(dolivia)
+            session.add(solivia)
+            session.add(andrew)
             session.commit()
             session.close()
             self.assertTrue(True)
@@ -185,14 +215,24 @@ class VolunteerTests(unittest.TestCase):
         moey = VolunteerNeighborhoods("Back Bay", doey.id)
         joey = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.neighborhood == joey.neighborhood)
+        session.close()
+
 
     def test_11_skill_write(self):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        olivia = session.query(Volunteer).filter_by(name='Olivia').first()
+        andrew = session.query(Volunteer).filter_by(name='Andrew').first()
         moey = VolunteerSkills("Teaching/Tutoring", joey.id)
+        doey = VolunteerSkills("Fine Arts", joey.id)
+        livia = VolunteerSkills("Legal", olivia.id)
+        drew = VolunteerSkills("Writing/Editing", andrew.id)
         self.assertTrue(moey.skill == "Teaching/Tutoring")
         try:
             session.add(moey)
+            session.add(doey)
+            session.add(livia)
+            session.add(drew)
             session.commit()
             session.close()
             self.assertTrue(True)
@@ -205,15 +245,24 @@ class VolunteerTests(unittest.TestCase):
         moey = VolunteerSkills("Teaching/Tutoring", doey.id)
         joey = session.query(VolunteerSkills).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.skill == joey.skill)
+        session.close()
 
     def test_13_availability_write(self):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        olivia = session.query(Volunteer).filter_by(name='Olivia').first()
+        andrew = session.query(Volunteer).filter_by(name='Andrew').first()
         if joey:
             moey = VolunteerAvailability("Monday", joey.id)
+            livia = VolunteerAvailability("Tuesday", olivia.id)
+            drew = VolunteerAvailability("Saturday", andrew.id)
+            mew = VolunteerAvailability("Sunday", andrew.id)
             self.assertTrue(moey.day == "Monday")
             try:
                 session.add(moey)
+                session.add(livia)
+                session.add(drew)
+                session.add(mew)
                 session.commit()
                 session.close()
                 self.assertTrue(True)
@@ -228,6 +277,7 @@ class VolunteerTests(unittest.TestCase):
         moey = VolunteerAvailability("Monday", doey.id)
         joey = session.query(VolunteerAvailability).filter_by(volunteer_id=doey.id).first()
         self.assertTrue(moey.day == joey.day)
+        session.close()
 
     def test_15_sign_up(self):
         session = Session()

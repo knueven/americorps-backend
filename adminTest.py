@@ -13,6 +13,25 @@ import string
 
 class AdminTests(unittest.TestCase):
 
+
+    def set_up_class(self):
+        s = Session()
+        shivi = Admin('Shivi', 'shivi@husky.neu.edu', 'ra', '4923840941', False,
+                      birthdate=date(1990, 7, 4), bio='Team mom', gender='Female')
+        michael = Admin('Michael', 'michael@husky.neu.edu', 'uml', '4928103491', False,
+                        birthdate=date(1993, 4, 9), bio='Soft Dev Prof', gender='Male')
+        kt = Admin('Katie', 'katie@husky.neu.edu', 'kt', '9898279812', False,
+                   birthdate=date(1995, 3, 21), bio='Winning', gender='Female')
+
+        s.add(shivi)
+        s.add(michael)
+        s.add(kt)
+        try:
+            s.commit()
+        except exc.SQLAlchemuError:
+            s.rollback()
+        s.close()
+
     #checks if the volunteer's fields are initialized correctly
     def test_01_init(self):
         mickey = Admin('Mickey Mouse', 'wood.jos@husky.neu.edu', 'mouse', '0765434567', True,

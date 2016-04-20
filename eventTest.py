@@ -12,42 +12,51 @@ import string
 # event contains: id, name, address, city, state, zip, about, start_at, posted_at, duration, interests, skills, org
 class EventTests(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        N=15
-        logemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        pocemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        org = Organization('Cancer Research Center', logemail, 'fire101', '3198023836', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!', pocemail)
 
+    def setUpClass2(cls):
         s = Session()
-        s.add(org)
+        org = s.query(Organization).filter_by(name='Homeless Shelter').first()
+        race1 = Event('Feed the Homeless', '20 Mass Ave', 'Boston', 'MA', '02115',
+                     'Come hand out bread and soup',
+                     datetime(2016, 2, 4, 16, 0, 0), datetime(2016, 2, 4, 14, 0, 0), org.id, 2)
+        org = s.query(Organization).filter_by(name='Dog Watchers').first()
+        race3 = Event('Walk dogs', '170 Boylston St.', 'Boston', 'MA', '02115',
+                     "Come walk people's dogs",
+                     datetime(2015, 12, 12, 10, 0, 0), datetime(2015, 12, 12, 14, 0, 0), org.id, 25)
+
+        s.add(race1)
+        s.add(race2)
+        s.add(race3)
         try:
             s.commit()
-        except exc.SQLAlchemyError:
+        except exc.SQLAlchemuError:
             s.rollback()
         s.close()
 
     # checks if the events fields are initialized correctly
     def test_01_init(self):
-        race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
+        s = Session()
+        org = s.query(Organization).filter_by(name='Cancer Research Center').first()
+        race = Event('Race for the Cure', '20 Newbury St.', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 25)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), org.id, 25)
         
         self.assertEqual(race.name, 'Race for the Cure')
-        self.assertEqual(race.address, 'Mass Ave')
+        self.assertEqual(race.address, '20 Newbury St.')
         self.assertEqual(race.city, 'Boston')
         self.assertEqual(race.state, 'MA')
         self.assertEqual(race.zip, '02115')
         self.assertEqual(race.about, 'Running a marathon to raise money for cancer research')
         self.assertEqual(str(race.start_at), '2016-04-02 13:00:00')
         self.assertEqual(str(race.end_at), '2016-04-02 14:00:00')
-        self.assertEqual(race.org, 1)
+        self.assertEqual(race.org, org.id)
         self.assertEqual(race.capacity, 25)
+        s.close()
 
     # test object write to the database.
     def test_02_db_write(self):
         s = Session()
-        org = s.query(Organization).filter_by(state="MA").first()
+        org = s.query(Organization).filter_by(name="Cancer Research Center").first()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
                      datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
@@ -137,6 +146,7 @@ class EventTests(unittest.TestCase):
         self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
                      datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  -1)
+
 
 # not sure if we still need this
 #    def test_org_exists(self):
