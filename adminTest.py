@@ -1,6 +1,7 @@
 from admin import Admin
 from db import Session
 import unittest
+from user import User
 from datetime import *
 from sqlalchemy import exc
 import random
@@ -12,12 +13,16 @@ import string
 
 class AdminTests(unittest.TestCase):
 
+
+
     #checks if the volunteer's fields are initialized correctly
     def test_01_init(self):
-        mickey = Admin('Mickey Mouse', 'wood.jos@husky.neu.edu', 'mouse', '0765434567', True,
+        N=10
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        mickey = Admin('Mickey Mouse', email, 'mouse', '0765434567', True,
                        birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
         self.assertTrue(mickey.name == 'Mickey Mouse')
-        self.assertTrue(mickey.email == 'wood.jos@husky.neu.edu')
+        #self.assertTrue(mickey.email == 'wood.jos@husky.neu.edu')
         #self.assertTrue(mickey.passwordhash == 'mouse')
         self.assertTrue(mickey.phone == '0765434567')
         self.assertTrue(mickey.master)
@@ -94,6 +99,24 @@ class AdminTests(unittest.TestCase):
         self.assertTrue(mickey.permissions == sickey.permissions)
         self.assertTrue(mickey.bio == sickey.bio)
         self.assertTrue(mickey.gender == sickey.gender)
+
+    def test_06_updating_name(self):
+        session = Session()
+        mickey = session.query(User).filter_by(name='Mickey Mouse').first()
+        q = session.query(User).filter_by(id=mickey.id)
+        q = q.update({"name":"Wood Joey"})
+        mickey = session.query(User).filter_by(id=mickey.id).first()
+        self.assertTrue(mickey.name == 'Wood Joey')
+        session.close()
+
+    def test_07_updating_email(self):
+        session = Session()
+        mickey = session.query(User).filter_by(name='Mickey Mouse').first()
+        q = session.query(User).filter_by(id=mickey.id)
+        q = q.update({"email":"jos.wood1@husky.neu.edu"})
+        mickey = session.query(User).filter_by(id=mickey.id).first()
+        self.assertTrue(mickey.email == 'jos.wood1@husky.neu.edu')
+        session.close()
                         
     
 

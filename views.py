@@ -71,6 +71,7 @@ def orgs(org_id):
     updateSuccess = {'status':'Organization updated'}
     updateError = {'error': 'Organization not found/input validation failed.'}
     noOrg = {'error': 'Organization not found.'}
+    deleteSuccess = {'status' : 'Organization deleted'}
     # update user
     if request.method == 'POST':
         data = request.json
@@ -87,12 +88,23 @@ def orgs(org_id):
         s = Session()
         u = s.query(Organization).filter_by(id=org_id).first()
         if u:
-            return jsonify(u.asdict()), status.HTTP_200_OK
             s.close()
+            return jsonify(u.asdict()), status.HTTP_200_OK
         else:
             return noOrg, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
-        return error, HTTP_503_SERVICE_UNAVAILABLE
+        s = Session()
+        org = s.query(Organization).filter_by(id=org_id).first()
+        if not(org):
+            return noOrg, status.HTTP_404_NOT_FOUND
+        try:
+            org.deleteSelf(s)
+        except exc.SQLAlchemyError as e:
+            deleteError = {'error': str(e)}
+            return deleteError, status.HTTP_400_BAD_REQUEST
+        s.commit()
+        s.close()
+        return deleteSuccess, status.HTTP_200_OK
 
 
 @app.route('/user/<int:user_id>', methods=['GET', 'POST', 'DELETE'])
@@ -101,6 +113,7 @@ def users(user_id):
     updateSuccess = {'status':'account updated'}
     updateError = {'error': 'User not found/input validation failed.'}
     noUser = {'error': 'User not found.'}
+    deleteSuccess = {'status' : 'account deleted'}
     # update user
     if request.method == 'POST':
         data = request.json
@@ -117,17 +130,61 @@ def users(user_id):
         s = Session()
         u = s.query(User).filter_by(id=user_id).first()
         if u:
-            return jsonify(u.asdict()), status.HTTP_200_OK
             s.close()
+            return jsonify(u.asdict()), status.HTTP_200_OK
         else:
             return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
-        return error, HTTP_503_SERVICE_UNAVAILABLE 
+        s = Session()
+        user = s.query(User).filter_by(id=user_id).first()
+        if not(user):
+            return noUser, status.HTTP_404_NOT_FOUND
+        else:
+            try:
+                user.deleteSelf(s)
+            except exc.SQLAlchemyError as e:
+                deleteError = {'error' : e.args}
+                return deleteError, status.HTTP_400_BAD_REQUEST
+            finally:
+                s.commit()
+                s.close()
+            return deleteSuccess, status.HTTP_200_OK
 
-@app.route('/event', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def events():
+
+@app.route('/user/loghours', methods=['POST'])
+def hours():
+    noVolunteer = {'error': 'Volunteer not found.'}
+    wrong = {'error': 'JSON incorrect - need volunteer, event, and hours'}
+    correct = {'status': 'hours logged!'}
+    wrong2 = {'error': 'error logging hours'}
+    data = request.json
+    s = Session()
+    vo = s.query(Volunteer).filter_by(id=data['volunteerid']).first()
+    if not(vo):
+        return noVolunteer, status.HTTP_404_NOT_FOUND
+    else:
+        eventid = data["eventid"]
+        hours = data["hours"]
+        if eventid and hours:
+            if vo.log_hours(eventid, hours):
+                return correct, status.HTTP_200_OK
+            else:
+                return wrong2, status.HTTP_500_INTERNAL_SERVER_ERROR
+        else: 
+            return wrong, status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+
+
+
+
+
+@app.route('/event/<int:event_id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def event(event_id):
     content = {'events': 'test'}
     success = {'status': 'event created'}
+    updateSuccess = {'status':'account updated'}
+    updateError = {'error': 'User not found/input validation failed.'}
     error = {'error': "Error in JSON/SQL syntax"}
     if request.method == 'POST':
         data = request.json
@@ -137,6 +194,29 @@ def events():
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
     if request.method == 'GET':
         return content, status.HTTP_200_OK
+    if request.method == 'POST':
+        data = request.json
+        if data:
+            s = Session()
+            u = s.query(Event).filter_by(id=event_id).update(data)
+            if u:
+                s.commit()
+                s.close()
+                return updateSuccess, status.HTTP_200_OK
+            else:
+                return updateError, status.HTTP_400_BAD_REQUEST
+
+@app.route('/event/get_all', methods=['GET'])
+def get_all():
+    if request.method == 'GET':
+        s = Session()
+        events = s.query(Event).all()
+        events_Json = []
+        for e in events:
+            events_Json.append(jsonify(e.asdict))
+        return events_Json, status.HTTP_200_OK
+
+
 
 @app.route('/event/signup', methods=['POST'])
 def signup():

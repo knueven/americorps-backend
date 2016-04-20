@@ -31,12 +31,14 @@ class Volunteer(User):
     birthdate = Column(Date)
     bio = Column(String(10000))
     gender = Column(Enum('Male', 'Female', 'Other'))
+    contact = Column(Boolean, nullable=False)
+    pic = Column(String(1000))
 
 
     @classmethod
     def fromdict(cls, d):
-        allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active', 'birthdate', 
-            'bio', 'gender', 'uhours', 'vhours','education', 'events')
+        allowed = ('name', 'email', 'passwordhash', 'phone', 'contact', 'last_active', 'birthdate', 
+            'bio', 'gender', 'uhours', 'vhours','education', 'events', 'pic')
         df = {k : v for k, v in d.items() if k in allowed}
         return cls(**df)
 
@@ -50,13 +52,13 @@ class Volunteer(User):
                     dict_[key] = result
         return dict_
 
-    def __init__(self, name, email, passwordhash, phone, uhours=None, vhours=None,
-                 education=None, birthdate=None, bio=None, gender=None):
+    def __init__(self, name, email, passwordhash, phone, contact, uhours=None, vhours=None,
+                 education=None, birthdate=None, bio=None, gender=None, pic=None):
         self.name = name
         # needs an @ and a .~~~
         self.email = email
         self.set_password(passwordhash)
-        if len(phone) > 15:
+        if len(phone) > 10:
             raise ValueError('phone number is too long')
         elif len(phone) < 10:
             raise ValueError('phone number is too short')
@@ -72,6 +74,8 @@ class Volunteer(User):
         self.uhours = uhours
         self.vhours = vhours
         self.education = education
+        self.contact = contact
+        self.pic = pic
         
 
     def set_password(self, password):
@@ -119,23 +123,62 @@ class Volunteer(User):
         else:
             raise ValueError("user does not exist")
 
-    def deleteSelf(self):
-        s = Session()
+    def deleteSelfFrom(self, table, session):
+        rows = session.query(table).filter_by(volunteer_id=self.id)
+        if rows:
+            for r in rows:
+                try:
+                    session.delete(r)
+                except:
+                    raise exc.SQLAlchemyError("failed to delete availability " + r.id)
+
+    def deleteSelf(self, session):
+        s = session
+
+        # delete all the attendee rows involving this user
         attendees = s.query(Attendee).filter_by(userID=self.id)
-        if not(attendees):
-            return False
-        else:
-            try:
-                for a in attendees:
+        if attendees:
+            for a in attendees:
+                try:
                     s.delete(a)
-                s.delete(self)
+                except:
+                    raise exc.SQLAlchemyError("failed to delete " + table.__tablename__ + " " + a.key)
+
+        # delete all the availability rows involving this user
+        self.deleteSelfFrom(VolunteerAvailability, s)
+
+        # delete all the interest rows involving this user
+        self.deleteSelfFrom(VolunteerInterests, s)
+
+        # delete all the neighborhood rows involving this user
+        self.deleteSelfFrom(VolunteerNeighborhoods, s)
+
+        # delete all the skill rows involving this user
+        self.deleteSelfFrom(VolunteerSkills, s)
+
+        # delete this user
+        try:
+            s.delete(self)
+        except:
+            raise exc.SQLAlchemyError("failed to delete volunteer " + self.id)
+
+    def log_hours(self, eventid, hours):
+        s = Session()
+        self.vhours = hours
+        attendee = s.query(Attendee).filter_by(eventID=eventid, userID=self.id).first()
+        if attendee:
+            try:
+                attendee.hours = hours
                 s.commit()
             except:
-                print("delete failed")
+                print("hour log failed")
                 return False
             finally:
                 s.close()
             return True
+        else:
+            return False
+        
 
     # create a volunteer from a json blob
 def createVolunteer(json):

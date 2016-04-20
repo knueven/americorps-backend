@@ -5,6 +5,7 @@ from datetime import datetime, date
 from flask import json
 from event import Event
 from user import User
+from orgmember import OrgMember
 import organization
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -18,11 +19,12 @@ class Organization(User):
     zip = Column(String(5), nullable=False)
     mission = Column(String(255), nullable=False)
     poc = Column(String(60), nullable=False)
+    pics = Column(String(5000))
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'email', 'passwordhash', 'phone', 'last_active',
-                   'address', 'city', 'state', 'zip', 'mission', 'poc')
+                   'address', 'city', 'state', 'zip', 'mission', 'poc', 'pics')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
@@ -37,7 +39,7 @@ class Organization(User):
         return dict_
 
     def __init__(self, name, email, passwordhash, phone, address, city, state,
-                 zip, mission, poc):
+                 zip, mission, poc, pics=None):
 
         # make sure th zip code is valid
         if len(zip) != 5 or not(zip.isdigit()):
@@ -48,7 +50,7 @@ class Organization(User):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        if len(phone) > 15 :
+        if len(phone) > 10 :
             raise ValueError("phone number is too long")
         elif len(phone) < 10:
             raise ValueError("phone number is too short")
@@ -63,6 +65,7 @@ class Organization(User):
         self.mission = mission
         self.poc = poc
         self.last_activity = datetime.now()
+        self.pics = pics
 
 
     def __repr__(self):
@@ -76,31 +79,33 @@ class Organization(User):
 
 
     def deleteSelf(self, session):
-        check = True
         events = session.query(Event).filter_by(org=self.id)
-        if not(events):
-            return False
-        else:
+        if events:
             for e in events:
-                 check = e.deleteSelf(session) and check
-            try:
-                for member in session.query(OrgMember).filter_by(org=self.id):
-                    session.delete(member)
-                session.delete(self)
-            except:
-                return False
-            return check
+                e.deleteSelf(session)
+        members = session.query(OrgMember).filter_by(org=self.id)
+        if members:
+            for m in members:
+                try:
+                    session.delete(m)
+                except:
+                    raise exc.SQLAlchemyError("failed to delete OrgMember " + m.id)
+        try:
+            session.delete(self)
+        except:
+            raise exc.SQLAlchemyError("failed to delete Organization " + self.id)
 
-def updateOrg(org_id, update_data):
-    session = Session()
-    try:
-        session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
-        session.commit()
-    except:
-        session.rollback()
-        raise ValueError("id not found")
-    finally:
-        session.close()
+
+#def updateOrg(org_id, update_data):
+#    session = Session()
+#    try:
+#        session.query(Organization).filter_by(id=org_id).update(json.loads(update_data))
+#        session.commit()
+#    except:
+#        session.rollback()
+#        raise ValueError("id not found")
+#    finally:
+#        session.close()
         
 # create an event from a json string
 def createOrganization(json1):

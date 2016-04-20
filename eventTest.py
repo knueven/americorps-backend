@@ -12,42 +12,32 @@ import string
 # event contains: id, name, address, city, state, zip, about, start_at, posted_at, duration, interests, skills, org
 class EventTests(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        N=15
-        logemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        pocemail = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        org = Organization('Cancer Research Center', logemail, 'fire101', '3198023836', '350 Mass Ave', 'Boston', 'MA', '02115', 'Looking for a Cure!', pocemail)
 
-        s = Session()
-        s.add(org)
-        try:
-            s.commit()
-        except exc.SQLAlchemyError:
-            s.rollback()
-        s.close()
 
     # checks if the events fields are initialized correctly
     def test_01_init(self):
-        race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
+        s = Session()
+        org = s.query(Organization).filter_by(name='Test Org').first()
+        race = Event('Race for the Cure', '20 Newbury St.', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 25)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), org.id, 25)
         
         self.assertEqual(race.name, 'Race for the Cure')
-        self.assertEqual(race.address, 'Mass Ave')
+        self.assertEqual(race.address, '20 Newbury St.')
         self.assertEqual(race.city, 'Boston')
         self.assertEqual(race.state, 'MA')
         self.assertEqual(race.zip, '02115')
         self.assertEqual(race.about, 'Running a marathon to raise money for cancer research')
         self.assertEqual(str(race.start_at), '2016-04-02 13:00:00')
         self.assertEqual(str(race.end_at), '2016-04-02 14:00:00')
-        self.assertEqual(race.org, 1)
+        self.assertEqual(race.org, org.id)
         self.assertEqual(race.capacity, 25)
+        s.close()
 
     # test object write to the database.
     def test_02_db_write(self):
         s = Session()
-        org = s.query(Organization).filter_by(state="MA").first()
+        org = s.query(Organization).filter_by(name='Test Org').first()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
                      datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
@@ -78,7 +68,7 @@ class EventTests(unittest.TestCase):
         except exc.SQLAlchemyError:
             self.assertTrue(False)
 
-    def test_query(self):
+    def test_04_query(self):
         session = Session()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
@@ -93,68 +83,51 @@ class EventTests(unittest.TestCase):
         self.assertTrue(race.start_at == qrace.start_at)
         self.assertTrue(race.end_at == qrace.end_at)
 
-# # race.zip is a string of letters - should be 5 ints
-# def test_zip_letters(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', 'abcdef',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'zip-codes must be a string of 5 integers')
+    def test_05_updating_name(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        q = session.query(Event).filter_by(id=race.id)
+        q = q.update({"name":"Wood Joey"})
+        race = session.query(Event).filter_by(id=race.id).first()
+        self.assertTrue(race.name == 'Wood Joey')
+        session.close()
+
+    def test_06_updating_zip(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        q = session.query(Event).filter_by(id=race.id)
+        q = q.update({"zip":"02120"})
+        race = session.query(Event).filter_by(id=race.id).first()
+        self.assertTrue(race.zip == '02120')
+        session.close()
+
+    # # race.zip is a string of letters - should be 5 ints
+    def test_07_zip_letters(self):
+        
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', 'abcde',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
 
 # # race.zip is too long - should be 5 ints
-# def test_zip_length(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '123456789',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'zip-codes must be a string of 5 integers')
+    def test_08_zip_length(self):
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '021155',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
 
-# # race.start_at is a string of letters - should be in the form mm/dd/yyyy, hh:mm
-# def test_startAt_letters(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', 'oops', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'start time must be in the form mm/dd/yyyy hh:mm')
 
-# # race.start_at is improperly formatted - should be in the form mm/dd/yyyy, hh:mm
-# def test_startAt_format(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', 'April 12, 2016 1pm', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'start time must be in the form mm/dd/yyyy hh:mm')
+# # race.zip is too short - should be 5 ints
+    def test_09_zip_length(self):
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '0211',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
 
-# # race.start_at cannot be in the past
-# def test_startAt_past(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', 'April 12, 2014 1pm', '03/27/2016 24:00:00',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'start time must be in the form mm/dd/yyyy hh:mm')
 
-# # race.posted_at is a string of letters - should be in the form mm/dd/yyyy, hh:mm:ss
-# def test_postedAt_letters(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', 'oops',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'post time must be in the form mm/dd/yyyy hh:mm:ss')
+# # race.capacity cant be less than 0
+    def test_10_zip_length(self):
+        self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
+                     'Running a marathon to raise money for cancer research',
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  -1)
 
-# # race.posted_at is improperly formatted - should be in the form mm/dd/yyyy, hh:mm:ss
-# def test_postedAt_format(self):
-#     race = Event(1, 'Race for the cure', 'Mass Ave', 'Boston', 'MA', '02115',
-#                'Running a marathon to raise money for cancer research', '04/02/2016 13:00', 'March 27, 2016 12am',
-#                2, 'cancer', 'running', 'Race for the Cure')
-#     self.assertRaises(ValueError, 'post time must be in the form mm/dd/yyyy hh:mm:ss')
-
-# These tests require the Interest and Skills Enumerations to be created
-
-# # race.interests should exist in the interests table
-# def test_interests_exists(self):
-#     session = Session()
-#     self.assertEqual(self.race.interests, session.query(Interests).filter_by(name=self.race.interests).first())
-#     session.close()
-#
-# # race.skills should exist in the skills table
-# def test_skills_exists(self):
-#     session = Session()
-#     self.assertEqual(self.race.skills, session.query(Skills).filter_by(name=self.race.skills).first())
-#     session.close()
 
 # not sure if we still need this
 #    def test_org_exists(self):
