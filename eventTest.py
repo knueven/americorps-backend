@@ -17,7 +17,7 @@ class EventTests(unittest.TestCase):
     # checks if the events fields are initialized correctly
     def test_01_init(self):
         s = Session()
-        org = s.query(Organization).filter_by(name='Cancer Research Center').first()
+        org = s.query(Organization).filter_by(name='Test Org').first()
         race = Event('Race for the Cure', '20 Newbury St.', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
                      datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), org.id, 25)
@@ -37,7 +37,7 @@ class EventTests(unittest.TestCase):
     # test object write to the database.
     def test_02_db_write(self):
         s = Session()
-        org = s.query(Organization).filter_by(name="Cancer Research Center").first()
+        org = s.query(Organization).filter_by(name='Test Org').first()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
                      datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
