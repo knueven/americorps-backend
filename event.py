@@ -24,11 +24,13 @@ class Event(Base):
     end_at = Column(DateTime(255), nullable=False)
     org = Column(Integer, ForeignKey('organizations.id'), nullable=False)
     capacity = Column(Integer, nullable=True)
+    featured = Column(Boolean)
+    
 
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'address', 'city', 'state', 'zip', 'about', 
-                   'start_at', 'end_at', 'org', 'capacity')
+                   'start_at', 'end_at', 'org', 'capacity', 'featured')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
@@ -44,7 +46,7 @@ class Event(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, about, start_at, end_at, org, capacity):
+                 zip, about, start_at, end_at, org, capacity=None, featured=None):
         self.name = name
         self.address = address
         self.city = city
@@ -62,6 +64,7 @@ class Event(Base):
             raise ValueError("capacity cannot be less than zero")
         else:
             self.capacity = capacity
+        self.featured = featured
 
         # Update a user (must exist)
     def updateEvent(self, event_id, update_data):
@@ -96,7 +99,6 @@ class Event(Base):
                     session.delete(attendee)
                 except:
                     raise exc.SQLAlchemyError("failed to delete attendee " + attendee.key)
-            session.commit()
             try:
                 session.commit()
                 session.delete(self)
