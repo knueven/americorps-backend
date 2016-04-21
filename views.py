@@ -227,6 +227,17 @@ def signup():
         else: 
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
 
+@app.route('/event/featured', methods=['GET'])
+def featured():
+    if request.method == 'GET':
+        s = Session()
+        feats = s.query(Event).filter_by(featured=True).all()
+        feats_Json = {'results':[]}
+        for e in feats:
+            print(Event.asdict(e))
+            feats_Json['results'].append(Event.asdict(e))
+        return feats_Json, status.HTTP_200_OK
+
 
 @app.route('/login', methods=['POST'])
 @cross_origin(headers=['Content-Type','Authorization'])
