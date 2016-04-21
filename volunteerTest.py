@@ -13,6 +13,7 @@ import volunteerTest
 import string
 import random
 from event import Event
+from enums import *
 # volunteer contains: name, email, passwordhash, phone, last_active,
 #			birthdate, permissions, bio, gender,
 #			uhours, vhours, education
@@ -25,7 +26,7 @@ class VolunteerTests(unittest.TestCase):
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         joey = Volunteer('Joey Wood', email, 'lit', '3015559721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree",
+                         uhours=0, vhours=0, education="somecoll",
                          pic="https://www.google.com/imgres?imgurl=http%3A%2F%2Fwww.peopleplace.eu%2Fimage%2Fnew%2Fslide1.jpg&imgrefurl=http%3A%2F%2Fwww.peopleplace.eu%2F&docid=lyjdXkOPdJV8bM&tbnid=u7uxEKYTPiGTmM%3A&w=2000&h=1333&bih=673&biw=1020&ved=0ahUKEwiJ3vq2yJzMAhUMdD4KHTtfDV0QMwhvKAYwBg&iact=mrc&uact=8")
         self.assertTrue(joey.name == 'Joey Wood')
         self.assertTrue(joey.email == email)
@@ -38,7 +39,7 @@ class VolunteerTests(unittest.TestCase):
         self.assertTrue(joey.gender == 'Male')
         self.assertTrue(joey.uhours == 0)
         self.assertTrue(joey.vhours == 0)
-        self.assertTrue(joey.education == "Some college, no degree")
+        self.assertTrue(joey.education == "somecoll")
         self.assertTrue(joey.pic == 'https://www.google.com/imgres?imgurl=http%3A%2F%2Fwww.peopleplace.eu%2Fimage%2Fnew%2Fslide1.jpg&imgrefurl=http%3A%2F%2Fwww.peopleplace.eu%2F&docid=lyjdXkOPdJV8bM&tbnid=u7uxEKYTPiGTmM%3A&w=2000&h=1333&bih=673&biw=1020&ved=0ahUKEwiJ3vq2yJzMAhUMdD4KHTtfDV0QMwhvKAYwBg&iact=mrc&uact=8')
 
 
@@ -49,7 +50,7 @@ class VolunteerTests(unittest.TestCase):
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         joey = Volunteer('Joey Wood', email, 'lit', '3015259721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree",
+                         uhours=0, vhours=0, education="somecoll",
                          pic='http://www.wired.com/wp-content/uploads/2014/09/parks-recreation-binge-ft.jpg')
         s = Session()
         try:
@@ -65,7 +66,7 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015259721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")        
+                         uhours=0, vhours=0, education="somecoll")        
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
         self.assertTrue(joey.name == poey.name)
         #self.assertTrue(joey.email == poey.email)
@@ -114,7 +115,7 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015259721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")         
+                         uhours=0, vhours=0, education="somecoll")         
         poey = session.query(Volunteer).filter_by(phone='3015259721').first()
         self.assertTrue(joey.name == poey.name)
         #self.assertTrue(joey.email == poey.email)
@@ -134,7 +135,7 @@ class VolunteerTests(unittest.TestCase):
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
         vol = Volunteer('Test', email, 'lit', '3015259725', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")  
+                         uhours=0, vhours=0, education="somecoll")  
         try:
             session.add(vol)
             session.commit()
@@ -152,8 +153,8 @@ class VolunteerTests(unittest.TestCase):
     def test_07_interests_write(self):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        moey = VolunteerInterests("Youth", joey.id)
-        self.assertTrue(moey.interest == "Youth")
+        moey = VolunteerInterests("youth", joey.id)
+        self.assertTrue(moey.interest == "youth")
         try:
             session.add(moey)
             session.commit()
@@ -165,7 +166,7 @@ class VolunteerTests(unittest.TestCase):
     def test_08_interests(self):
         session = Session()
         doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        moey = VolunteerInterests("Youth", doey.id)
+        moey = VolunteerInterests("youth", doey.id)
         joey = session.query(VolunteerInterests).filter_by(volunteer_id=doey.id).first()
         #self.assertTrue(moey.interest == joey.interest)
         session.close()
@@ -173,8 +174,8 @@ class VolunteerTests(unittest.TestCase):
     def test_09_neighborhood_write(self):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        moey = VolunteerNeighborhoods("Back Bay", joey.id)
-        self.assertTrue(moey.neighborhood == "Back Bay")
+        moey = VolunteerNeighborhoods("backbay", joey.id)
+        self.assertTrue(moey.neighborhood == "backbay")
         try:
             session.add(moey)
             session.commit()
@@ -186,7 +187,7 @@ class VolunteerTests(unittest.TestCase):
     def test_10_neighborhoods(self):
         session = Session()
         doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        moey = VolunteerNeighborhoods("Back Bay", doey.id)
+        moey = VolunteerNeighborhoods("backbay", doey.id)
         joey = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=doey.id).first()
         #self.assertTrue(moey.neighborhood == joey.neighborhood)
         session.close()
@@ -195,8 +196,8 @@ class VolunteerTests(unittest.TestCase):
     def test_11_skill_write(self):
         session = Session()
         joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        moey = VolunteerSkills("Teaching/Tutoring", joey.id)
-        self.assertTrue(moey.skill == "Teaching/Tutoring")
+        moey = VolunteerSkills(SkillsEnum.teaching, joey.id)
+        self.assertTrue(moey.skill == "teaching")
         try:
             session.add(moey)
             session.commit()
@@ -208,7 +209,7 @@ class VolunteerTests(unittest.TestCase):
     def test_12_skills(self):
         session = Session()
         doey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-        moey = VolunteerSkills("Teaching/Tutoring", doey.id)
+        moey = VolunteerSkills("teaching", doey.id)
         joey = session.query(VolunteerSkills).filter_by(volunteer_id=doey.id).first()
         #self.assertTrue(moey.skill == joey.skill)
         session.close()
@@ -284,54 +285,29 @@ class VolunteerTests(unittest.TestCase):
     def test_19_create_volunteer(self):
         json = {'name': 'Joey Wood', 'email': 'wood.jos@husky.neu.edu', 'passwordhash': 'lit',
                 'phone': '3015559721', 'contact': true, 'birthdate':'03/27/2016', 'bio': 'Snell rhymes with hell',
-                'gender': 'Male', 'uhours': 0, 'vhours': 0, 'education': "Some college, no degree"}
+                'gender': 'Male', 'uhours': 0, 'vhours': 0, 'education': "somecoll"}
         try:
             createVolunteer(json)
         except exc.SQLAlchemyError:
             self.assertTrue(False)
         
 
-    #def test_20_delete_self(self):
-#        session = Session()
-#        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
-#        jid = joey.id
-#        moey = session.query(User).filter_by(id=jid).first()
-#        self.assertTrue(moey != None)
-#        ints = session.query(VolunteerInterests).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(ints != None)
-#        skills = session.query(VolunteerSkills).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(skills != None)
-#        neigh = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(neigh != None)
-#        avail = session.query(VolunteerAvailability).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(avail != None)
-#        joey.deleteSelf(session)
-#        moey = session.query(User).filter_by(id=jid).first()
-#        self.assertTrue(moey == None)
-#        ints = session.query(VolunteerInterests).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(ints == None)
-#        skills = session.query(VolunteerSkills).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(skills == None)
-#        neigh = session.query(VolunteerNeighborhoods).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(neigh == None)
-#        avail = session.query(VolunteerAvailability).filter_by(volunteer_id=jid).first()
-#        self.assertTrue(avail == None)
-#        session.close()
+
 
     def test_21_phone_long(self):
         self.assertRaises(ValueError, Volunteer, 'Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '30155597211', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")
+                         uhours=0, vhours=0, education="somecoll")
 
     def test_22_phone_short(self):
         self.assertRaises(ValueError, Volunteer, 'Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '301555972', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")
+                         uhours=0, vhours=0, education="somecoll")
 
     def test_23_phone_letters(self):
         self.assertRaises(ValueError, Volunteer, 'Joey Wood', 'wood.jos@husky.neu.edu', 'lit', 'abcdefghij', True,
                          birthdate=date(1990, 5, 26), bio='Snell rhymes with hell', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree")
+                         uhours=0, vhours=0, education="somecoll")
         
         
         
