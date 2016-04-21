@@ -23,6 +23,7 @@ class Event(Base):
     posted_at = Column(DateTime(255), nullable=False)
     end_at = Column(DateTime(255), nullable=False)
     org = Column(Integer, ForeignKey('organizations.id'), nullable=False)
+    org_name = Column(String(255))
     capacity = Column(Integer, nullable=True)
     featured = Column(Boolean)
     
@@ -30,7 +31,7 @@ class Event(Base):
     @classmethod
     def fromdict(cls, d):
         allowed = ('name', 'address', 'city', 'state', 'zip', 'about', 
-                   'start_at', 'end_at', 'org', 'capacity', 'featured')
+                   'start_at', 'end_at', 'org', 'org_name', 'capacity', 'featured')
         df = {k: e for k,e in d.items() if k in allowed}
         return cls(**df)
 
@@ -46,7 +47,7 @@ class Event(Base):
 
     # all these fields are strings
     def __init__(self, name, address, city, state,
-                 zip, about, start_at, end_at, org, capacity=None, featured=None):
+                 zip, about, start_at, end_at, org, org_name=None, capacity=None, featured=None):
         self.name = name
         self.address = address
         self.city = city
@@ -60,6 +61,7 @@ class Event(Base):
         self.posted_at = datetime.now()
         self.end_at = end_at
         self.org = org
+        self.org_name = org_name
         if capacity < 0:
             raise ValueError("capacity cannot be less than zero")
         else:

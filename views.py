@@ -244,10 +244,10 @@ def signup():
 def featured():
     if request.method == 'GET':
         s = Session()
-        feats = s.query(Event).filter_by(featured=True).all()
+        feats = s.query(Event).filter_by(featured=True)
         feats_Json = {'results':[]}
         for e in feats:
-            print(Event.asdict(e))
+            #print(Event.asdict(e))
             feats_Json['results'].append(Event.asdict(e))
         return feats_Json, status.HTTP_200_OK
 
