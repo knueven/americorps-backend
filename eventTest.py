@@ -20,7 +20,7 @@ class EventTests(unittest.TestCase):
         org = s.query(Organization).filter_by(name='Test Org').first()
         race = Event('Race for the Cure', '20 Newbury St.', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), org.id, 25)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), org.id, 25, False)
         
         self.assertEqual(race.name, 'Race for the Cure')
         self.assertEqual(race.address, '20 Newbury St.')
@@ -32,6 +32,7 @@ class EventTests(unittest.TestCase):
         self.assertEqual(str(race.end_at), '2016-04-02 14:00:00')
         self.assertEqual(race.org, org.id)
         self.assertEqual(race.capacity, 25)
+        self.assertFalse(race.featured)
         s.close()
 
     # test object write to the database.
@@ -40,7 +41,7 @@ class EventTests(unittest.TestCase):
         org = s.query(Organization).filter_by(name='Test Org').first()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
-                     datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
+                     datetime(2016, 4, 2, 14, 0, 0), org.id, 30, False)
 
         s.add(race)
         s.commit()
@@ -72,7 +73,7 @@ class EventTests(unittest.TestCase):
         session = Session()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20, False)
         qrace = session.query(Event).filter_by(name='Race for the Cure').first()
         self.assertTrue(race.name == qrace.name)
         self.assertTrue(race.address == qrace.address)
@@ -82,6 +83,7 @@ class EventTests(unittest.TestCase):
         self.assertTrue(race.about == qrace.about)
         self.assertTrue(race.start_at == qrace.start_at)
         self.assertTrue(race.end_at == qrace.end_at)
+        self.assertFalse(race.featured)
 
     def test_05_updating_name(self):
         session = Session()

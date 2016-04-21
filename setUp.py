@@ -43,11 +43,11 @@ class SetUp(unittest.TestCase):
         org = s.query(Organization).filter_by(name='Homeless Shelter').first()
         race1 = Event('Feed the Homeless', '20 Mass Ave', 'Boston', 'MA', '02115',
                      'Come hand out bread and soup',
-                     datetime(2016, 2, 4, 16, 0, 0), datetime(2016, 2, 4, 14, 0, 0), org.id, 2)
+                     datetime(2016, 2, 4, 16, 0, 0), datetime(2016, 2, 4, 14, 0, 0), org.id, 2, True)
         org = s.query(Organization).filter_by(name='Dog Watchers').first()
         race3 = Event('Walk dogs', '170 Boylston St.', 'Boston', 'MA', '02115',
                      "Come walk people's dogs",
-                     datetime(2015, 12, 12, 10, 0, 0), datetime(2015, 12, 12, 14, 0, 0), org.id, 25)
+                     datetime(2015, 12, 12, 10, 0, 0), datetime(2015, 12, 12, 14, 0, 0), org.id, 25, True)
 
         s.add(race1)
         s.add(race3)
@@ -58,7 +58,7 @@ class SetUp(unittest.TestCase):
         s.close()
 
     def test_03_vol_setup(self):
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
+        joey = Volunteer('Joseph Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree",
                          pic='http://www.wired.com/wp-content/uploads/2014/09/parks-recreation-binge-ft.jpg')
@@ -83,7 +83,7 @@ class SetUp(unittest.TestCase):
 
     def test_04_vol_ints(self):
         session = Session()
-        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        joey = session.query(Volunteer).filter_by(name='Joseph Wood').first()
         olivia = session.query(Volunteer).filter_by(name='Olivia').first()
         andrew = session.query(Volunteer).filter_by(name='Andrew').first()
         doey = VolunteerInterests("Animals", joey.id)
@@ -101,7 +101,7 @@ class SetUp(unittest.TestCase):
 
     def test_05_vol_skills(self):
         session = Session()
-        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        joey = session.query(Volunteer).filter_by(name='Joseph Wood').first()
         olivia = session.query(Volunteer).filter_by(name='Olivia').first()
         andrew = session.query(Volunteer).filter_by(name='Andrew').first()
         doey = VolunteerSkills("Fine Arts", joey.id)
@@ -136,7 +136,7 @@ class SetUp(unittest.TestCase):
 
     def test_07_vol_avail(self):
         session = Session()
-        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
+        joey = session.query(Volunteer).filter_by(name='Joseph Wood').first()
         olivia = session.query(Volunteer).filter_by(name='Olivia').first()
         andrew = session.query(Volunteer).filter_by(name='Andrew').first()
         if joey:

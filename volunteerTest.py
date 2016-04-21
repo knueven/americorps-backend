@@ -47,7 +47,7 @@ class VolunteerTests(unittest.TestCase):
     def test_02_db_write(self):
         N=20
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        joey = Volunteer('Joey Wood', email, 'lit', '3015559721', True,
+        joey = Volunteer('Joey Wood', email, 'lit', '3015259721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree",
                          pic='http://www.wired.com/wp-content/uploads/2014/09/parks-recreation-binge-ft.jpg')
@@ -63,7 +63,7 @@ class VolunteerTests(unittest.TestCase):
 # checks if the volunteer was added to the database after initialization
     def test_03_queryName(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015259721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")        
         poey = session.query(Volunteer).filter_by(name='Joey Wood').first()
@@ -112,10 +112,10 @@ class VolunteerTests(unittest.TestCase):
     # checks if the volunteer can be queried by phone
     def test_05_queryPhone(self):
         session = Session()
-        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
+        joey = Volunteer('Joey Wood', 'wood.jos@husky.neu.edu', 'lit', '3015259721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")         
-        poey = session.query(Volunteer).filter_by(phone='3015559721').first()
+        poey = session.query(Volunteer).filter_by(phone='3015259721').first()
         self.assertTrue(joey.name == poey.name)
         #self.assertTrue(joey.email == poey.email)
         self.assertTrue(joey.phone == poey.phone)
@@ -132,13 +132,13 @@ class VolunteerTests(unittest.TestCase):
         N = 15
         session = Session()
         email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
-        vol = Volunteer('Test', email, 'lit', '3015559725', True,
+        vol = Volunteer('Test', email, 'lit', '3015259725', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
                          uhours=0, vhours=0, education="Some college, no degree")  
         try:
             session.add(vol)
             session.commit()
-            poey = session.query(Volunteer).filter_by(phone='3015559725').first()
+            poey = session.query(Volunteer).filter_by(phone='3015259725').first()
             self.assertTrue(vol.passwordhash != 'lit')
             self.assertTrue(poey.passwordhash != 'lit')
             self.assertTrue(vol.check_password('lit'))
@@ -243,6 +243,8 @@ class VolunteerTests(unittest.TestCase):
         event = session.query(Event).filter_by(state='MA').first()
         addEvent(event.id, joey.id)
         attendee = session.query(Attendee).filter_by(userID=joey.id).first()
+        print(attendee.userID)
+        print(joey.id)
         self.assertTrue(attendee.userID == joey.id)
         session.close()
 
@@ -274,9 +276,9 @@ class VolunteerTests(unittest.TestCase):
         session = Session()
         joey = session.query(User).filter_by(name='Joey Wood').first()
         q = session.query(User).filter_by(id=joey.id)
-        q = q.update({"email":"wood.jos@husky.neu.edu"})
+        q = q.update({"email":"wood5@husky.neu.edu"})
         joey = session.query(User).filter_by(id=joey.id).first()
-        self.assertTrue(joey.email == 'wood.jos@husky.neu.edu')
+        self.assertTrue(joey.email == 'wood5@husky.neu.edu')
         session.close()
 
     def test_19_create_volunteer(self):
@@ -290,9 +292,8 @@ class VolunteerTests(unittest.TestCase):
         
 
     #def test_20_delete_self(self):
-#        #Session = sessionmaker(autoflush=False)
 #        session = Session()
-#        joey = session.query(User).filter_by(name='Joey Wood').first()
+#        joey = session.query(Volunteer).filter_by(name='Joey Wood').first()
 #        jid = joey.id
 #        moey = session.query(User).filter_by(id=jid).first()
 #        self.assertTrue(moey != None)
@@ -305,7 +306,6 @@ class VolunteerTests(unittest.TestCase):
 #        avail = session.query(VolunteerAvailability).filter_by(volunteer_id=jid).first()
 #        self.assertTrue(avail != None)
 #        joey.deleteSelf(session)
-#        
 #        moey = session.query(User).filter_by(id=jid).first()
 #        self.assertTrue(moey == None)
 #        ints = session.query(VolunteerInterests).filter_by(volunteer_id=jid).first()

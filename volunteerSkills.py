@@ -19,6 +19,7 @@ class VolunteerSkills(Base):
 						"Handiwork",
 						"Fine Arts",
 						"TEFL/TESOL",
+						"Language",
 						"Writing/Editing",
 						"Foreign Language",
 						"Event Planning",
@@ -33,7 +34,7 @@ class VolunteerSkills(Base):
 		self.volunteer_id = volunteer_id
 
 	def __repr__(self):
-		return "<VolunteerSkills(skill='%s')>" % (self.day)
+		return "<VolunteerSkills(skill='%s')>" % (self.skill)
 
 	def createvskills(volunteer_id, skills):
 		s = Session()
@@ -48,4 +49,15 @@ class VolunteerSkills(Base):
 		finally:
 			s.close()
 		return True
+
+	def get_skills(id):
+		s = Session()
+		result = []
+		q = s.query(VolunteerSkills).filter_by(volunteer_id=id)
+		for sk in q:
+				result.append(sk.skill)
+		s.close()
+		return result
+
+
 

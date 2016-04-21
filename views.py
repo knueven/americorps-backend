@@ -1,12 +1,14 @@
 import volunteer
 from volunteer import Volunteer
-from organization import Organization
 from admin import Admin
 import admin
 from organization import *
 import orgmember
 import organization
 import event
+from volunteerSkills import VolunteerSkills
+from volunteerNeighborhoods import VolunteerNeighborhoods
+from volunteerInterests import VolunteerInterests
 from flask import render_template,redirect, url_for, json, g
 from flask.ext.api import status
 from flask import Flask, request, jsonify, session
@@ -102,7 +104,6 @@ def orgs(org_id):
         except exc.SQLAlchemyError as e:
             deleteError = {'error': str(e)}
             return deleteError, status.HTTP_400_BAD_REQUEST
-        s.commit()
         s.close()
         return deleteSuccess, status.HTTP_200_OK
 
@@ -130,8 +131,12 @@ def users(user_id):
         s = Session()
         u = s.query(User).filter_by(id=user_id).first()
         if u:
-            s.close()
-            return jsonify(u.asdict()), status.HTTP_200_OK
+            user_id = u.id
+            u = u.asdict()
+            u['skills'] = VolunteerSkills.get_skills(user_id)
+            u['neighborhoods'] = VolunteerNeighborhoods.get_neighborhoods(user_id)
+            u['interests'] = VolunteerInterests.get_interests(user_id)
+            return jsonify(u), status.HTTP_200_OK
         else:
             return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
@@ -146,7 +151,6 @@ def users(user_id):
                 deleteError = {'error' : e.args}
                 return deleteError, status.HTTP_400_BAD_REQUEST
             finally:
-                s.commit()
                 s.close()
             return deleteSuccess, status.HTTP_200_OK
 
@@ -211,9 +215,10 @@ def get_all():
     if request.method == 'GET':
         s = Session()
         events = s.query(Event).all()
-        events_Json = []
+        events_Json = {'results':[]}
         for e in events:
-            events_Json.append(jsonify(e.asdict))
+            print(Event.asdict(e))
+            events_Json['results'].append(Event.asdict(e))
         return events_Json, status.HTTP_200_OK
 
 
@@ -228,6 +233,17 @@ def signup():
             return success, status.HTTP_200_OK
         else: 
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
+
+@app.route('/event/featured', methods=['GET'])
+def featured():
+    if request.method == 'GET':
+        s = Session()
+        feats = s.query(Event).filter_by(featured=True).all()
+        feats_Json = {'results':[]}
+        for e in feats:
+            print(Event.asdict(e))
+            feats_Json['results'].append(Event.asdict(e))
+        return feats_Json, status.HTTP_200_OK
 
 
 @app.route('/login', methods=['POST'])

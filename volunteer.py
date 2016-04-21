@@ -155,10 +155,12 @@ class Volunteer(User):
 
         # delete all the skill rows involving this user
         self.deleteSelfFrom(VolunteerSkills, s)
+        s.commit()
 
         # delete this user
         try:
             s.delete(self)
+            s.commit()
         except:
             raise exc.SQLAlchemyError("failed to delete volunteer " + self.id)
 
@@ -178,6 +180,9 @@ class Volunteer(User):
             return True
         else:
             return False
+
+    def getEvents(self, session):
+        return session.query(Attendee).filter_by(userID)
         
 
     # create a volunteer from a json blob
