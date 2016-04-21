@@ -43,11 +43,13 @@ class SetUp(unittest.TestCase):
         org = s.query(Organization).filter_by(name='Homeless Shelter').first()
         race1 = Event('Feed the Homeless', '20 Mass Ave', 'Boston', 'MA', '02115',
                      'Come hand out bread and soup',
-                     datetime(2016, 2, 4, 16, 0, 0), datetime(2016, 2, 4, 14, 0, 0), org.id, 2, True)
+                     datetime(2016, 2, 4, 16, 0, 0), datetime(2016, 2, 4, 14, 0, 0), org.id, org_name=org.name,
+                      capacity=2, featured=True)
         org = s.query(Organization).filter_by(name='Dog Watchers').first()
         race3 = Event('Walk dogs', '170 Boylston St.', 'Boston', 'MA', '02115',
                      "Come walk people's dogs",
-                     datetime(2015, 12, 12, 10, 0, 0), datetime(2015, 12, 12, 14, 0, 0), org.id, 25, True)
+                     datetime(2015, 12, 12, 10, 0, 0), datetime(2015, 12, 12, 14, 0, 0), org.id, org_name=org.name,
+                      capacity=25, featured=True)
 
         s.add(race1)
         s.add(race3)
@@ -60,15 +62,15 @@ class SetUp(unittest.TestCase):
     def test_03_vol_setup(self):
         joey = Volunteer('Joseph Wood', 'wood.jos@husky.neu.edu', 'lit', '3015559721', True,
                          birthdate=date(1990, 5, 26), bio='CS Major', gender='Male',
-                         uhours=0, vhours=0, education="Some college, no degree",
+                         uhours=0, vhours=0, education="somecoll",
                          pic='http://www.wired.com/wp-content/uploads/2014/09/parks-recreation-binge-ft.jpg')
         olivia = Volunteer('Olivia', 'olivia@husky.neu.edu', 'sratlyfe', '4029834098', True,
                            birthdate=date(1720, 10, 30), bio='Vote for Pedro', gender='Female',
-                           uhours=0, vhours=0, education='Less than High School',
+                           uhours=0, vhours=0, education='lesshigh',
                            pic='https://upload.wikimedia.org/wikipedia/en/a/a3/Parks_recreation_canvassing.jpg')
         andrew= Volunteer('Andrew', 'andrew@husky.neu.edu', 'sqlalchemy', '9852039385', True,
                           birthdate=date(1993, 12, 22), bio='Yahoo4ever', gender='Male',
-                          uhours=0, vhours=0, education='Doctoral or professional degree',
+                          uhours=0, vhours=0, education='doctoral',
                           pic='http://cdn.fansided.com/wp-content/blogs.dir/340/files/2014/12/ben-wyatt-parks-and-rec.png')
         s = Session()
         try:
@@ -86,9 +88,9 @@ class SetUp(unittest.TestCase):
         joey = session.query(Volunteer).filter_by(name='Joseph Wood').first()
         olivia = session.query(Volunteer).filter_by(name='Olivia').first()
         andrew = session.query(Volunteer).filter_by(name='Andrew').first()
-        doey = VolunteerInterests("Animals", joey.id)
-        livia = VolunteerInterests("Health", olivia.id)
-        drew = VolunteerInterests("Education", andrew.id)
+        doey = VolunteerInterests("animals", joey.id)
+        livia = VolunteerInterests("health", olivia.id)
+        drew = VolunteerInterests("education", andrew.id)
         try:
             session.add(doey)
             session.add(livia)
@@ -104,9 +106,9 @@ class SetUp(unittest.TestCase):
         joey = session.query(Volunteer).filter_by(name='Joseph Wood').first()
         olivia = session.query(Volunteer).filter_by(name='Olivia').first()
         andrew = session.query(Volunteer).filter_by(name='Andrew').first()
-        doey = VolunteerSkills("Fine Arts", joey.id)
-        livia = VolunteerSkills("Legal", olivia.id)
-        drew = VolunteerSkills("Writing/Editing", andrew.id)
+        doey = VolunteerSkills("arts", joey.id)
+        livia = VolunteerSkills("legal", olivia.id)
+        drew = VolunteerSkills("writing", andrew.id)
         try:
             session.add(doey)
             session.add(livia)
@@ -121,9 +123,9 @@ class SetUp(unittest.TestCase):
         session = Session()
         olivia = session.query(Volunteer).filter_by(name='Olivia').first()
         andrew = session.query(Volunteer).filter_by(name='andrew').first()
-        dolivia = VolunteerNeighborhoods("Allston", olivia.id)
-        solivia = VolunteerNeighborhoods("Brighton", olivia.id)
-        andrew = VolunteerNeighborhoods("West End", andrew.id)
+        dolivia = VolunteerNeighborhoods("allston", olivia.id)
+        solivia = VolunteerNeighborhoods("brighton", olivia.id)
+        andrew = VolunteerNeighborhoods("westend", andrew.id)
         try:
             session.add(dolivia)
             session.add(solivia)

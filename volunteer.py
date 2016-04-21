@@ -25,9 +25,9 @@ class Volunteer(User):
     # the Volunteer will have all User fields
     uhours = Column(Integer)
     vhours = Column(Integer)
-    education = Column(Enum("Less than High School","High School diploma or equivalent","Some college, no degree"
-                            ,"Postsecondary non-degree award","Associate's degree", "Bachelor's degree",
-                            "Master's degree", "Doctoral or professional degree", name="education_enum"))
+    education = Column(Enum("lesshigh","highschool","somecoll"
+                            ,"postsec","associate", "bachelor",
+                            "master", "doctoral", name="education_enum"))
     birthdate = Column(Date)
     bio = Column(String(10000))
     gender = Column(Enum('Male', 'Female', 'Other'))
@@ -133,36 +133,37 @@ class Volunteer(User):
                     raise exc.SQLAlchemyError("failed to delete availability " + r.id)
 
     def deleteSelf(self, session):
-        s = session
-
         # delete all the attendee rows involving this user
-        attendees = s.query(Attendee).filter_by(userID=self.id)
+        attendees = session.query(Attendee).filter_by(userID=self.id)
         if attendees:
             for a in attendees:
                 try:
-                    s.delete(a)
+                    session.delete(a)
                 except:
                     raise exc.SQLAlchemyError("failed to delete " + table.__tablename__ + " " + a.key)
 
+        session.commit()
         # delete all the availability rows involving this user
-        self.deleteSelfFrom(VolunteerAvailability, s)
-
+        self.deleteSelfFrom(VolunteerAvailability, session)
+        print(self.id)
         # delete all the interest rows involving this user
-        self.deleteSelfFrom(VolunteerInterests, s)
-
+        self.deleteSelfFrom(VolunteerInterests, session)
+        print("2")
         # delete all the neighborhood rows involving this user
-        self.deleteSelfFrom(VolunteerNeighborhoods, s)
-
+        self.deleteSelfFrom(VolunteerNeighborhoods, session)
+        print("3")
         # delete all the skill rows involving this user
-        self.deleteSelfFrom(VolunteerSkills, s)
-        s.commit()
-
+        self.deleteSelfFrom(VolunteerSkills, session)
+        print("4")
+        session.commit()
         # delete this user
         try:
-            s.delete(self)
-            s.commit()
+            print("5")
+            session.delete(id=self.id)
+            session.commit()
+            print("6")
         except:
-            raise exc.SQLAlchemyError("failed to delete volunteer " + self.id)
+            print("failed to delete volunteer ")
 
     def log_hours(self, eventid, hours):
         s = Session()

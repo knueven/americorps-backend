@@ -38,7 +38,6 @@ class EventNeighborhoods(Base):
 	#events = relationship("Event", back_populates="eventNeighborhoods")
 
 	def __init__(self, neighborhood, event_id):
-		self.id = id
 		self.neighborhood = neighborhood
 		self.event_id = event_id
 
