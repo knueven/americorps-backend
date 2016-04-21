@@ -91,7 +91,7 @@ def orgs(org_id):
         u = s.query(Organization).filter_by(id=org_id).first()
         if u:
             s.close()
-            return jsonify(u.asdict()), status.HTTP_200_OK
+            return u.asdict(), status.HTTP_200_OK
         else:
             return noOrg, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
@@ -136,7 +136,7 @@ def users(user_id):
             u['skills'] = VolunteerSkills.get_skills(user_id)
             u['neighborhoods'] = VolunteerNeighborhoods.get_neighborhoods(user_id)
             u['interests'] = VolunteerInterests.get_interests(user_id)
-            return jsonify(u), status.HTTP_200_OK
+            return u, status.HTTP_200_OK
         else:
             return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':
@@ -201,7 +201,7 @@ def event(event_id):
         s = Session()
         e = s.query(Event).filter_by(id=event_id).first()
         if e:
-            return jsonify(Event.asdict(e)), status.HTTP_200_OK
+            return Event.asdict(e), status.HTTP_200_OK
         else:
             return noEvent, status.HTTP_404_NOT_FOUND
     if request.method == 'POST':
