@@ -123,8 +123,9 @@ def users(user_id):
             u = s.query(User).filter_by(id=user_id).update(data)
             if u:
                 s.commit()
-                s.close()
-                return updateSuccess, status.HTTP_200_OK
+                u = s.query(User).filter_by(id=user_id).first()
+                #print(u)
+                return u.asdict(), status.HTTP_200_OK
             else:
                 return updateError, status.HTTP_400_BAD_REQUEST
     if request.method == 'GET':
@@ -307,4 +308,4 @@ def parse_token(req):
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    return jsonify({'result': 'success'})
+    return {'result': 'success'}
