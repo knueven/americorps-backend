@@ -64,23 +64,6 @@ class AdminTests(unittest.TestCase):
         self.assertTrue(mickey.bio == sickey.bio)
         self.assertTrue(mickey.gender == sickey.gender)
                         
-
-    # checks if the volunteer can be queried by email
-    def test_04_queryEmail(self):
-        session = Session()
-        mickey = Admin('Mickey Mouse', 'mickey@disney.com', 'mouse', '0765434567', True,
-                         birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
-        sickey = session.query(Admin).filter_by(name='Mickey Mouse').first()
-        self.assertTrue(mickey.name == sickey.name)
-        #self.assertTrue(mickey.email == sickey.email)
-        #self.assertTrue(mickey.passwordhash == sickey.passwordhash)
-        self.assertTrue(mickey.phone == sickey.phone)
-        self.assertTrue(mickey.master)
-        #self.assertTrue(mickey.last_active == )
-        self.assertTrue(mickey.birthdate == sickey.birthdate)
-        self.assertTrue(mickey.permissions == sickey.permissions)
-        self.assertTrue(mickey.bio == sickey.bio)
-        self.assertTrue(mickey.gender == sickey.gender)
                         
 
     # checks if the volunteer can be queried by phone
@@ -117,6 +100,44 @@ class AdminTests(unittest.TestCase):
         mickey = session.query(User).filter_by(id=mickey.id).first()
         self.assertTrue(mickey.email == 'jos.wood1@husky.neu.edu')
         session.close()
+
+    def test_08_phone_long(self):
+        N=10
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        self.assertRaises(ValueError, Admin, 'Mickey Mouse', email, 'mouse', '07654345677', True,
+                       birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
+
+    def test_09_phone_short(self):
+        N=10
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        self.assertRaises(ValueError, Admin, 'Mickey Mouse', email, 'mouse', '076543456', True,
+                       birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
+
+    def test_10_phone_letters(self):
+        N=10
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        self.assertRaises(ValueError, Admin, 'Mickey Mouse', email, 'mouse', 'abcdefghij', True,
+                       birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
+
+    #unit test for password hashing
+    def test_11_password_hash(self):
+        session = Session()
+        N=10
+        email = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(N)) + '@gmail.com'
+        mickey = Admin('Mickey Mouse', email, 'mouse', '0765434567', True,
+                       birthdate=date(2006, 6, 6), bio='Peace Walt', gender='Male')
+        try:
+            session.add(mickey)
+            session.commit()
+            rickey = session.query(Admin).filter_by(phone='0765434567').first()
+            self.assertTrue(mickey.passwordhash != 'mouse')
+            self.assertTrue(rickey.passwordhash != 'mouse')
+            self.assertTrue(mickey.check_password('mouse'))
+            self.assertFalse(mickey.check_password('mouse2'))
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
                         
     
 

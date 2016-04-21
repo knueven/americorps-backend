@@ -42,7 +42,7 @@ class Admin(User):
         self.name = name
         self.email = email
         self.set_password(passwordhash)
-        if len(phone) > 15:
+        if len(phone) > 10:
             raise ValueError ('phone number is too long')
         elif len(phone) < 10:
             raise ValueError ('phone number is too short')
