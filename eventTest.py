@@ -7,6 +7,9 @@ from datetime import datetime
 from sqlalchemy import exc
 import random
 import string
+from eventSkills import EventSkills
+from eventInterests import EventInterests
+from eventNeighborhoods import EventNeighborhoods
 
 
 # event contains: id, name, address, city, state, zip, about, start_at, posted_at, duration, interests, skills, org
@@ -129,6 +132,72 @@ class EventTests(unittest.TestCase):
         self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
                      datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  -1)
+
+    def test_11_interests_write(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        dace = EventInterests("Youth", race.id)
+        self.assertTrue(dace.interest == "Youth")
+        try:
+            session.add(dace)
+            session.commit()
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+
+    def test_12_interests(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        dace = EventInterests("Youth", race.id)
+        lace = session.query(EventInterests).filter_by(event_id=race.id).first()
+        self.assertTrue(dace.interest == lace.interest)
+        session.close()
+
+    def test_13_neighborhood_write(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        dace = EventNeighborhoods("Back Bay", race.id)
+        self.assertTrue(dace.neighborhood == "Back Bay")
+        try:
+            session.add(dace)
+            session.commit()
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+
+    def test_14_neighborhoods(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        dace = EventNeighborhoods("Back Bay", race.id)
+        lace = session.query(EventNeighborhoods).filter_by(event_id=race.id).first()
+        self.assertTrue(dace.neighborhood == lace.neighborhood)
+        session.close()
+
+
+    def test_15_skill_write(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        dace = EventSkills("Teaching/Tutoring", race.id)
+        self.assertTrue(dace.skill == "Teaching/Tutoring")
+        try:
+            session.add(dace)
+            session.commit()
+            session.close()
+            self.assertTrue(True)
+        except exc.SQLAlchemyError:
+            self.assertTrue(False)
+
+    def test_16_skills(self):
+        session = Session()
+        race = session.query(Event).filter_by(name='Race for the Cure').first()
+        dace = EventSkills("Teaching/Tutoring", race.id)
+        lace = session.query(EventSkills).filter_by(event_id=race.id).first()
+        self.assertTrue(dace.skill == lace.skill)
+        session.close()
+
+        
 
 
 # not sure if we still need this
