@@ -188,6 +188,7 @@ def event(event_id):
     content = {'events': 'test'}
     success = {'status': 'event created'}
     updateSuccess = {'status':'account updated'}
+    noEvent = {'error': 'User not found.'}
     updateError = {'error': 'User not found/input validation failed.'}
     error = {'error': "Error in JSON/SQL syntax"}
     if request.method == 'POST':
@@ -197,7 +198,12 @@ def event(event_id):
         else:
             return error, status.HTTP_500_INTERNAL_SERVER_ERROR
     if request.method == 'GET':
-        return content, status.HTTP_200_OK
+        s = Session()
+        e = s.query(Event).filter_by(id=event_id).first()
+        if e:
+            return jsonify(Event.asdict(e)), status.HTTP_200_OK
+        else:
+            return noEvent, status.HTTP_404_NOT_FOUND
     if request.method == 'POST':
         data = request.json
         if data:
@@ -217,7 +223,7 @@ def get_all():
         events = s.query(Event).all()
         events_Json = {'results':[]}
         for e in events:
-            print(Event.asdict(e))
+            #print(Event.asdict(e))
             events_Json['results'].append(Event.asdict(e))
         return events_Json, status.HTTP_200_OK
 
