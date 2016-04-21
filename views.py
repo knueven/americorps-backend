@@ -288,6 +288,9 @@ def create_token(user):
         if (user.permissions == 'volunteer'):
             us = s.query(Volunteer).filter_by(id=user.id).first()
             d = volunteer.Volunteer.asdict(us)
+            d['skills'] = VolunteerSkills.get_skills(us.id)
+            d['neighborhoods'] = VolunteerNeighborhoods.get_neighborhoods(us.id)
+            d['interests'] = VolunteerInterests.get_interests(us.id)
         if (user.permissions == 'admin'):
             us = s.query(Admin).filter_by(id=user.id).first()
             d = admin.Admin.asdict(us)
