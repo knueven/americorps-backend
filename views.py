@@ -6,6 +6,9 @@ from organization import *
 import orgmember
 import organization
 import event
+from volunteerSkills import VolunteerSkills
+from volunteerNeighborhoods import VolunteerNeighborhoods
+from volunteerInterests import VolunteerInterests
 from flask import render_template,redirect, url_for, json, g
 from flask.ext.api import status
 from flask import Flask, request, jsonify, session
@@ -128,8 +131,12 @@ def users(user_id):
         s = Session()
         u = s.query(User).filter_by(id=user_id).first()
         if u:
-            s.close()
-            return jsonify(u.asdict()), status.HTTP_200_OK
+            user_id = u.id
+            u = u.asdict()
+            u['skills'] = VolunteerSkills.get_skills(user_id)
+            u['neighborhoods'] = VolunteerNeighborhoods.get_neighborhoods(user_id)
+            u['interests'] = VolunteerInterests.get_interests(user_id)
+            return jsonify(u), status.HTTP_200_OK
         else:
             return noUser, status.HTTP_404_NOT_FOUND
     if request.method == 'DELETE':

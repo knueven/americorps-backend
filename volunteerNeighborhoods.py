@@ -58,3 +58,12 @@ class VolunteerNeighborhoods(Base):
         finally:
             s.close()
         return True
+
+    def get_neighborhoods(id):
+        s = Session()
+        result = []
+        q = s.query(VolunteerNeighborhoods).filter_by(volunteer_id=id)
+        for n in q:
+          result.append(n.neighborhood)
+        s.close()
+        return result
