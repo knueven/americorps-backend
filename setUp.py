@@ -169,7 +169,9 @@ class SetUp(unittest.TestCase):
         s.add(kt)
         try:
             s.commit()
-        except exc.SQLAlchemuError:
+        except exc.SQLAlchemyError:
             s.rollback()
         s.close()
-        
+
+if __name__ == '__main__':
+    unittest.main()
