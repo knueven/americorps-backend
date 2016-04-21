@@ -84,20 +84,20 @@ class OrganizationTests(unittest.TestCase):
         self.assertTrue(test.email == 'jos.wood@husky.neu.edu')
         session.close()
 
-    def test_06_add_event(self):
-        s = Session()
-        org = s.query(Organization).filter_by(name="Test Org").first()
-        race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
-                     'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
-                     datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
-
-        s.add(race)
-        s.commit()
-        s.close()
-        if s.query(Event).filter_by(name='Race for the Cure').first():
-            self.assertTrue(True)
-        else:
-            self.assertTrue(False)
+#    def test_06_add_event(self):
+#        s = Session()
+#        org = s.query(Organization).filter_by(name="Test Org").first()
+#        race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
+#                     'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
+#                     datetime(2016, 4, 2, 14, 0, 0), org.id, 30)
+#
+#        s.add(race)
+#        s.commit()
+#        s.close()
+#        if s.query(Event).filter_by(name='Race for the Cure').first():
+#            self.assertTrue(True)
+#        else:
+#            self.assertTrue(False)
 
     def test_07_password_check(self):
         session = Session()

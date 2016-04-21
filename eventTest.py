@@ -23,7 +23,8 @@ class EventTests(unittest.TestCase):
         org = s.query(Organization).filter_by(name='Test Org').first()
         race = Event('Race for the Cure', '20 Newbury St.', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), org.id, 25, False)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), org.id, org_name=org.name,
+                     capacity=25, featured=False)
         
         self.assertEqual(race.name, 'Race for the Cure')
         self.assertEqual(race.address, '20 Newbury St.')
@@ -34,6 +35,7 @@ class EventTests(unittest.TestCase):
         self.assertEqual(str(race.start_at), '2016-04-02 13:00:00')
         self.assertEqual(str(race.end_at), '2016-04-02 14:00:00')
         self.assertEqual(race.org, org.id)
+        self.assertEqual(race.org_name, org.name)
         self.assertEqual(race.capacity, 25)
         self.assertFalse(race.featured)
         s.close()
@@ -44,7 +46,8 @@ class EventTests(unittest.TestCase):
         org = s.query(Organization).filter_by(name='Test Org').first()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research', datetime(2016, 4, 2, 13, 0, 0),
-                     datetime(2016, 4, 2, 14, 0, 0), org.id, 30, False)
+                     datetime(2016, 4, 2, 14, 0, 0), org.id, org_name=org.name,
+                     capacity=30, featured=False)
 
         s.add(race)
         s.commit()
@@ -76,7 +79,7 @@ class EventTests(unittest.TestCase):
         session = Session()
         race = Event('Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20, False)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, 20, False)
         qrace = session.query(Event).filter_by(name='Race for the Cure').first()
         self.assertTrue(race.name == qrace.name)
         self.assertTrue(race.address == qrace.address)
@@ -86,6 +89,7 @@ class EventTests(unittest.TestCase):
         self.assertTrue(race.about == qrace.about)
         self.assertTrue(race.start_at == qrace.start_at)
         self.assertTrue(race.end_at == qrace.end_at)
+        self.assertTrue(qrace.org_name != None)
         self.assertFalse(race.featured)
 
     def test_05_updating_name(self):
@@ -111,27 +115,27 @@ class EventTests(unittest.TestCase):
         
         self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', 'abcde',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, capacity=20)
 
 # # race.zip is too long - should be 5 ints
     def test_08_zip_length(self):
         self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '021155',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, capacity=20)
 
 
 # # race.zip is too short - should be 5 ints
     def test_09_zip_length(self):
         self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '0211',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  20)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, capacity=20)
 
 
 # # race.capacity cant be less than 0
     def test_10_zip_length(self):
         self.assertRaises(ValueError, Event, 'Race for the Cure', 'Mass Ave', 'Boston', 'MA', '02115',
                      'Running a marathon to raise money for cancer research',
-                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1,  -1)
+                     datetime(2016, 4, 2, 13, 0, 0), datetime(2016, 4, 2, 14, 0, 0), 1, capacity=-1)
 
     def test_11_interests_write(self):
         session = Session()

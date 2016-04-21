@@ -43,11 +43,13 @@ class SetUp(unittest.TestCase):
         org = s.query(Organization).filter_by(name='Homeless Shelter').first()
         race1 = Event('Feed the Homeless', '20 Mass Ave', 'Boston', 'MA', '02115',
                      'Come hand out bread and soup',
-                     datetime(2016, 2, 4, 16, 0, 0), datetime(2016, 2, 4, 14, 0, 0), org.id, 2, True)
+                     datetime(2016, 2, 4, 16, 0, 0), datetime(2016, 2, 4, 14, 0, 0), org.id, org_name=org.name,
+                      capacity=2, featured=True)
         org = s.query(Organization).filter_by(name='Dog Watchers').first()
         race3 = Event('Walk dogs', '170 Boylston St.', 'Boston', 'MA', '02115',
                      "Come walk people's dogs",
-                     datetime(2015, 12, 12, 10, 0, 0), datetime(2015, 12, 12, 14, 0, 0), org.id, 25, True)
+                     datetime(2015, 12, 12, 10, 0, 0), datetime(2015, 12, 12, 14, 0, 0), org.id, org_name=org.name,
+                      capacity=25, featured=True)
 
         s.add(race1)
         s.add(race3)
@@ -169,9 +171,7 @@ class SetUp(unittest.TestCase):
         s.add(kt)
         try:
             s.commit()
-        except exc.SQLAlchemyError:
+        except exc.SQLAlchemuError:
             s.rollback()
         s.close()
-
-if __name__ == '__main__':
-    unittest.main()
+        
